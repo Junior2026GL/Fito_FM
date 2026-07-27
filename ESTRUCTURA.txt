@@ -1,0 +1,62 @@
+fito_fm/
+├── backend/
+│   ├── scripts/
+│   │   ├── create-admin.js
+│   │   ├── run-migrations.js
+│   │   └── run-seeds.js
+│   ├── src/
+│   │   ├── config/
+│   │   ├── infrastructure/
+│   │   │   ├── database/
+│   │   │   │   ├── migrations/
+│   │   │   │   └── seeds/
+│   │   │   ├── email/
+│   │   │   ├── pdf/
+│   │   │   └── storage/
+│   │   ├── modules/
+│   │   │   ├── _template/
+│   │   │   ├── auth/
+│   │   │   └── health/
+│   │   ├── routes/
+│   │   ├── shared/
+│   │   │   ├── errors/
+│   │   │   ├── middleware/
+│   │   │   ├── responses/
+│   │   │   └── utils/
+│   │   ├── app.js
+│   │   └── server.js
+│   ├── storage/
+│   │   ├── private/
+│   │   ├── public/
+│   │   └── temp/
+│   ├── tests/
+│   │   ├── integration/
+│   │   └── unit/
+│   ├── .env.example
+│   ├── eslint.config.js
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   ├── config/
+│   │   ├── features/
+│   │   │   ├── _template/
+│   │   │   └── auth/
+│   │   ├── hooks/
+│   │   ├── layouts/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── store/
+│   │   ├── styles/
+│   │   └── utils/
+│   ├── .env.example
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package.json
+│   └── vite.config.js
+├── docs/
+├── .gitignore
+├── ESTRUCTURA.txt
+└── README.md
