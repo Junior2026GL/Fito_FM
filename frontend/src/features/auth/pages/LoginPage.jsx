@@ -53,9 +53,6 @@ export const LoginPage = () => {
         <div className="login-mascot-wrapper">
           <img src={mascota} alt="Mascota La Gorra Azul" className="login-brand-mascot" />
         </div>
-
-        {/* Sticker "Se siente" en la esquina inferior derecha */}
-        <img src={seSiente} alt="Se siente" className="login-se-siente" />
       </aside>
 
       {/* Lado derecho – formulario */}
