@@ -1169,10 +1169,7 @@ button {
 }
 
 .diputados-body {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 20px;
-  align-items: start;
+  display: block;
 }
 
 /* Card del mapa */
@@ -1251,49 +1248,219 @@ button {
 
 /* Panel lateral de info */
 .diputados-info-card {
-  min-height: 200px;
-  display: flex;
-  flex-direction: column;
+  display: none;
 }
 
-.diputados-muni-title {
-  font-size: 1.25rem;
-  font-weight: 900;
-  color: #0f172a;
-  margin: 0 0 16px;
-  letter-spacing: -0.02em;
+.diputados-muni-title,
+.diputados-placeholder,
+.diputados-empty {
+  display: none;
 }
 
-.diputados-placeholder {
+/* ============================================================
+   MODAL – Municipio
+   ============================================================ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 18, 45, 0.7);
+  backdrop-filter: blur(3px);
+  z-index: 100;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 24px 0;
-  color: #94a3b8;
-  font-size: 0.8125rem;
-  text-align: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.18s ease;
 }
 
-.diputados-placeholder p {
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal-panel {
+  background: #ffffff;
+  border-radius: 20px;
+  width: min(920px, 100%);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow:
+    0 8px 32px rgba(7, 18, 50, 0.3),
+    0 2px 8px rgba(7, 18, 50, 0.2);
+  animation: slideUp 0.22s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* Header del modal */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 32px 24px;
+  background: linear-gradient(135deg, #0b1f4d 0%, #1a3a8a 100%);
+  flex-shrink: 0;
+}
+
+.modal-header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.modal-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
   margin: 0;
 }
 
-.diputados-empty {
+.modal-title {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+
+.modal-close {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* Fila de stats */
+.modal-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: #e4e8f0;
+  border-bottom: 1px solid #e4e8f0;
+  flex-shrink: 0;
+}
+
+.modal-stat-card {
+  background: #ffffff;
+  padding: 22px 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.modal-stat-placeholder {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  background: #fafbfd;
+}
+
+.modal-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.modal-stat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.modal-stat-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #64748b;
+}
+
+.modal-stat-value {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.modal-stat-value-sm {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.modal-stat-sub {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* Cuerpo del modal */
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px;
+  min-height: 280px;
+}
+
+.modal-body-placeholder {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  flex: 1;
-  padding: 32px 16px;
+  gap: 14px;
+  height: 100%;
+  min-height: 220px;
   color: #94a3b8;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   text-align: center;
 }
 
-.diputados-empty p {
+.modal-body-placeholder p {
   margin: 0;
+  max-width: 380px;
+  line-height: 1.6;
+}
+
+@media (max-width: 700px) {
+  .modal-stats-row {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-header {
+    padding: 20px 20px 18px;
+  }
+
+  .modal-body {
+    padding: 20px;
+  }
 }
 
 @media (max-width: 900px) {

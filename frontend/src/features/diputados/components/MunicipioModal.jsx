@@ -1,0 +1,83 @@
+import { useEffect } from "react";
+
+const IconClose = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+const IconElectoral = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+  </svg>
+);
+
+export const MunicipioModal = ({ municipio, onClose }) => {
+  // Cerrar con Escape
+  useEffect(() => {
+    const handleKey = (e) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [onClose]);
+
+  if (!municipio) return null;
+
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-panel" onClick={(e) => e.stopPropagation()}>
+
+        {/* ── HEADER ── */}
+        <div className="modal-header">
+          <div className="modal-header-content">
+            <span className="modal-eyebrow">Francisco Morazán</span>
+            <h2 className="modal-title">{municipio.label}</h2>
+          </div>
+          <button className="modal-close" onClick={onClose} title="Cerrar">
+            <IconClose />
+          </button>
+        </div>
+
+        {/* ── STATS ROW ── */}
+        <div className="modal-stats-row">
+          <div className="modal-stat-card">
+            <div className="modal-stat-icon">
+              <IconElectoral />
+            </div>
+            <div className="modal-stat-body">
+              <span className="modal-stat-label">Carga Electoral</span>
+              <span className="modal-stat-value">—</span>
+              <span className="modal-stat-sub">Total de electores habilitados</span>
+            </div>
+          </div>
+
+          {/* Espacio reservado para más stats */}
+          <div className="modal-stat-card modal-stat-placeholder">
+            <span className="modal-stat-label">Próximamente</span>
+            <span className="modal-stat-value-sm">más información</span>
+          </div>
+
+          <div className="modal-stat-card modal-stat-placeholder">
+            <span className="modal-stat-label">Próximamente</span>
+            <span className="modal-stat-value-sm">más información</span>
+          </div>
+        </div>
+
+        {/* ── BODY – espacio para tablas / gráficos futuros ── */}
+        <div className="modal-body">
+          <div className="modal-body-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="1.2">
+              <rect x="3" y="3" width="18" height="18" rx="3" />
+              <path d="M3 9h18M9 21V9" />
+            </svg>
+            <p>Aquí se mostrarán los resultados por aspirante y detalle de JRVs</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+};
