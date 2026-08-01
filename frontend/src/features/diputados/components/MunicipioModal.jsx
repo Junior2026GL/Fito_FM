@@ -121,11 +121,6 @@ export const MunicipioModal = ({ municipio, onClose }) => {
                   key={item.casilla}
                   className={`casilla-card ${idx === 0 ? "casilla-gold" : idx === 1 ? "casilla-silver" : idx === 2 ? "casilla-bronze" : ""}`}
                 >
-                  {idx < 3 && (
-                    <span className="casilla-medal">
-                      {idx === 0 ? "🥇" : idx === 1 ? "🥈" : "🥉"}
-                    </span>
-                  )}
                   <span className="casilla-numero">{item.casilla}</span>
                   <span className="casilla-votos">{formatNum(item.votos)}</span>
                   <div className="casilla-bar-track">
