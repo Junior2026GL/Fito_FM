@@ -45,13 +45,13 @@ export const FranciscoMorazanMap = ({ onMunicipioClick }) => {
 
     const container = containerRef.current;
     const width = container.clientWidth || 700;
-    const height = container.clientHeight || 500;
+    const height = container.clientHeight || 680;
 
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
-    // Proyección centrada en Francisco Morazán
-    const projection = d3.geoMercator().fitSize([width, height], geoData);
+    // Proyección con padding para que no queden cortados los bordes
+    const projection = d3.geoMercator().fitExtent([[24, 24], [width - 24, height - 24]], geoData);
     const pathGen = d3.geoPath().projection(projection);
 
     const g = svg.append("g");
@@ -101,6 +101,45 @@ export const FranciscoMorazanMap = ({ onMunicipioClick }) => {
         setSelected(name);
 
         if (onMunicipioClick) onMunicipioClick({ key: name, label });
+      });
+
+    // Labels de texto sobre cada municipio
+    g.selectAll("text")
+      .data(geoData.features)
+      .join("text")
+      .attr("x", (d) => pathGen.centroid(d)[0])
+      .attr("y", (d) => pathGen.centroid(d)[1])
+      .attr("text-anchor", "middle")
+      .attr("dominant-baseline", "central")
+      .attr("pointer-events", "none")
+      .attr("fill", "rgba(255,255,255,0.9)")
+      .attr("font-size", "7.5px")
+      .attr("font-weight", "700")
+      .attr("font-family", "Inter, system-ui, sans-serif")
+      .attr("paint-order", "stroke")
+      .attr("stroke", "rgba(0,0,0,0.45)")
+      .attr("stroke-width", "2px")
+      .attr("stroke-linejoin", "round")
+      .each(function (d) {
+        const name = d.properties.NAME_2;
+        const label = MUNICIPIO_LABELS[name] || name;
+        const words = label.split(" ");
+        const el = d3.select(this);
+        const cx = pathGen.centroid(d)[0];
+        const cy = pathGen.centroid(d)[1];
+        const lineH = 9;
+        // Partir en líneas de máx 2 palabras
+        const lines = [];
+        for (let i = 0; i < words.length; i += 2) {
+          lines.push(words.slice(i, i + 2).join(" "));
+        }
+        const startY = cy - ((lines.length - 1) * lineH) / 2;
+        lines.forEach((line, i) => {
+          el.append("tspan")
+            .attr("x", cx)
+            .attr("y", startY + i * lineH)
+            .text(line);
+        });
       });
 
     // Zoom + pan
