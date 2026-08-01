@@ -1422,6 +1422,21 @@ button {
   font-weight: 500;
 }
 
+.modal-stat-loading {
+  display: inline-block;
+  width: 80px;
+  height: 28px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 /* Cuerpo del modal */
 .modal-body {
   flex: 1;

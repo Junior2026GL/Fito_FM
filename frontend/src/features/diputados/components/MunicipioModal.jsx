@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getMunicipio } from "../services/diputados.service.js";
 
 const IconClose = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -17,6 +18,9 @@ const IconElectoral = () => (
 );
 
 export const MunicipioModal = ({ municipio, onClose }) => {
+  const [datos, setDatos] = useState(null);
+  const [cargando, setCargando] = useState(true);
+
   // Cerrar con Escape
   useEffect(() => {
     const handleKey = (e) => { if (e.key === "Escape") onClose(); };
@@ -24,7 +28,21 @@ export const MunicipioModal = ({ municipio, onClose }) => {
     return () => document.removeEventListener("keydown", handleKey);
   }, [onClose]);
 
+  // Cargar datos del municipio
+  useEffect(() => {
+    if (!municipio) return;
+    setCargando(true);
+    setDatos(null);
+    getMunicipio(municipio.label)
+      .then(setDatos)
+      .catch(() => setDatos(null))
+      .finally(() => setCargando(false));
+  }, [municipio]);
+
   if (!municipio) return null;
+
+  const formatNum = (n) =>
+    n != null ? Number(n).toLocaleString("es-HN") : "—";
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
@@ -49,15 +67,26 @@ export const MunicipioModal = ({ municipio, onClose }) => {
             </div>
             <div className="modal-stat-body">
               <span className="modal-stat-label">Carga Electoral</span>
-              <span className="modal-stat-value">—</span>
+              <span className="modal-stat-value">
+                {cargando ? <span className="modal-stat-loading" /> : formatNum(datos?.carga_electoral)}
+              </span>
               <span className="modal-stat-sub">Total de electores habilitados</span>
             </div>
           </div>
 
-          {/* Espacio reservado para más stats */}
-          <div className="modal-stat-card modal-stat-placeholder">
-            <span className="modal-stat-label">Próximamente</span>
-            <span className="modal-stat-value-sm">más información</span>
+          <div className="modal-stat-card">
+            <div className="modal-stat-icon" style={{ background: "#f0fdf4", color: "#166534" }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+              </svg>
+            </div>
+            <div className="modal-stat-body">
+              <span className="modal-stat-label">Total JRV</span>
+              <span className="modal-stat-value">
+                {cargando ? <span className="modal-stat-loading" /> : formatNum(datos?.total_jrv)}
+              </span>
+              <span className="modal-stat-sub">Juntas receptoras de votos</span>
+            </div>
           </div>
 
           <div className="modal-stat-card modal-stat-placeholder">
