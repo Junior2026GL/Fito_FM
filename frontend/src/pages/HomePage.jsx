@@ -8,7 +8,7 @@ export const HomePage = () => {
       <p className="eyebrow">Panel principal</p>
       <h1>Hola, {user?.name?.split(" ")[0]} 👋</h1>
       <p>
-        Bienvenido a <strong>fito_fm</strong>. Usa el menú superior para navegar
+        Bienvenido a <strong>fito_fm</strong>. Usa el menú lateral para navegar
         por las secciones disponibles.
       </p>
     </section>
