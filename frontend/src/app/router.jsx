@@ -6,6 +6,7 @@ import { HomePage } from "../pages/HomePage.jsx";
 import { NotFoundPage } from "../pages/NotFoundPage.jsx";
 import { LoginPage } from "../features/auth/pages/LoginPage.jsx";
 import { UsersPage } from "../features/users/pages/UsersPage.jsx";
+import { DiputadosPage } from "../features/diputados/pages/DiputadosPage.jsx";
 
 export const AppRoutes = () => (
   <Routes>
@@ -16,6 +17,7 @@ export const AppRoutes = () => (
     <Route element={<ProtectedRoute />}>
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
+        <Route path="/diputados" element={<DiputadosPage />} />
 
         {/* Solo administradores */}
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
