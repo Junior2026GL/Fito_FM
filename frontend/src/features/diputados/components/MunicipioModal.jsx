@@ -146,7 +146,7 @@ export const MunicipioModal = ({ municipio, onClose }) => {
               <div className="casillas-pos-row">
                 {votos.map((_, idx) => (
                   <div key={idx} className="casilla-pos-box">
-                    #{idx + 1}
+                    {idx + 1}
                   </div>
                 ))}
               </div>

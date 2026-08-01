@@ -58,7 +58,9 @@ export const MainLayout = () => {
       <aside className="sidebar">
         {/* Brand */}
         <div className="sidebar-brand">
-          <img src={gorraLogo} alt="fito_fm" className="sidebar-brand-logo" />
+          <div className="sidebar-brand-circle">
+            <img src={gorraLogo} alt="fito_fm" className="sidebar-brand-logo" />
+          </div>
         </div>
 
         {/* Navigation */}
