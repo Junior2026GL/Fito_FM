@@ -13,11 +13,15 @@ export const getMunicipios = async () => {
 };
 
 export const getMunicipio = async (municipio) => {
+  const casillas = Array.from({ length: 23 }, (_, i) => 93 + i);
+  const sumaVotos = casillas.map((n) => `COALESCE(\`Casilla ${n}\`, 0)`).join(" + ");
+
   const [rows] = await pool.execute(
     `SELECT
        Municipio                      AS municipio,
        SUM(\`Carga Electoral\`)        AS carga_electoral,
-       COUNT(*)                       AS total_jrv
+       COUNT(*)                       AS total_jrv,
+       SUM(${sumaVotos})              AS total_votos
      FROM dip_fito_fm
      WHERE Municipio = ? COLLATE utf8mb4_general_ci
      GROUP BY Municipio`,

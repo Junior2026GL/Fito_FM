@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getMunicipio, getVotosByMunicipio } from "../services/diputados.service.js";
+import { ParticipacionChart } from "./ParticipacionChart.jsx";
 import papeleta from "../../../assets/papeleta.png";
 
 const IconClose = () => (
@@ -96,8 +97,18 @@ export const MunicipioModal = ({ municipio, onClose }) => {
           </div>
 
           <div className="modal-stat-card modal-stat-placeholder">
-            <span className="modal-stat-label">Próximamente</span>
-            <span className="modal-stat-value-sm">más información</span>
+            <div className="modal-stat-icon" style={{ background: "#fdf4ff", color: "#7c3aed" }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+              </svg>
+            </div>
+            <div className="modal-stat-body">
+              <span className="modal-stat-label">Total Marcas</span>
+              <span className="modal-stat-value" style={{ color: "#7c3aed" }}>
+                {cargando ? <span className="modal-stat-loading" /> : formatNum(datos?.total_votos)}
+              </span>
+              <span className="modal-stat-sub">Suma de votos de los 23 aspirantes</span>
+            </div>
           </div>
         </div>
 
@@ -116,11 +127,8 @@ export const MunicipioModal = ({ municipio, onClose }) => {
             </div>
           ) : votos.length > 0 ? (
             <div className="casillas-grid">
-              {votos.map((item, idx) => (
-                <div
-                  key={item.casilla}
-                  className={`casilla-card ${idx === 0 ? "casilla-gold" : idx === 1 ? "casilla-silver" : idx === 2 ? "casilla-bronze" : ""}`}
-                >
+              {votos.map((item) => (
+                <div key={item.casilla} className="casilla-card">
                   <span className="casilla-numero">{item.casilla}</span>
                   <span className="casilla-votos">{formatNum(item.votos)}</span>
                   <div className="casilla-bar-track">
@@ -140,6 +148,14 @@ export const MunicipioModal = ({ municipio, onClose }) => {
               </svg>
               <p>No se encontraron datos de votos para este municipio</p>
             </div>
+          )}
+
+          {/* ── Gráfico participación ── */}
+          {!cargando && datos && (
+            <ParticipacionChart
+              cargaElectoral={datos.carga_electoral}
+              totalVotos={datos.total_votos}
+            />
           )}
         </div>
 

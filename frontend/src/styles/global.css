@@ -1492,9 +1492,9 @@ button {
   box-shadow: 0 4px 12px rgba(12, 36, 97, 0.1);
 }
 
-.casilla-gold   { border-color: #f59e0b; background: #fffbeb; }
-.casilla-silver { border-color: #94a3b8; background: #f8fafc; }
-.casilla-bronze { border-color: #b45309; background: #fff7ed; }
+.casilla-gold   { border-color: #e2e8f0; background: #ffffff; }
+.casilla-silver { border-color: #e2e8f0; background: #ffffff; }
+.casilla-bronze { border-color: #e2e8f0; background: #ffffff; }
 
 .casilla-medal {
   position: absolute;
@@ -1551,6 +1551,118 @@ button {
   background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.2s infinite;
+}
+
+/* ============================================================
+   GRÁFICO PARTICIPACIÓN ELECTORAL
+   ============================================================ */
+.participacion-chart {
+  margin-top: 28px;
+  padding: 24px;
+  background: #f8fafd;
+  border: 1px solid #e4e8f0;
+  border-radius: 14px;
+}
+
+.chart-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.chart-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 100px;
+  align-items: center;
+  gap: 12px;
+}
+
+.chart-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+  white-space: nowrap;
+}
+
+.chart-track {
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.chart-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s ease;
+}
+
+.chart-fill-ce  { background: #cbd5e1; }
+.chart-fill-tv  { background: linear-gradient(90deg, #1d4ed8, #3b82f6); }
+.chart-fill-abs { background: #fca5a5; }
+
+.chart-value {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+  text-align: right;
+}
+
+.chart-value-blue { color: #1d4ed8; }
+.chart-value-gray { color: #94a3b8; }
+
+/* Badge participación */
+.chart-pct-badge {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 20px;
+  border-top: 1px solid #e4e8f0;
+}
+
+.chart-ring {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #1d4ed8 calc(var(--pct, 0) * 1%),
+    #e2e8f0 0
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.chart-ring::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  background: #f8fafd;
+  border-radius: 50%;
+}
+
+.chart-ring-value {
+  position: relative;
+  z-index: 1;
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.chart-pct-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 4px;
+}
+
+.chart-pct-sub {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0;
 }
 
 .modal-body-placeholder {
