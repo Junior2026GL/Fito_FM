@@ -72,20 +72,19 @@ button {
 
 /* Brand */
 .sidebar-brand {
-  padding: 24px 20px 20px;
+  padding: 16px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.sidebar-brand-text {
-  font-size: 1.2rem;
-  font-weight: 900;
-  color: #ffffff;
-  letter-spacing: -0.02em;
-  display: inline-block;
-  padding: 6px 14px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+.sidebar-brand-logo {
+  width: 100%;
+  max-width: 160px;
+  height: 72px;
+  object-fit: contain;
+  display: block;
 }
 
 /* Nav links */

@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/context/AuthContext.jsx";
+import gorraLogo from "../assets/gorra.PNG";
 
 const IconHome = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -57,7 +58,7 @@ export const MainLayout = () => {
       <aside className="sidebar">
         {/* Brand */}
         <div className="sidebar-brand">
-          <span className="sidebar-brand-text">fito_fm</span>
+          <img src={gorraLogo} alt="fito_fm" className="sidebar-brand-logo" />
         </div>
 
         {/* Navigation */}
