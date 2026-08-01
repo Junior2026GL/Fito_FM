@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getMunicipio } from "../services/diputados.service.js";
+import papeleta from "../../../assets/papeleta.png";
 
 const IconClose = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -93,6 +94,11 @@ export const MunicipioModal = ({ municipio, onClose }) => {
             <span className="modal-stat-label">Próximamente</span>
             <span className="modal-stat-value-sm">más información</span>
           </div>
+        </div>
+
+        {/* ── PAPELETA ── */}
+        <div className="modal-papeleta-banner">
+          <img src={papeleta} alt="Papeleta electoral" className="modal-papeleta-img" />
         </div>
 
         {/* ── BODY – espacio para tablas / gráficos futuros ── */}
