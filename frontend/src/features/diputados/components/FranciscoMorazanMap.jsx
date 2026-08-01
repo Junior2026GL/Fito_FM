@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import geoData from "../data/francisco_morazan.json";
 
-// Nombres legibles con espacios
+// Nombres legibles — deben coincidir exactamente con la columna Municipio en la DB
 const MUNICIPIO_LABELS = {
   Alubarén: "Alubarén",
   Cedros: "Cedros",
@@ -23,15 +23,15 @@ const MUNICIPIO_LABELS = {
   SanAntoniodeOriente: "San Antonio de Oriente",
   SanBuenaventura: "San Buenaventura",
   SanIgnacio: "San Ignacio",
-  SanJuandeFlores: "San Juan de Flores",
+  SanJuandeFlores: "Cantarranas",          // antes: San Juan de Flores
   SanMiguelito: "San Miguelito",
   SantaAna: "Santa Ana",
   SantaLucía: "Santa Lucía",
   Talanga: "Talanga",
   Tatumbla: "Tatumbla",
   "ValledeÁngeles": "Valle de Ángeles",
-  Vallecillo: "Vallecillo",
-  VilladeSanFrancisco: "Villa de San Francisco",
+  Vallecillo: "Vallecillos",               // DB usa plural
+  VilladeSanFrancisco: "Villa San Francisco", // DB sin "de"
 };
 
 export const FranciscoMorazanMap = ({ onMunicipioClick }) => {
