@@ -141,10 +141,18 @@ export const MunicipioModal = ({ municipio, onClose }) => {
               ))}
             </div>
           ) : votos.length > 0 ? (
+            {/* Fila de posiciones */}
+            <div className="casillas-pos-row">
+              {votos.map((_, idx) => (
+                <div key={idx} className="casilla-pos-box">
+                  #{idx + 1}
+                </div>
+              ))}
+            </div>
+
             <div className="casillas-grid">
-              {votos.map((item, idx) => (
+              {votos.map((item) => (
                 <div key={item.casilla} className="casilla-card">
-                  <span className="casilla-pos">#{idx + 1}</span>
                   <span className="casilla-numero">{item.casilla}</span>
                   <span className="casilla-votos">{formatNum(item.votos)}</span>
                   <div className="casilla-bar-track">

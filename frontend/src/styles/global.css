@@ -1269,7 +1269,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 16px;
   animation: fadeIn 0.18s ease;
 }
 
@@ -1281,8 +1281,9 @@ button {
 .modal-panel {
   background: #ffffff;
   border-radius: 20px;
-  width: min(1100px, 100%);
-  max-height: 92vh;
+  width: 100%;
+  max-width: 1400px;
+  max-height: 96vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1479,7 +1480,7 @@ button {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  padding: 6px 4px 8px;
+  padding: 8px 4px 8px;
   border-radius: 10px;
   border: 1.5px solid #e2e8f0;
   background: #ffffff;
@@ -1487,15 +1488,30 @@ button {
   min-width: 0;
 }
 
-.casilla-pos {
+/* Fila de posiciones sobre los cards */
+.casillas-pos-row {
+  display: grid;
+  grid-template-columns: repeat(23, 1fr);
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.casilla-pos-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  border-radius: 6px;
   font-size: 0.6rem;
   font-weight: 800;
-  color: #94a3b8;
   background: #f1f5f9;
-  border-radius: 4px;
-  padding: 1px 5px;
-  line-height: 1.4;
-  letter-spacing: 0.02em;
+  color: #94a3b8;
+  letter-spacing: 0.01em;
+}
+
+.casilla-pos-top {
+  background: #fce7f3;
+  color: #be185d;
 }
 
 .casilla-card:hover {
