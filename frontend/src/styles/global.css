@@ -1478,13 +1478,24 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 10px 4px 8px;
+  gap: 2px;
+  padding: 6px 4px 8px;
   border-radius: 10px;
   border: 1.5px solid #e2e8f0;
   background: #ffffff;
   transition: transform 0.12s, box-shadow 0.12s;
   min-width: 0;
+}
+
+.casilla-pos {
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #94a3b8;
+  background: #f1f5f9;
+  border-radius: 4px;
+  padding: 1px 5px;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
 }
 
 .casilla-card:hover {
