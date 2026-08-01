@@ -18,10 +18,11 @@ export const getMunicipio = async (municipio) => {
 
   const [rows] = await pool.execute(
     `SELECT
-       Municipio                      AS municipio,
-       SUM(\`Carga Electoral\`)        AS carga_electoral,
-       COUNT(*)                       AS total_jrv,
-       SUM(${sumaVotos})              AS total_votos
+       Municipio                                AS municipio,
+       SUM(\`Carga Electoral\`)                  AS carga_electoral,
+       COUNT(*)                                 AS total_jrv,
+       SUM(${sumaVotos})                        AS total_votos,
+       COUNT(DISTINCT \`Centro de Votación\`)    AS total_centros
      FROM dip_fito_fm
      WHERE Municipio = ? COLLATE utf8mb4_general_ci
      GROUP BY Municipio`,

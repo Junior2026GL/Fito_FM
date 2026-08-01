@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { getMunicipio, getVotosByMunicipio } from "../services/diputados.service.js";
-import { ParticipacionChart } from "./ParticipacionChart.jsx";
 import papeleta from "../../../assets/papeleta.png";
 
 const IconClose = () => (
@@ -96,7 +95,7 @@ export const MunicipioModal = ({ municipio, onClose }) => {
             </div>
           </div>
 
-          <div className="modal-stat-card modal-stat-placeholder">
+          <div className="modal-stat-card">
             <div className="modal-stat-icon" style={{ background: "#fdf4ff", color: "#7c3aed" }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
@@ -108,6 +107,22 @@ export const MunicipioModal = ({ municipio, onClose }) => {
                 {cargando ? <span className="modal-stat-loading" /> : formatNum(datos?.total_votos)}
               </span>
               <span className="modal-stat-sub">Suma de votos de los 23 aspirantes</span>
+            </div>
+          </div>
+
+          <div className="modal-stat-card">
+            <div className="modal-stat-icon" style={{ background: "#fff7ed", color: "#c2410c" }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+            </div>
+            <div className="modal-stat-body">
+              <span className="modal-stat-label">Centros de Votación</span>
+              <span className="modal-stat-value" style={{ color: "#c2410c" }}>
+                {cargando ? <span className="modal-stat-loading" /> : formatNum(datos?.total_centros)}
+              </span>
+              <span className="modal-stat-sub">Centros habilitados en el municipio</span>
             </div>
           </div>
         </div>
@@ -150,13 +165,7 @@ export const MunicipioModal = ({ municipio, onClose }) => {
             </div>
           )}
 
-          {/* ── Gráfico participación ── */}
-          {!cargando && datos && (
-            <ParticipacionChart
-              cargaElectoral={datos.carga_electoral}
-              totalVotos={datos.total_votos}
-            />
-          )}
+          {!cargando && datos && null}
         </div>
 
       </div>
