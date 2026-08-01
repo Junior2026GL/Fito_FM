@@ -11,3 +11,8 @@ export const getMunicipio = asyncHandler(async (req, res) => {
   const data = await service.getMunicipio(req.params.municipio);
   return successResponse(res, { data });
 });
+
+export const getVotos = asyncHandler(async (req, res) => {
+  const data = await service.getVotosByMunicipio(req.params.municipio);
+  return successResponse(res, { data });
+});

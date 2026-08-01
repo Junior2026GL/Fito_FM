@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMunicipio } from "../services/diputados.service.js";
+import { getMunicipio, getVotosByMunicipio } from "../services/diputados.service.js";
 import papeleta from "../../../assets/papeleta.png";
 
 const IconClose = () => (
@@ -20,23 +20,26 @@ const IconElectoral = () => (
 
 export const MunicipioModal = ({ municipio, onClose }) => {
   const [datos, setDatos] = useState(null);
+  const [votos, setVotos] = useState([]);
   const [cargando, setCargando] = useState(true);
 
-  // Cerrar con Escape
   useEffect(() => {
     const handleKey = (e) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
   }, [onClose]);
 
-  // Cargar datos del municipio
   useEffect(() => {
     if (!municipio) return;
     setCargando(true);
     setDatos(null);
-    getMunicipio(municipio.label)
-      .then(setDatos)
-      .catch(() => setDatos(null))
+    setVotos([]);
+    Promise.all([
+      getMunicipio(municipio.label),
+      getVotosByMunicipio(municipio.label),
+    ])
+      .then(([d, v]) => { setDatos(d); setVotos(v); })
+      .catch(() => {})
       .finally(() => setCargando(false));
   }, [municipio]);
 
@@ -44,6 +47,8 @@ export const MunicipioModal = ({ municipio, onClose }) => {
 
   const formatNum = (n) =>
     n != null ? Number(n).toLocaleString("es-HN") : "—";
+
+  const maxVotos = votos[0]?.votos || 1;
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
@@ -101,15 +106,46 @@ export const MunicipioModal = ({ municipio, onClose }) => {
           <img src={papeleta} alt="Papeleta electoral" className="modal-papeleta-img" />
         </div>
 
-        {/* ── BODY – espacio para tablas / gráficos futuros ── */}
+        {/* ── VOTOS POR CASILLA ── */}
         <div className="modal-body">
-          <div className="modal-body-placeholder">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="1.2">
-              <rect x="3" y="3" width="18" height="18" rx="3" />
-              <path d="M3 9h18M9 21V9" />
-            </svg>
-            <p>Aquí se mostrarán los resultados por aspirante y detalle de JRVs</p>
-          </div>
+          {cargando ? (
+            <div className="casillas-skeleton">
+              {Array.from({ length: 23 }).map((_, i) => (
+                <div key={i} className="casilla-card-skeleton" />
+              ))}
+            </div>
+          ) : votos.length > 0 ? (
+            <div className="casillas-grid">
+              {votos.map((item, idx) => (
+                <div
+                  key={item.casilla}
+                  className={`casilla-card ${idx === 0 ? "casilla-gold" : idx === 1 ? "casilla-silver" : idx === 2 ? "casilla-bronze" : ""}`}
+                >
+                  {idx < 3 && (
+                    <span className="casilla-medal">
+                      {idx === 0 ? "🥇" : idx === 1 ? "🥈" : "🥉"}
+                    </span>
+                  )}
+                  <span className="casilla-numero">{item.casilla}</span>
+                  <span className="casilla-votos">{formatNum(item.votos)}</span>
+                  <div className="casilla-bar-track">
+                    <div
+                      className="casilla-bar-fill"
+                      style={{ width: `${Math.round((item.votos / maxVotos) * 100)}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="modal-body-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="1.2">
+                <rect x="3" y="3" width="18" height="18" rx="3" />
+                <path d="M3 9h18M9 21V9" />
+              </svg>
+              <p>No se encontraron datos de votos para este municipio</p>
+            </div>
+          )}
         </div>
 
       </div>

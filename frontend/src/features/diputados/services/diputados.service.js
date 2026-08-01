@@ -9,3 +9,8 @@ export const getMunicipio = async (municipio) => {
   const response = await api.get(`/diputados/municipios/${encodeURIComponent(municipio)}`);
   return response.data.data;
 };
+
+export const getVotosByMunicipio = async (municipio) => {
+  const response = await api.get(`/diputados/municipios/${encodeURIComponent(municipio)}/votos`);
+  return response.data.data;
+};
