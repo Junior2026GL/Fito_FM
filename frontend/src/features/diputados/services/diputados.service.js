@@ -5,12 +5,21 @@ export const getMunicipios = async () => {
   return response.data.data;
 };
 
-export const getMunicipio = async (municipio) => {
-  const response = await api.get(`/diputados/municipios/${encodeURIComponent(municipio)}`);
+export const getCiudadesByMunicipio = async (municipio) => {
+  const response = await api.get(`/diputados/municipios/${encodeURIComponent(municipio)}/ciudades`);
   return response.data.data;
 };
 
-export const getVotosByMunicipio = async (municipio) => {
-  const response = await api.get(`/diputados/municipios/${encodeURIComponent(municipio)}/votos`);
+export const getMunicipio = async (municipio, ciudad) => {
+  const response = await api.get(`/diputados/municipios/${encodeURIComponent(municipio)}`, {
+    params: ciudad ? { ciudad } : undefined,
+  });
+  return response.data.data;
+};
+
+export const getVotosByMunicipio = async (municipio, ciudad) => {
+  const response = await api.get(`/diputados/municipios/${encodeURIComponent(municipio)}/votos`, {
+    params: ciudad ? { ciudad } : undefined,
+  });
   return response.data.data;
 };

@@ -76,10 +76,11 @@ export const MainLayout = () => {
 
           <NavLink
             to="/diputados"
+            title="Diputados Elecciones Generales 2025"
             className={({ isActive }) => `sidebar-link${isActive ? " active" : ""}`}
           >
             <span className="sidebar-icon"><IconMap /></span>
-            <span className="sidebar-label">Diputados</span>
+            <span className="sidebar-label">Diputados Elecciones Generales 2025</span>
           </NavLink>
 
           {user?.role === "admin" && (

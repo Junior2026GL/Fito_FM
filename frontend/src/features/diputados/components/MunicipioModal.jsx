@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
-import { getMunicipio, getVotosByMunicipio } from "../services/diputados.service.js";
+import { getCiudadesByMunicipio, getMunicipio, getVotosByMunicipio } from "../services/diputados.service.js";
 import papeleta from "../../../assets/papeleta.png";
+
+const formatCiudad = (c) =>
+  c ? c.charAt(0) + c.slice(1).toLowerCase() : c;
 
 const IconClose = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -22,6 +25,8 @@ export const MunicipioModal = ({ municipio, onClose }) => {
   const [datos, setDatos] = useState(null);
   const [votos, setVotos] = useState([]);
   const [cargando, setCargando] = useState(true);
+  const [ciudades, setCiudades] = useState([]);
+  const [ciudadSeleccionada, setCiudadSeleccionada] = useState(null);
 
   useEffect(() => {
     const handleKey = (e) => { if (e.key === "Escape") onClose(); };
@@ -29,19 +34,34 @@ export const MunicipioModal = ({ municipio, onClose }) => {
     return () => document.removeEventListener("keydown", handleKey);
   }, [onClose]);
 
-  useEffect(() => {
-    if (!municipio) return;
+  const cargarDatos = (municipioLabel, ciudad) => {
     setCargando(true);
     setDatos(null);
     setVotos([]);
     Promise.all([
-      getMunicipio(municipio.label),
-      getVotosByMunicipio(municipio.label),
+      getMunicipio(municipioLabel, ciudad),
+      getVotosByMunicipio(municipioLabel, ciudad),
     ])
       .then(([d, v]) => { setDatos(d); setVotos(v); })
       .catch(() => {})
       .finally(() => setCargando(false));
+  };
+
+  useEffect(() => {
+    if (!municipio) return;
+    setCiudades([]);
+    setCiudadSeleccionada(null);
+    cargarDatos(municipio.label, null);
+    getCiudadesByMunicipio(municipio.label)
+      .then((list) => setCiudades(list.length > 1 ? list : []))
+      .catch(() => {});
   }, [municipio]);
+
+  const handleCiudadClick = (ciudad) => {
+    if (ciudad === ciudadSeleccionada) return;
+    setCiudadSeleccionada(ciudad);
+    cargarDatos(municipio.label, ciudad);
+  };
 
   if (!municipio) return null;
 
@@ -60,6 +80,29 @@ export const MunicipioModal = ({ municipio, onClose }) => {
             <span className="modal-eyebrow">Francisco Morazán</span>
             <h2 className="modal-title">{municipio.label}</h2>
           </div>
+
+          {ciudades.length > 0 && (
+            <div className="modal-ciudad-tabs">
+              <button
+                type="button"
+                className={`modal-ciudad-tab${ciudadSeleccionada === null ? " active" : ""}`}
+                onClick={() => handleCiudadClick(null)}
+              >
+                Todos
+              </button>
+              {ciudades.map((c) => (
+                <button
+                  type="button"
+                  key={c}
+                  className={`modal-ciudad-tab${ciudadSeleccionada === c ? " active" : ""}`}
+                  onClick={() => handleCiudadClick(c)}
+                >
+                  {formatCiudad(c)}
+                </button>
+              ))}
+            </div>
+          )}
+
           <button className="modal-close" onClick={onClose} title="Cerrar">
             <IconClose />
           </button>

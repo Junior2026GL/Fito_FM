@@ -145,7 +145,7 @@ button {
 }
 
 .sidebar-label {
-  line-height: 1;
+  line-height: 1.25;
 }
 
 /* Footer: user + logout */
@@ -1340,6 +1340,36 @@ button {
   margin: 0;
   letter-spacing: -0.025em;
   line-height: 1.1;
+}
+
+.modal-ciudad-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.modal-ciudad-tab {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.modal-ciudad-tab:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+.modal-ciudad-tab.active {
+  background: #ffffff;
+  color: #0b1f4d;
+  border-color: #ffffff;
 }
 
 .modal-close {
