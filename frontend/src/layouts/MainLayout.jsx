@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/context/AuthContext.jsx";
+import { hasModuleAccess } from "../config/modules.js";
 import gorraLogo from "../assets/gorra.PNG";
 
 const IconHome = () => (
@@ -74,14 +75,16 @@ export const MainLayout = () => {
             <span className="sidebar-label">Inicio</span>
           </NavLink>
 
-          <NavLink
-            to="/diputados"
-            title="Diputados Elecciones Generales 2025"
-            className={({ isActive }) => `sidebar-link${isActive ? " active" : ""}`}
-          >
-            <span className="sidebar-icon"><IconMap /></span>
-            <span className="sidebar-label">Diputados Elecciones Generales 2025</span>
-          </NavLink>
+          {hasModuleAccess(user, "diputados") && (
+            <NavLink
+              to="/diputados"
+              title="Diputados Elecciones Generales 2025"
+              className={({ isActive }) => `sidebar-link${isActive ? " active" : ""}`}
+            >
+              <span className="sidebar-icon"><IconMap /></span>
+              <span className="sidebar-label">Diputados Elecciones Generales 2025</span>
+            </NavLink>
+          )}
 
           {user?.role === "admin" && (
             <NavLink

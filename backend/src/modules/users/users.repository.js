@@ -31,7 +31,7 @@ export const findAll = async ({ page, limit, search, role, active }) => {
 
   const [rows] = await pool.query(
     `SELECT
-       id, name, username, email, role, is_active, created_at, updated_at
+       id, name, username, email, role, modules, is_active, created_at, updated_at
      FROM users u
      ${where}
      ORDER BY created_at DESC
@@ -67,7 +67,7 @@ export const findAll = async ({ page, limit, search, role, active }) => {
 
 export const findById = async (id) => {
   const [rows] = await pool.execute(
-    `SELECT id, name, username, email, role, is_active, created_at, updated_at
+    `SELECT id, name, username, email, role, modules, is_active, created_at, updated_at
      FROM users
      WHERE id = ?
      LIMIT 1`,
@@ -96,19 +96,19 @@ export const findByUsername = async (username, excludeId = null) => {
   return rows[0] || null;
 };
 
-export const update = async (id, { name, username, email, role }) => {
+export const update = async (id, { name, username, email, role, modules }) => {
   await pool.execute(
-    `UPDATE users SET name = ?, username = ?, email = ?, role = ? WHERE id = ?`,
-    [name, username.toLowerCase(), email.toLowerCase(), role, id]
+    `UPDATE users SET name = ?, username = ?, email = ?, role = ?, modules = ? WHERE id = ?`,
+    [name, username.toLowerCase(), email.toLowerCase(), role, JSON.stringify(modules ?? []), id]
   );
   return findById(id);
 };
 
-export const create = async ({ name, username, email, passwordHash, role }) => {
+export const create = async ({ name, username, email, passwordHash, role, modules }) => {
   const [result] = await pool.execute(
-    `INSERT INTO users (name, username, email, password_hash, role)
-     VALUES (?, ?, ?, ?, ?)`,
-    [name, username.toLowerCase(), email.toLowerCase(), passwordHash, role]
+    `INSERT INTO users (name, username, email, password_hash, role, modules)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [name, username.toLowerCase(), email.toLowerCase(), passwordHash, role, JSON.stringify(modules ?? [])]
   );
   return findById(result.insertId);
 };

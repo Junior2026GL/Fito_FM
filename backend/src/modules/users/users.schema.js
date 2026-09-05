@@ -1,4 +1,7 @@
 import { z } from "zod";
+import { AVAILABLE_MODULES } from "../../config/constants.js";
+
+const modulesSchema = z.array(z.enum(AVAILABLE_MODULES)).default([]);
 
 export const listUsersSchema = z.object({
   body: z.object({}),
@@ -18,7 +21,8 @@ export const createUserSchema = z.object({
     username: z.string().trim().min(3).max(80).regex(/^[a-zA-Z0-9_-]+$/, "Solo letras, números, _ y -"),
     email: z.string().trim().email().max(160),
     password: z.string().min(8).max(100),
-    role: z.enum(["admin", "user"])
+    role: z.enum(["admin", "user"]),
+    modules: modulesSchema
   }),
   params: z.object({}),
   query: z.object({})
@@ -29,7 +33,8 @@ export const updateUserSchema = z.object({
     name: z.string().trim().min(2).max(120),
     username: z.string().trim().min(3).max(80).regex(/^[a-zA-Z0-9_-]+$/, "Solo letras, números, _ y -"),
     email: z.string().trim().email().max(160),
-    role: z.enum(["admin", "user"])
+    role: z.enum(["admin", "user"]),
+    modules: modulesSchema
   }),
   params: z.object({
     id: z.coerce.number().int().positive()

@@ -9,6 +9,7 @@ export const findUserByUsername = async (username) => {
        email,
        password_hash,
        role,
+       modules,
        is_active
      FROM users
      WHERE username = ?

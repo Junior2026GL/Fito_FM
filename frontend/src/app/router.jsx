@@ -17,7 +17,11 @@ export const AppRoutes = () => (
     <Route element={<ProtectedRoute />}>
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
-        <Route path="/diputados" element={<DiputadosPage />} />
+
+        {/* Requiere el módulo "diputados" */}
+        <Route element={<ProtectedRoute requiredModule="diputados" />}>
+          <Route path="/diputados" element={<DiputadosPage />} />
+        </Route>
 
         {/* Solo administradores */}
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>

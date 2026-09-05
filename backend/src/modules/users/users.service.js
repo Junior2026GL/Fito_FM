@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { AppError } from "../../shared/errors/app-error.js";
 import * as usersRepository from "./users.repository.js";
 
-export const createUser = async ({ name, username, email, password, role }) => {
+export const createUser = async ({ name, username, email, password, role, modules }) => {
   const emailConflict = await usersRepository.findByEmail(email);
   if (emailConflict) throw new AppError("El correo ya está en uso", 409);
 
@@ -10,7 +10,7 @@ export const createUser = async ({ name, username, email, password, role }) => {
   if (usernameConflict) throw new AppError("El nombre de usuario ya está en uso", 409);
 
   const passwordHash = await bcrypt.hash(password, 12);
-  return usersRepository.create({ name, username, email, passwordHash, role });
+  return usersRepository.create({ name, username, email, passwordHash, role, modules });
 };
 
 export const listUsers = async (query) => {

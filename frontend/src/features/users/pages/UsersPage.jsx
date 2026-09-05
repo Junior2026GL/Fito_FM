@@ -5,6 +5,7 @@ import {
   updateUser,
   toggleUserStatus
 } from "../services/users.service.js";
+import { AVAILABLE_MODULES } from "../../../config/modules.js";
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    Constantes
@@ -93,8 +94,8 @@ const UserModal = ({ user, onClose, onSaved, onCreated }) => {
   const isEditing = !!user;
   const [form, setForm] = useState(
     isEditing
-      ? { name: user.name, username: user.username, email: user.email, password: "", role: user.role }
-      : { name: "", username: "", email: "", password: "", role: "user" }
+      ? { name: user.name, username: user.username, email: user.email, password: "", role: user.role, modules: user.modules || [] }
+      : { name: "", username: "", email: "", password: "", role: "user", modules: ["diputados"] }
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -102,6 +103,15 @@ const UserModal = ({ user, onClose, onSaved, onCreated }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleModuleToggle = (moduleKey) => {
+    setForm((prev) => ({
+      ...prev,
+      modules: prev.modules.includes(moduleKey)
+        ? prev.modules.filter((m) => m !== moduleKey)
+        : [...prev.modules, moduleKey]
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -194,6 +204,29 @@ const UserModal = ({ user, onClose, onSaved, onCreated }) => {
               <option value="admin">Administrador</option>
             </select>
           </div>
+
+          {form.role === "admin" ? (
+            <div className="form-group">
+              <label className="form-label">Módulos</label>
+              <span className="form-hint">Los administradores tienen acceso a todos los módulos.</span>
+            </div>
+          ) : (
+            <div className="form-group">
+              <label className="form-label">Módulos con acceso</label>
+              <div className="module-checkbox-list">
+                {AVAILABLE_MODULES.map((m) => (
+                  <label key={m.key} className="module-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={form.modules.includes(m.key)}
+                      onChange={() => handleModuleToggle(m.key)}
+                    />
+                    {m.label}
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" onClick={onClose} disabled={loading}>

@@ -1800,6 +1800,30 @@ button {
   margin-top: 4px;
 }
 
+.module-checkbox-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.module-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  user-select: none;
+}
+
+.module-checkbox input {
+  cursor: pointer;
+}
+
 /* ============================================================
    CONFIRM MODAL
    ============================================================ */
