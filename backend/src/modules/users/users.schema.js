@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { AVAILABLE_MODULES } from "../../config/constants.js";
 
-const modulesSchema = z.array(z.enum(AVAILABLE_MODULES)).default([]);
+const modulesSchema = z.array(z.string().trim().min(1).max(50)).default([]);
 
 export const listUsersSchema = z.object({
   body: z.object({}),

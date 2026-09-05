@@ -5,7 +5,7 @@ import {
   updateUser,
   toggleUserStatus
 } from "../services/users.service.js";
-import { AVAILABLE_MODULES } from "../../../config/modules.js";
+import { getModules } from "../services/modules.service.js";
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    Constantes
@@ -87,15 +87,62 @@ const PasswordField = ({ id, name, value, onChange, required = false }) => {
   );
 };
 
+const IconModuleDefault = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" />
+    <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
+  </svg>
+);
+
+const MODULE_ICONS = {
+  diputados: () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
+      <line x1="8" y1="2" x2="8" y2="18" /><line x1="16" y1="6" x2="16" y2="22" />
+    </svg>
+  )
+};
+
+/**
+ * Lista de módulos con switches. Si `readOnly` es true, todos aparecen
+ * activados y deshabilitados (caso de administradores con acceso total).
+ */
+const ModulePermissionList = ({ modules, selected, onToggle, readOnly = false }) => (
+  <div className="module-permission-list">
+    {modules.map((m) => {
+      const Icon = MODULE_ICONS[m.key] || IconModuleDefault;
+      const checked = readOnly ? true : selected.includes(m.key);
+      return (
+        <div key={m.key} className={`module-permission-item${readOnly ? " is-readonly" : ""}`}>
+          <span className="module-permission-icon"><Icon /></span>
+          <div className="module-permission-text">
+            <span className="module-permission-title">{m.label}</span>
+            <span className="module-permission-desc">{m.description}</span>
+          </div>
+          <label className="toggle-switch">
+            <input
+              type="checkbox"
+              checked={checked}
+              disabled={readOnly}
+              onChange={() => onToggle?.(m.key)}
+            />
+            <span className="toggle-switch-track" />
+          </label>
+        </div>
+      );
+    })}
+  </div>
+);
+
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    Modal crear / editar
 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-const UserModal = ({ user, onClose, onSaved, onCreated }) => {
+const UserModal = ({ user, modules, onClose, onSaved, onCreated }) => {
   const isEditing = !!user;
   const [form, setForm] = useState(
     isEditing
       ? { name: user.name, username: user.username, email: user.email, password: "", role: user.role, modules: user.modules || [] }
-      : { name: "", username: "", email: "", password: "", role: "user", modules: ["diputados"] }
+      : { name: "", username: "", email: "", password: "", role: "user", modules: [] }
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -209,30 +256,13 @@ const UserModal = ({ user, onClose, onSaved, onCreated }) => {
             <div className="form-group">
               <label className="form-label">Módulos</label>
               <span className="form-hint">Los administradores tienen acceso a todos los módulos.</span>
-              <div className="module-checkbox-list">
-                {AVAILABLE_MODULES.map((m) => (
-                  <label key={m.key} className="module-checkbox module-checkbox-disabled">
-                    <input type="checkbox" checked disabled />
-                    {m.label}
-                  </label>
-                ))}
-              </div>
+              <ModulePermissionList modules={modules} selected={modules.map((m) => m.key)} readOnly />
             </div>
           ) : (
             <div className="form-group">
               <label className="form-label">Módulos con acceso</label>
-              <div className="module-checkbox-list">
-                {AVAILABLE_MODULES.map((m) => (
-                  <label key={m.key} className="module-checkbox">
-                    <input
-                      type="checkbox"
-                      checked={form.modules.includes(m.key)}
-                      onChange={() => handleModuleToggle(m.key)}
-                    />
-                    {m.label}
-                  </label>
-                ))}
-              </div>
+              <span className="form-hint">Elige qué secciones podrá ver este usuario al iniciar sesión.</span>
+              <ModulePermissionList modules={modules} selected={form.modules} onToggle={handleModuleToggle} />
             </div>
           )}
 
@@ -321,6 +351,7 @@ export const UsersPage = () => {
   const [meta, setMeta] = useState({ total: 0, page: 1, limit: 20, totalPages: 1, stats: null });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [modules, setModules] = useState([]);
 
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
@@ -354,6 +385,7 @@ export const UsersPage = () => {
 
   useEffect(() => { fetchUsers(); }, [fetchUsers]);
   useEffect(() => { setPage(1); }, [search, roleFilter, activeFilter]);
+  useEffect(() => { getModules().then(setModules).catch(() => {}); }, []);
 
   const handleSearchInput = (e) => {
     const val = e.target.value;
@@ -408,10 +440,10 @@ export const UsersPage = () => {
       {toast && <div className="toast" role="status">{toast}</div>}
 
       {modal?.type === "create" && (
-        <UserModal onClose={() => setModal(null)} onCreated={handleCreated} onSaved={() => {}} />
+        <UserModal modules={modules} onClose={() => setModal(null)} onCreated={handleCreated} onSaved={() => {}} />
       )}
       {modal?.type === "edit" && (
-        <UserModal user={modal.user} onClose={() => setModal(null)} onSaved={handleSaved} onCreated={() => {}} />
+        <UserModal user={modal.user} modules={modules} onClose={() => setModal(null)} onSaved={handleSaved} onCreated={() => {}} />
       )}
       {modal?.type === "confirm" && (
         <ConfirmModal user={modal.user} onClose={() => setModal(null)} onConfirm={handleToggleConfirm} />
@@ -531,7 +563,7 @@ export const UsersPage = () => {
                         ? "Todos"
                         : user.modules?.length
                           ? user.modules
-                              .map((key) => AVAILABLE_MODULES.find((m) => m.key === key)?.label ?? key)
+                              .map((key) => modules.find((m) => m.key === key)?.label ?? key)
                               .join(", ")
                           : "Sin acceso"}
                     </td>

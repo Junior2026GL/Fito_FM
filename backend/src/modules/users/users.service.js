@@ -1,6 +1,16 @@
 import bcrypt from "bcryptjs";
 import { AppError } from "../../shared/errors/app-error.js";
 import * as usersRepository from "./users.repository.js";
+import * as modulesRepository from "../modules/modules.repository.js";
+
+const validateModules = async (modules) => {
+  if (!modules?.length) return;
+  const validKeys = await modulesRepository.findAllKeys();
+  const invalid = modules.filter((m) => !validKeys.includes(m));
+  if (invalid.length) {
+    throw new AppError(`Módulo(s) inválido(s): ${invalid.join(", ")}`, 400);
+  }
+};
 
 export const createUser = async ({ name, username, email, password, role, modules }) => {
   const emailConflict = await usersRepository.findByEmail(email);
@@ -8,6 +18,8 @@ export const createUser = async ({ name, username, email, password, role, module
 
   const usernameConflict = await usersRepository.findByUsername(username);
   if (usernameConflict) throw new AppError("El nombre de usuario ya está en uso", 409);
+
+  await validateModules(modules);
 
   const passwordHash = await bcrypt.hash(password, 12);
   return usersRepository.create({ name, username, email, passwordHash, role, modules });
@@ -38,6 +50,8 @@ export const updateUser = async (id, data) => {
     const conflict = await usersRepository.findByUsername(data.username, id);
     if (conflict) throw new AppError("El nombre de usuario ya está en uso", 409);
   }
+
+  await validateModules(data.modules);
 
   return usersRepository.update(id, data);
 };

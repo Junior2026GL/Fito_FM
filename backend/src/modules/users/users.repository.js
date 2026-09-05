@@ -1,5 +1,31 @@
 import { pool } from "../../infrastructure/database/connection.js";
+import { withTransaction } from "../../infrastructure/database/transaction.js";
 import { getPagination } from "../../shared/utils/pagination.js";
+
+const MODULES_SUBQUERY = `
+  COALESCE(
+    (SELECT JSON_ARRAYAGG(m.\`key\`)
+     FROM user_modules um
+     JOIN modules m ON m.id = um.module_id
+     WHERE um.user_id = u.id),
+    JSON_ARRAY()
+  ) AS modules
+`;
+
+const setUserModules = async (connection, userId, moduleKeys) => {
+  await connection.execute("DELETE FROM user_modules WHERE user_id = ?", [userId]);
+
+  if (!moduleKeys?.length) return;
+
+  const [rows] = await connection.query(
+    `SELECT id, \`key\` FROM modules WHERE \`key\` IN (?)`,
+    [moduleKeys]
+  );
+  if (!rows.length) return;
+
+  const values = rows.map((m) => [userId, m.id]);
+  await connection.query("INSERT INTO user_modules (user_id, module_id) VALUES ?", [values]);
+};
 
 export const findAll = async ({ page, limit, search, role, active }) => {
   const { page: parsedPage, limit: parsedLimit, offset } = getPagination(page, limit);
@@ -31,10 +57,11 @@ export const findAll = async ({ page, limit, search, role, active }) => {
 
   const [rows] = await pool.query(
     `SELECT
-       id, name, username, email, role, modules, is_active, created_at, updated_at
+       u.id, u.name, u.username, u.email, u.role, ${MODULES_SUBQUERY},
+       u.is_active, u.created_at, u.updated_at
      FROM users u
      ${where}
-     ORDER BY created_at DESC
+     ORDER BY u.created_at DESC
      LIMIT ${parsedLimit} OFFSET ${offset}`,
     params
   );
@@ -67,9 +94,11 @@ export const findAll = async ({ page, limit, search, role, active }) => {
 
 export const findById = async (id) => {
   const [rows] = await pool.execute(
-    `SELECT id, name, username, email, role, modules, is_active, created_at, updated_at
-     FROM users
-     WHERE id = ?
+    `SELECT
+       u.id, u.name, u.username, u.email, u.role, ${MODULES_SUBQUERY},
+       u.is_active, u.created_at, u.updated_at
+     FROM users u
+     WHERE u.id = ?
      LIMIT 1`,
     [id]
   );
@@ -97,20 +126,27 @@ export const findByUsername = async (username, excludeId = null) => {
 };
 
 export const update = async (id, { name, username, email, role, modules }) => {
-  await pool.execute(
-    `UPDATE users SET name = ?, username = ?, email = ?, role = ?, modules = ? WHERE id = ?`,
-    [name, username.toLowerCase(), email.toLowerCase(), role, JSON.stringify(modules ?? []), id]
-  );
+  await withTransaction(async (connection) => {
+    await connection.execute(
+      `UPDATE users SET name = ?, username = ?, email = ?, role = ? WHERE id = ?`,
+      [name, username.toLowerCase(), email.toLowerCase(), role, id]
+    );
+    await setUserModules(connection, id, modules);
+  });
   return findById(id);
 };
 
 export const create = async ({ name, username, email, passwordHash, role, modules }) => {
-  const [result] = await pool.execute(
-    `INSERT INTO users (name, username, email, password_hash, role, modules)
-     VALUES (?, ?, ?, ?, ?, ?)`,
-    [name, username.toLowerCase(), email.toLowerCase(), passwordHash, role, JSON.stringify(modules ?? [])]
-  );
-  return findById(result.insertId);
+  const id = await withTransaction(async (connection) => {
+    const [result] = await connection.execute(
+      `INSERT INTO users (name, username, email, password_hash, role)
+       VALUES (?, ?, ?, ?, ?)`,
+      [name, username.toLowerCase(), email.toLowerCase(), passwordHash, role]
+    );
+    await setUserModules(connection, result.insertId, modules);
+    return result.insertId;
+  });
+  return findById(id);
 };
 
 export const setActive = async (id, isActive) => {

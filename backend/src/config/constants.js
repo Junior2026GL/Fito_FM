@@ -1,8 +1,5 @@
 export const APP_NAME = "fito_fm";
 
-// Módulos que un admin puede asignar/revocar por usuario (aparte del rol)
-export const AVAILABLE_MODULES = Object.freeze(["diputados"]);
-
 export const HTTP_STATUS = Object.freeze({
   OK: 200,
   CREATED: 201,
