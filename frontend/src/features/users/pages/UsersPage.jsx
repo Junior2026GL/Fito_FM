@@ -558,14 +558,20 @@ export const UsersPage = () => {
                         {ROLE_LABEL[user.role] ?? user.role}
                       </span>
                     </td>
-                    <td className="text-muted">
-                      {user.role === "admin"
-                        ? "Todos"
-                        : user.modules?.length
-                          ? user.modules
-                              .map((key) => modules.find((m) => m.key === key)?.label ?? key)
-                              .join(", ")
-                          : "Sin acceso"}
+                    <td>
+                      {user.role === "admin" ? (
+                        <span className="module-chip module-chip-all">Todos</span>
+                      ) : user.modules?.length ? (
+                        <div className="module-chip-list">
+                          {user.modules.map((key) => (
+                            <span key={key} className="module-chip">
+                              {modules.find((m) => m.key === key)?.label ?? key}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="module-chip module-chip-empty">Sin acceso</span>
+                      )}
                     </td>
                     <td>
                       <span className={`badge ${user.is_active ? "badge-active" : "badge-inactive"}`}>
