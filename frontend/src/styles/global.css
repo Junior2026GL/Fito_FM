@@ -1824,6 +1824,16 @@ button {
   cursor: pointer;
 }
 
+.module-checkbox-disabled {
+  opacity: 0.6;
+  cursor: default;
+  background: #f8fafc;
+}
+
+.module-checkbox-disabled input {
+  cursor: default;
+}
+
 /* ============================================================
    CONFIRM MODAL
    ============================================================ */

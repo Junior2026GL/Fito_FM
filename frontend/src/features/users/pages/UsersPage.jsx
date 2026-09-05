@@ -39,7 +39,7 @@ const StatCard = ({ label, value, color, icon }) => (
 
 const SkeletonRow = () => (
   <tr>
-    {[200, 160, 80, 70, 90, 110].map((w, i) => (
+    {[200, 160, 80, 100, 70, 90, 110].map((w, i) => (
       <td key={i}><div className="skeleton" style={{ width: w, height: 14 }} /></td>
     ))}
   </tr>
@@ -209,6 +209,14 @@ const UserModal = ({ user, onClose, onSaved, onCreated }) => {
             <div className="form-group">
               <label className="form-label">Módulos</label>
               <span className="form-hint">Los administradores tienen acceso a todos los módulos.</span>
+              <div className="module-checkbox-list">
+                {AVAILABLE_MODULES.map((m) => (
+                  <label key={m.key} className="module-checkbox module-checkbox-disabled">
+                    <input type="checkbox" checked disabled />
+                    {m.label}
+                  </label>
+                ))}
+              </div>
             </div>
           ) : (
             <div className="form-group">
@@ -476,6 +484,7 @@ export const UsersPage = () => {
                 <th>Nombre / Usuario</th>
                 <th>Correo</th>
                 <th>Rol</th>
+                <th>Módulos</th>
                 <th>Estado</th>
                 <th>Registrado</th>
                 <th>Acciones</th>
@@ -486,7 +495,7 @@ export const UsersPage = () => {
                 [...Array(5)].map((_, i) => <SkeletonRow key={i} />)
               ) : users.length === 0 ? (
                 <tr>
-                  <td colSpan={6}>
+                  <td colSpan={7}>
                     <div className="empty-state">
                       <div className="empty-state-icon">ðŸ‘¥</div>
                       <p className="empty-state-title">Sin usuarios</p>
@@ -516,6 +525,15 @@ export const UsersPage = () => {
                       <span className={`badge badge-${user.role}`}>
                         {ROLE_LABEL[user.role] ?? user.role}
                       </span>
+                    </td>
+                    <td className="text-muted">
+                      {user.role === "admin"
+                        ? "Todos"
+                        : user.modules?.length
+                          ? user.modules
+                              .map((key) => AVAILABLE_MODULES.find((m) => m.key === key)?.label ?? key)
+                              .join(", ")
+                          : "Sin acceso"}
                     </td>
                     <td>
                       <span className={`badge ${user.is_active ? "badge-active" : "badge-inactive"}`}>
