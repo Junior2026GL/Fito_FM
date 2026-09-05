@@ -270,13 +270,15 @@ button {
 }
 
 .btn-primary {
-  background: #2563eb;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   color: #ffffff;
-  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #1d4ed8;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
 }
 
 .btn-secondary {
@@ -740,7 +742,7 @@ button {
 }
 
 .page-title {
-  font-size: 1.5rem;
+  font-size: 1.625rem;
   font-weight: 900;
   color: #0f172a;
   margin: 0;
@@ -760,46 +762,53 @@ button {
   gap: 10px;
   flex-wrap: wrap;
   margin-bottom: 16px;
+  background: #ffffff;
+  border: 1px solid #e4e8f0;
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: 0 1px 3px rgba(20, 32, 58, 0.04);
 }
 
 .search-input {
   flex: 1;
   min-width: 220px;
   padding: 9px 14px 9px 38px;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid transparent;
   border-radius: 10px;
   font-size: 0.875rem;
   color: #0f172a;
-  background: #fff;
+  background-color: #f8fafc;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: 12px center;
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
 }
 
 .search-input:focus {
+  background-color: #ffffff;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
 
 .select-filter {
   padding: 9px 36px 9px 12px;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid transparent;
   border-radius: 10px;
   font-size: 0.875rem;
   color: #374151;
-  background: #fff;
+  background-color: #f8fafc;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
   cursor: pointer;
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
 }
 
 .select-filter:focus {
+  background-color: #ffffff;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
@@ -826,7 +835,7 @@ button {
 }
 
 .data-table th {
-  padding: 12px 16px;
+  padding: 13px 16px;
   text-align: left;
   font-size: 0.7rem;
   font-weight: 800;
@@ -838,7 +847,7 @@ button {
 }
 
 .data-table td {
-  padding: 14px 16px;
+  padding: 16px;
   border-bottom: 1px solid #f1f5f9;
   color: #374151;
   vertical-align: middle;
@@ -848,8 +857,46 @@ button {
   border-bottom: none;
 }
 
+.data-table tbody tr {
+  transition: background 0.1s;
+}
+
 .data-table tbody tr:hover td {
-  background: #fafbfd;
+  background: #f8fafc;
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+}
+
+.user-name {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 0.875rem;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 500;
 }
 
 .table-empty {
@@ -1116,23 +1163,24 @@ button {
 .stat-card {
   background: #ffffff;
   border: 1px solid #e4e8f0;
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 18px 20px;
   display: flex;
   align-items: center;
   gap: 14px;
   box-shadow: 0 1px 3px rgba(20, 32, 58, 0.04);
-  transition: box-shadow 0.15s;
+  transition: box-shadow 0.15s, transform 0.15s;
 }
 
 .stat-card:hover {
-  box-shadow: 0 4px 12px rgba(20, 32, 58, 0.08);
+  box-shadow: 0 8px 20px rgba(20, 32, 58, 0.1);
+  transform: translateY(-2px);
 }
 
 .stat-card-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
