@@ -8,6 +8,7 @@ import { LoginPage } from "../features/auth/pages/LoginPage.jsx";
 import { UsersPage } from "../features/users/pages/UsersPage.jsx";
 import { DiputadosPage } from "../features/diputados/pages/DiputadosPage.jsx";
 import { DashboardPage } from "../features/dashboard/pages/DashboardPage.jsx";
+import { AuditoriaPage } from "../features/auditoria/pages/AuditoriaPage.jsx";
 
 export const AppRoutes = () => (
   <Routes>
@@ -27,6 +28,11 @@ export const AppRoutes = () => (
         {/* Requiere el módulo "diputados" */}
         <Route element={<ProtectedRoute requiredModule="diputados" />}>
           <Route path="/diputados" element={<DiputadosPage />} />
+        </Route>
+
+        {/* Requiere el módulo "auditoria" */}
+        <Route element={<ProtectedRoute requiredModule="auditoria" />}>
+          <Route path="/auditoria" element={<AuditoriaPage />} />
         </Route>
 
         {/* Solo administradores */}
