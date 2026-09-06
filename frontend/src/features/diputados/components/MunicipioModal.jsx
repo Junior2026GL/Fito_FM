@@ -173,12 +173,7 @@ export const MunicipioModal = ({ municipio, onClose }) => {
               {/* Fila de posiciones */}
               <div className="casillas-pos-row">
                 {votos.map((_, idx) => (
-                  <div
-                    key={idx}
-                    className={`casilla-pos-box${
-                      idx === 0 ? " casilla-pos-gold" : idx === 1 ? " casilla-pos-silver" : idx === 2 ? " casilla-pos-bronze" : ""
-                    }`}
-                  >
+                  <div key={idx} className="casilla-pos-box">
                     {idx + 1}
                   </div>
                 ))}
