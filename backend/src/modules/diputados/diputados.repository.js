@@ -2,12 +2,19 @@ import { pool } from "../../infrastructure/database/connection.js";
 
 export const getMunicipios = async () => {
   const [rows] = await pool.execute(
+    // Carga Electoral se repite en cada urna de un mismo centro/grupo, por eso se deduplica antes de sumar
     `SELECT
-       Municipio           AS municipio,
-       SUM(\`Carga Electoral\`) AS carga_electoral
-     FROM dip_fito_fm
-     GROUP BY Municipio
-     ORDER BY Municipio`
+       municipio,
+       SUM(carga_electoral) AS carga_electoral
+     FROM (
+       SELECT DISTINCT
+         Municipio               AS municipio,
+         \`Centro de Votación\`    AS centro,
+         \`Carga Electoral\`       AS carga_electoral
+       FROM dip_fito_fm
+     ) t
+     GROUP BY municipio
+     ORDER BY municipio`
   );
   return rows;
 };
@@ -34,19 +41,37 @@ export const getMunicipio = async (municipio, ciudad) => {
     params.push(ciudad);
   }
 
-  const [rows] = await pool.execute(
+  const [[totales]] = await pool.execute(
     `SELECT
-       Municipio                                AS municipio,
-       SUM(\`Carga Electoral\`)                  AS carga_electoral,
-       COUNT(*)                                 AS total_jrv,
-       SUM(${sumaVotos})                        AS total_votos,
-       COUNT(DISTINCT \`Centro de Votación\`)    AS total_centros
+       COUNT(*)          AS total_jrv,
+       SUM(${sumaVotos}) AS total_votos
      FROM dip_fito_fm
-     WHERE Municipio = ? COLLATE utf8mb4_general_ci ${ciudadFilter}
-     GROUP BY Municipio`,
+     WHERE Municipio = ? COLLATE utf8mb4_general_ci ${ciudadFilter}`,
     params
   );
-  return rows[0] ?? null;
+
+  if (!totales || totales.total_jrv === 0) return null;
+
+  const [[cargaTotales]] = await pool.execute(
+    // Carga Electoral se repite en cada urna de un mismo centro/grupo, por eso se deduplica antes de sumar/contar
+    `SELECT
+       SUM(carga_electoral) AS carga_electoral,
+       COUNT(*)             AS total_centros
+     FROM (
+       SELECT DISTINCT \`Centro de Votación\` AS centro, \`Carga Electoral\` AS carga_electoral
+       FROM dip_fito_fm
+       WHERE Municipio = ? COLLATE utf8mb4_general_ci ${ciudadFilter}
+     ) t`,
+    params
+  );
+
+  return {
+    municipio,
+    carga_electoral: cargaTotales.carga_electoral,
+    total_jrv: totales.total_jrv,
+    total_votos: totales.total_votos,
+    total_centros: cargaTotales.total_centros
+  };
 };
 
 export const getVotosByMunicipio = async (municipio, ciudad) => {
