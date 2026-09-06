@@ -66,6 +66,13 @@ const CheckCircleIcon = () => (
   </svg>
 );
 
+const ModulesIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" />
+    <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
+  </svg>
+);
+
 const EyeIcon = ({ open }) =>
   open ? (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -273,18 +280,20 @@ const UserModal = ({ user, modules, onClose, onSaved, onCreated }) => {
             </select>
           </div>
 
-          {form.role === "admin" ? (
-            <div className="form-group">
-              <label className="form-label">Módulos</label>
-              <span className="form-hint">Los administradores tienen acceso a todos los módulos.</span>
-              <ModulePermissionList modules={modules} selected={modules.map((m) => m.key)} readOnly />
-            </div>
-          ) : (
-            <div className="form-group">
-              <label className="form-label">Módulos con acceso</label>
-              <span className="form-hint">Elige qué secciones podrá ver este usuario al iniciar sesión.</span>
-              <ModulePermissionList modules={modules} selected={form.modules} onToggle={handleModuleToggle} />
-            </div>
+          {!isEditing && (
+            form.role === "admin" ? (
+              <div className="form-group">
+                <label className="form-label">Módulos</label>
+                <span className="form-hint">Los administradores tienen acceso a todos los módulos.</span>
+                <ModulePermissionList modules={modules} selected={modules.map((m) => m.key)} readOnly />
+              </div>
+            ) : (
+              <div className="form-group">
+                <label className="form-label">Módulos con acceso</label>
+                <span className="form-hint">Elige qué secciones podrá ver este usuario al iniciar sesión.</span>
+                <ModulePermissionList modules={modules} selected={form.modules} onToggle={handleModuleToggle} />
+              </div>
+            )
           )}
 
           <div className="modal-footer">
@@ -303,9 +312,109 @@ const UserModal = ({ user, modules, onClose, onSaved, onCreated }) => {
   );
 };
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+/* ────────────────────────────────────────────────────────────
+   Modal asignar módulos
+──────────────────────────────────────────────────────────── */
+const ModulesModal = ({ user, modules, onClose, onSaved }) => {
+  const [selected, setSelected] = useState(user.modules || []);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const isAdmin = user.role === "admin";
+
+  const handleToggle = (moduleKey) => {
+    setSelected((prev) =>
+      prev.includes(moduleKey) ? prev.filter((m) => m !== moduleKey) : [...prev, moduleKey]
+    );
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      const res = await updateUser(user.id, {
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        modules: selected
+      });
+      onSaved(res.data);
+    } catch (err) {
+      setError(err.response?.data?.message || "Error al guardar los módulos");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const fn = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", fn);
+    return () => window.removeEventListener("keydown", fn);
+  }, [onClose]);
+
+  return (
+    <div
+      className="modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modules-modal-title"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div className="modal">
+        <div className="modal-header">
+          <h2 className="modal-title" id="modules-modal-title">Asignar módulos</h2>
+          <button className="modal-close" onClick={onClose} aria-label="Cerrar">&times;</button>
+        </div>
+
+        {error && (
+          <div className="alert alert-error">
+            <span className="alert-icon">!</span> {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <div className="modules-modal-user">
+            <Avatar name={user.name} />
+            <div>
+              <div className="user-name">{user.name}</div>
+              <div className="user-role">@{user.username}</div>
+            </div>
+          </div>
+
+          <div className="form-group">
+            {isAdmin ? (
+              <>
+                <span className="form-hint">Los administradores tienen acceso a todos los módulos.</span>
+                <ModulePermissionList modules={modules} selected={modules.map((m) => m.key)} readOnly />
+              </>
+            ) : (
+              <>
+                <span className="form-hint">Elige qué secciones podrá ver este usuario al iniciar sesión.</span>
+                <ModulePermissionList modules={modules} selected={selected} onToggle={handleToggle} />
+              </>
+            )}
+          </div>
+
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" onClick={onClose} disabled={loading}>
+              Cancelar
+            </button>
+            <button type="submit" className="btn btn-primary" disabled={loading || isAdmin}>
+              {loading
+                ? <><span className="spinner" /> Guardando...</>
+                : "Guardar módulos"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+/* ────────────────────────────────────────────────────────────
    Modal confirmación de cambio de estado
-â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+──────────────────────────────────────────────────────────── */
 const ConfirmModal = ({ user, onClose, onConfirm }) => {
   const [loading, setLoading] = useState(false);
   const deactivating = user.is_active;
@@ -445,6 +554,12 @@ export const UsersPage = () => {
     showToast("Usuario actualizado correctamente");
   };
 
+  const handleModulesSaved = (updatedUser) => {
+    setUsers((prev) => prev.map((u) => (u.id === updatedUser.id ? updatedUser : u)));
+    setModal(null);
+    showToast("Módulos actualizados correctamente");
+  };
+
   const handleCreated = () => {
     setModal(null);
     fetchUsers();
@@ -465,6 +580,9 @@ export const UsersPage = () => {
       )}
       {modal?.type === "edit" && (
         <UserModal user={modal.user} modules={modules} onClose={() => setModal(null)} onSaved={handleSaved} onCreated={() => {}} />
+      )}
+      {modal?.type === "modules" && (
+        <ModulesModal user={modal.user} modules={modules} onClose={() => setModal(null)} onSaved={handleModulesSaved} />
       )}
       {modal?.type === "confirm" && (
         <ConfirmModal user={modal.user} onClose={() => setModal(null)} onConfirm={handleToggleConfirm} />
@@ -609,6 +727,14 @@ export const UsersPage = () => {
                           aria-label={`Editar ${user.name}`}
                         >
                           <PencilIcon />
+                        </button>
+                        <button
+                          className="action-icon-btn action-icon-modules"
+                          onClick={() => setModal({ type: "modules", user })}
+                          title="Asignar módulos"
+                          aria-label={`Asignar módulos a ${user.name}`}
+                        >
+                          <ModulesIcon />
                         </button>
                         <button
                           className={`action-icon-btn ${user.is_active ? "action-icon-danger" : "action-icon-success"}`}
