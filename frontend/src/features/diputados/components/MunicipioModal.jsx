@@ -139,21 +139,6 @@ export const MunicipioModal = ({ municipio, onClose }) => {
           </div>
 
           <div className="modal-stat-card">
-            <div className="modal-stat-icon" style={{ background: "#fdf4ff", color: "#7c3aed" }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-              </svg>
-            </div>
-            <div className="modal-stat-body">
-              <span className="modal-stat-label">Total Marcas</span>
-              <span className="modal-stat-value" style={{ color: "#7c3aed" }}>
-                {cargando ? <span className="modal-stat-loading" /> : formatNum(datos?.total_votos)}
-              </span>
-              <span className="modal-stat-sub">Suma de votos de los 23 aspirantes</span>
-            </div>
-          </div>
-
-          <div className="modal-stat-card">
             <div className="modal-stat-icon" style={{ background: "#fff7ed", color: "#c2410c" }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -188,7 +173,12 @@ export const MunicipioModal = ({ municipio, onClose }) => {
               {/* Fila de posiciones */}
               <div className="casillas-pos-row">
                 {votos.map((_, idx) => (
-                  <div key={idx} className="casilla-pos-box">
+                  <div
+                    key={idx}
+                    className={`casilla-pos-box${
+                      idx === 0 ? " casilla-pos-gold" : idx === 1 ? " casilla-pos-silver" : idx === 2 ? " casilla-pos-bronze" : ""
+                    }`}
+                  >
                     {idx + 1}
                   </div>
                 ))}
