@@ -4,6 +4,7 @@ import { authRoutes } from "../modules/auth/auth.routes.js";
 import { usersRoutes } from "../modules/users/users.routes.js";
 import { diputadosRoutes } from "../modules/diputados/diputados.routes.js";
 import { modulesRoutes } from "../modules/modules/modules.routes.js";
+import { dashboardRoutes } from "../modules/dashboard/dashboard.routes.js";
 
 export const apiRouter = Router();
 
@@ -12,3 +13,5 @@ apiRouter.use("/auth", authRoutes);
 apiRouter.use("/users", usersRoutes);
 apiRouter.use("/diputados", diputadosRoutes);
 apiRouter.use("/modules", modulesRoutes);
+apiRouter.use("/dashboard", dashboardRoutes);
+

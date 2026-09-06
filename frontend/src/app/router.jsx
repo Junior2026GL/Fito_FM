@@ -7,6 +7,7 @@ import { NotFoundPage } from "../pages/NotFoundPage.jsx";
 import { LoginPage } from "../features/auth/pages/LoginPage.jsx";
 import { UsersPage } from "../features/users/pages/UsersPage.jsx";
 import { DiputadosPage } from "../features/diputados/pages/DiputadosPage.jsx";
+import { DashboardPage } from "../features/dashboard/pages/DashboardPage.jsx";
 
 export const AppRoutes = () => (
   <Routes>
@@ -17,6 +18,11 @@ export const AppRoutes = () => (
     <Route element={<ProtectedRoute />}>
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
+
+        {/* Requiere el módulo "dashboard" */}
+        <Route element={<ProtectedRoute requiredModule="dashboard" />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+        </Route>
 
         {/* Requiere el módulo "diputados" */}
         <Route element={<ProtectedRoute requiredModule="diputados" />}>
