@@ -45,6 +45,27 @@ const SkeletonRow = () => (
   </tr>
 );
 
+const PencilIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+    <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+  </svg>
+);
+
+const PowerIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18.36 6.64a9 9 0 1 1-12.73 0" />
+    <line x1="12" y1="2" x2="12" y2="12" />
+  </svg>
+);
+
+const CheckCircleIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+    <polyline points="22 4 12 14.01 9 11.01" />
+  </svg>
+);
+
 const EyeIcon = ({ open }) =>
   open ? (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -582,16 +603,20 @@ export const UsersPage = () => {
                     <td>
                       <div className="actions-cell">
                         <button
-                          className="btn btn-sm btn-secondary"
+                          className="action-icon-btn action-icon-edit"
                           onClick={() => setModal({ type: "edit", user })}
+                          title="Editar"
+                          aria-label={`Editar ${user.name}`}
                         >
-                          Editar
+                          <PencilIcon />
                         </button>
                         <button
-                          className={`btn btn-sm ${user.is_active ? "btn-danger" : "btn-success"}`}
+                          className={`action-icon-btn ${user.is_active ? "action-icon-danger" : "action-icon-success"}`}
                           onClick={() => setModal({ type: "confirm", user })}
+                          title={user.is_active ? "Desactivar" : "Activar"}
+                          aria-label={`${user.is_active ? "Desactivar" : "Activar"} ${user.name}`}
                         >
-                          {user.is_active ? "Desactivar" : "Activar"}
+                          {user.is_active ? <PowerIcon /> : <CheckCircleIcon />}
                         </button>
                       </div>
                     </td>

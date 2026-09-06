@@ -912,8 +912,56 @@ button {
 
 .actions-cell {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   align-items: center;
+}
+
+.action-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 9px;
+  background: #f1f5f9;
+  color: #475569;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+
+.action-icon-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.12);
+}
+
+.action-icon-btn:active {
+  transform: scale(0.94);
+}
+
+.action-icon-edit:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.action-icon-danger {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.action-icon-danger:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.action-icon-success {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.action-icon-success:hover {
+  background: #dcfce7;
+  color: #15803d;
 }
 
 /* ============================================================
