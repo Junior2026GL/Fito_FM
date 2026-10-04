@@ -58,11 +58,6 @@ export const LoginPage = () => {
             <img src={mascota} alt="Mascota La Gorra Azul" />
           </div>
         </div>
-
-        <div className="login-brand-copy">
-          <h1 className="login-brand-title">La Gorra Azul</h1>
-          <p className="login-brand-text">Plataforma de gestión y resultados electorales</p>
-        </div>
       </aside>
 
       {/* Lado derecho – formulario */}

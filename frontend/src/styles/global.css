@@ -656,25 +656,6 @@ button {
   object-fit: cover;
 }
 
-.login-brand-copy {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-}
-
-.login-brand-title {
-  margin: 0 0 6px;
-  font-size: 1.6rem;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-}
-
-.login-brand-text {
-  margin: 0;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
 /* ── Panel derecho ────────────────────────────────────── */
 .login-form-side {
   position: relative;
