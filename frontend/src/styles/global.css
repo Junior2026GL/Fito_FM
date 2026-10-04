@@ -93,12 +93,29 @@ button {
   text-overflow: ellipsis;
 }
 
-.topbar-user {
+.topbar-menu {
+  position: relative;
   margin-left: auto;
+}
+
+.topbar-user {
   display: flex;
   align-items: center;
   gap: 10px;
   min-width: 0;
+  padding: 6px 10px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.topbar-user:hover,
+.topbar-user[aria-expanded="true"] {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .topbar-avatar {
@@ -121,6 +138,7 @@ button {
 }
 
 .topbar-user-name {
+  display: block;
   font-size: 0.8125rem;
   font-weight: 700;
   color: #ffffff;
@@ -131,30 +149,74 @@ button {
 }
 
 .topbar-user-role {
+  display: block;
   font-size: 0.68rem;
   color: rgba(255, 255, 255, 0.55);
   font-weight: 500;
 }
 
-.topbar-logout {
+
+.topbar-chevron {
+  display: flex;
+  color: rgba(255, 255, 255, 0.6);
+  transition: transform 0.15s;
+}
+
+.topbar-chevron.open {
+  transform: rotate(180deg);
+}
+
+.topbar-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 220px;
+  padding: 6px;
+  background: #ffffff;
+  border: 1px solid #e4e8f0;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(11, 31, 77, 0.2);
+  animation: slideUp 0.15s ease;
+}
+
+.topbar-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #172033;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+
+.topbar-dropdown-item:hover {
+  background: #eef3fc;
+  color: #0e2460;
+}
+
+.topbar-dropdown-item.danger {
+  color: #b91c1c;
+}
+
+.topbar-dropdown-item.danger:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.checkbox-inline {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 36px;
-  padding: 0 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: transparent;
-  color: rgba(255, 255, 255, 0.8);
   font-size: 0.8125rem;
-  font-weight: 700;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
-}
-
-.topbar-logout:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
 }
 
 .page-container {
@@ -2283,83 +2345,6 @@ button {
   font-weight: 600;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.home-section-title {
-  margin: 28px 0 14px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #64748b;
-}
-
-.home-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-}
-
-.home-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 20px;
-  background: #ffffff;
-  border: 1px solid #e4e8f0;
-  border-radius: 16px;
-  text-decoration: none;
-  box-shadow: 0 1px 4px rgba(20, 32, 58, 0.04);
-  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
-}
-
-.home-card:hover {
-  transform: translateY(-2px);
-  border-color: #b9c9ec;
-  box-shadow: 0 8px 20px rgba(11, 31, 77, 0.1);
-}
-
-.home-card-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
-  flex-shrink: 0;
-  color: #0e2460;
-  background: #e8eefb;
-}
-
-.home-card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
-  min-width: 0;
-}
-
-.home-card-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #172033;
-}
-
-.home-card-text {
-  font-size: 0.8125rem;
-  line-height: 1.4;
-  color: #64748b;
-}
-
-.home-card-arrow {
-  color: #94a3b8;
-  font-size: 1.1rem;
-  transition: transform 0.15s, color 0.15s;
-}
-
-.home-card:hover .home-card-arrow {
-  color: #0e2460;
-  transform: translateX(3px);
 }
 
 @media (max-width: 768px) {

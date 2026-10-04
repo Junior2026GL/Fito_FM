@@ -26,3 +26,16 @@ export const findUserByUsername = async (username) => {
 
   return rows[0] || null;
 };
+
+export const findPasswordHashById = async (id) => {
+  const [rows] = await pool.execute(
+    "SELECT id, name, password_hash FROM users WHERE id = ? AND is_active = 1 LIMIT 1",
+    [id]
+  );
+
+  return rows[0] || null;
+};
+
+export const updatePasswordHash = async (id, passwordHash) => {
+  await pool.execute("UPDATE users SET password_hash = ? WHERE id = ?", [passwordHash, id]);
+};

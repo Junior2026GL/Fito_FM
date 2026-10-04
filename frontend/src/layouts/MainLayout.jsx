@@ -1,9 +1,12 @@
+import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/context/AuthContext.jsx";
 import { hasModuleAccess } from "../config/modules.js";
 import {
-  IconHome, IconUsers, IconMap, IconDashboard, IconAuditoria, IconLogout
+  IconHome, IconUsers, IconMap, IconDashboard, IconAuditoria, IconLogout,
+  IconKey, IconChevronDown
 } from "../components/icons.jsx";
+import { ChangePasswordModal } from "../components/ChangePasswordModal.jsx";
 import gorraLogo from "../assets/gorra.PNG";
 
 const PAGE_TITLES = {
@@ -19,6 +22,28 @@ export const MainLayout = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const pageTitle = PAGE_TITLES[pathname] ?? "Panel de administración";
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (!menuRef.current?.contains(event.target)) setMenuOpen(false);
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [menuOpen]);
 
   const handleLogout = () => {
     logout();
@@ -107,19 +132,52 @@ export const MainLayout = () => {
             <span className="topbar-eyebrow">Panel de administración</span>
             <span className="topbar-page">{pageTitle}</span>
           </div>
-          <div className="topbar-user">
-            <div className="topbar-avatar">{initials}</div>
-            <div className="topbar-user-info">
-              <div className="topbar-user-name">{user?.name}</div>
-              <div className="topbar-user-role">
-                {user?.role === "admin" ? "Administrador" : "Usuario"}
+          <div className="topbar-menu" ref={menuRef}>
+            <button
+              type="button"
+              className="topbar-user"
+              onClick={() => setMenuOpen((open) => !open)}
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
+            >
+              <span className="topbar-avatar">{initials}</span>
+              <span className="topbar-user-info">
+                <span className="topbar-user-name">{user?.name}</span>
+                <span className="topbar-user-role">
+                  {user?.role === "admin" ? "Administrador" : "Usuario"}
+                </span>
+              </span>
+              <span className={`topbar-chevron${menuOpen ? " open" : ""}`}>
+                <IconChevronDown />
+              </span>
+            </button>
+
+            {menuOpen && (
+              <div className="topbar-dropdown" role="menu">
+                <button
+                  type="button"
+                  className="topbar-dropdown-item"
+                  role="menuitem"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setPasswordModalOpen(true);
+                  }}
+                >
+                  <IconKey />
+                  Cambiar contraseña
+                </button>
+                <button
+                  type="button"
+                  className="topbar-dropdown-item danger"
+                  role="menuitem"
+                  onClick={handleLogout}
+                >
+                  <IconLogout />
+                  Salir
+                </button>
               </div>
-            </div>
+            )}
           </div>
-          <button className="topbar-logout" onClick={handleLogout} title="Cerrar sesión">
-            <IconLogout />
-            <span>Salir</span>
-          </button>
         </header>
 
         {/* ── CONTENT ── */}
@@ -129,6 +187,10 @@ export const MainLayout = () => {
           </div>
         </main>
       </div>
+
+      {passwordModalOpen && (
+        <ChangePasswordModal onClose={() => setPasswordModalOpen(false)} />
+      )}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { getAuditLogs } from "../services/auditoria.service.js";
 const ACTION_LABEL = {
   login: { label: "Inicio de sesión", className: "badge-active" },
   login_failed: { label: "Intento fallido", className: "badge-inactive" },
+  password_change: { label: "Cambio de contraseña", className: "badge-user" },
   create: { label: "Creación", className: "badge-admin" },
   update: { label: "Actualización", className: "badge-user" },
   activate: { label: "Activación", className: "badge-active" },
@@ -92,6 +93,7 @@ export const AuditoriaPage = () => {
           <option value="">Todas las acciones</option>
           <option value="login">Inicio de sesión</option>
           <option value="login_failed">Intento fallido</option>
+          <option value="password_change">Cambio de contraseña</option>
           <option value="create">Creación</option>
           <option value="update">Actualización</option>
           <option value="activate">Activación</option>

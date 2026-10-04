@@ -5,3 +5,7 @@ export const login = async (credentials) => {
   // Devuelve { token, user } directamente
   return response.data.data;
 };
+
+export const changePassword = async ({ currentPassword, newPassword }) => {
+  await api.post("/auth/change-password", { currentPassword, newPassword });
+};

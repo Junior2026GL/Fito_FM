@@ -10,3 +10,11 @@ export const login = asyncHandler(async (req, res) => {
     data: result
   });
 });
+
+export const changePassword = asyncHandler(async (req, res) => {
+  await authService.changePassword(req.user.sub, req.validated.body, { ip: req.ip });
+
+  return successResponse(res, {
+    message: "Contraseña actualizada correctamente"
+  });
+});

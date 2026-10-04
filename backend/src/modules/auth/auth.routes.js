@@ -1,8 +1,9 @@
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
-import { login } from "./auth.controller.js";
+import { login, changePassword } from "./auth.controller.js";
 import { validate } from "../../shared/middleware/validate.middleware.js";
-import { loginSchema } from "./auth.schema.js";
+import { loginSchema, changePasswordSchema } from "./auth.schema.js";
+import { requireAuth } from "../../shared/middleware/auth.middleware.js";
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
@@ -18,3 +19,4 @@ const loginLimiter = rateLimit({
 export const authRoutes = Router();
 
 authRoutes.post("/login", loginLimiter, validate(loginSchema), login);
+authRoutes.post("/change-password", requireAuth, validate(changePasswordSchema), changePassword);

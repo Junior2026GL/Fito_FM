@@ -48,3 +48,33 @@ export const login = async ({ username, password }, { ip } = {}) => {
     }
   };
 };
+
+export const changePassword = async (userId, { currentPassword, newPassword }, { ip } = {}) => {
+  const user = await authRepository.findPasswordHashById(userId);
+
+  if (!user) {
+    throw new AppError("Usuario no encontrado", 404);
+  }
+
+  const currentMatches = await bcrypt.compare(currentPassword, user.password_hash);
+
+  if (!currentMatches) {
+    throw new AppError("La contraseña actual es incorrecta", 400);
+  }
+
+  if (currentPassword === newPassword) {
+    throw new AppError("La nueva contraseña debe ser diferente a la actual", 400);
+  }
+
+  const newHash = await bcrypt.hash(newPassword, 12);
+  await authRepository.updatePasswordHash(user.id, newHash);
+
+  await auditoriaService.logEvent({
+    action: "password_change",
+    entity: "users",
+    entityId: String(user.id),
+    userId: user.id,
+    userName: user.name,
+    ipAddress: ip
+  });
+};
