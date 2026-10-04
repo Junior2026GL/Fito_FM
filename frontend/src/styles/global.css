@@ -3614,7 +3614,7 @@ button {
 .app-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
   padding: 14px 32px;
@@ -3640,16 +3640,9 @@ button {
   object-fit: contain;
 }
 
-.app-footer-meta {
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: #94a3b8;
-}
-
 @media (max-width: 768px) {
   .app-footer {
     padding: 14px 16px;
-    justify-content: center;
     text-align: center;
   }
 }
