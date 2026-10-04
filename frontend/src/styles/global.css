@@ -209,16 +209,6 @@ button {
   color: #b91c1c;
 }
 
-.checkbox-inline {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: #475569;
-  cursor: pointer;
-}
-
 .page-container {
   width: min(1180px, calc(100% - 48px));
   margin: 32px auto;
@@ -2357,4 +2347,314 @@ button {
   .topbar-user-info {
     display: none;
   }
+}
+
+/* ============================================================
+   MODAL – CAMBIAR CONTRASEÑA
+   ============================================================ */
+.pw-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(7, 18, 50, 0.55);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.15s ease;
+}
+
+.pw-modal {
+  width: min(440px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 28px 70px rgba(7, 18, 50, 0.35);
+  animation: slideUp 0.2s ease;
+}
+
+.pw-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 24px;
+  color: #ffffff;
+  background: linear-gradient(120deg, #0b1f4d 0%, #123a8f 100%);
+}
+
+.pw-header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.pw-header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.pw-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.pw-subtitle {
+  margin: 3px 0 0;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.pw-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  transition: background 0.15s, color 0.15s;
+}
+
+.pw-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.pw-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px;
+}
+
+.pw-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.pw-alert svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.pw-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.pw-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.pw-input-wrap {
+  position: relative;
+}
+
+.pw-input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.pw-input {
+  width: 100%;
+  height: 46px;
+  padding: 0 46px 0 42px;
+  border: 1.5px solid #dbe3f0;
+  border-radius: 12px;
+  font-size: 0.9375rem;
+  color: #0f172a;
+  background: #f8fafd;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.pw-input:focus {
+  border-color: #123a8f;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(18, 58, 143, 0.14);
+}
+
+.pw-input-wrap:focus-within .pw-input-icon {
+  color: #123a8f;
+}
+
+.pw-input-eye {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #94a3b8;
+  transition: color 0.15s, background 0.15s;
+}
+
+.pw-input-eye:hover {
+  color: #0e2460;
+  background: #eef3fc;
+}
+
+.pw-hint {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.pw-strength {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pw-strength-bars {
+  display: flex;
+  flex: 1;
+  gap: 5px;
+}
+
+.pw-strength-bar {
+  flex: 1;
+  height: 5px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  transition: background 0.2s;
+}
+
+.pw-strength-bar.weak { background: #ef4444; }
+.pw-strength-bar.medium { background: #f59e0b; }
+.pw-strength-bar.strong { background: #16a34a; }
+
+.pw-strength-label {
+  min-width: 70px;
+  text-align: right;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.pw-strength-label.weak { color: #dc2626; }
+.pw-strength-label.medium { color: #d97706; }
+.pw-strength-label.strong { color: #15803d; }
+
+.pw-match {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.pw-match.ok { color: #15803d; }
+.pw-match.bad { color: #dc2626; }
+
+.pw-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+  padding-top: 20px;
+  border-top: 1px solid #eef1f6;
+}
+
+.pw-btn {
+  height: 42px;
+  padding: 0 20px;
+  border-radius: 11px;
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s, opacity 0.15s;
+}
+
+.pw-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.pw-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.pw-btn-secondary {
+  color: #334155;
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+}
+
+.pw-btn-secondary:hover {
+  background: #e8edf5;
+}
+
+.pw-btn-primary {
+  color: #ffffff;
+  background: linear-gradient(120deg, #0b1f4d 0%, #123a8f 100%);
+  box-shadow: 0 4px 12px rgba(11, 31, 77, 0.28);
+}
+
+.pw-btn-primary:hover:not(:disabled) {
+  box-shadow: 0 6px 16px rgba(11, 31, 77, 0.38);
+  filter: brightness(1.1);
+}
+
+.pw-success {
+  align-items: center;
+  text-align: center;
+  padding: 36px 28px 28px;
+}
+
+.pw-success-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.pw-success-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.pw-success-text {
+  margin: 0 0 8px;
+  max-width: 320px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #64748b;
 }
