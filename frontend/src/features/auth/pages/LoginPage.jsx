@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 import { login } from "../services/auth.service.js";
 import { DialogError } from "../../../components/Dialog.jsx";
 import { PasswordField, TextField } from "../../../components/DialogFields.jsx";
-import { IconAuditoria, IconLogIn, IconMap, IconUser } from "../../../components/icons.jsx";
+import { IconLogIn, IconUser } from "../../../components/icons.jsx";
 import logoGorra from "../../../assets/gorra.PNG";
 import mascota from "../../../assets/animado.PNG";
 
@@ -53,25 +53,9 @@ export const LoginPage = () => {
         <div className="login-deco login-deco-2" />
         <div className="login-deco login-deco-3" />
 
-        <div className="login-brand-top">
-          <span className="login-brand-mark">
-            <img src={logoGorra} alt="" />
-          </span>
-          <span className="login-brand-name">FITO</span>
-        </div>
-
         <div className="login-mascot-stage">
           <div className="login-mascot-card">
             <img src={mascota} alt="Mascota La Gorra Azul" />
-          </div>
-
-          <div className="login-chip login-chip-1">
-            <span className="login-chip-icon"><IconMap /></span>
-            Resultados por municipio
-          </div>
-          <div className="login-chip login-chip-2">
-            <span className="login-chip-icon"><IconAuditoria /></span>
-            Auditoría del sistema
           </div>
         </div>
 
@@ -89,7 +73,7 @@ export const LoginPage = () => {
 
         <div className="login-form-box">
           <p className="login-eyebrow">Panel de administración</p>
-          <h2 className="login-title">Bienvenido de vuelta</h2>
+          <h2 className="login-title">Acceso al sistema</h2>
           <p className="login-subtitle">Ingresa tus credenciales para continuar.</p>
 
           <DialogError message={error} />
