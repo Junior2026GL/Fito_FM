@@ -186,6 +186,17 @@ export const MainLayout = () => {
             <Outlet />
           </div>
         </main>
+
+        {/* ── FOOTER ── */}
+        <footer className="app-footer">
+          <div className="app-footer-brand">
+            <img src={gorraLogo} alt="" className="app-footer-logo" />
+            <span>
+              © {new Date().getFullYear()} <strong>fito_fm</strong> · Todos los derechos reservados
+            </span>
+          </div>
+          <span className="app-footer-meta">Panel de administración</span>
+        </footer>
       </div>
 
       {passwordModalOpen && (
