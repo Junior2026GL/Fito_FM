@@ -217,3 +217,17 @@ export const IconChevronRight = () => (
     <polyline points="9 18 15 12 9 6" />
   </svg>
 );
+
+export const IconChevronsLeft = () => (
+  <svg {...strokeProps}>
+    <polyline points="11 17 6 12 11 7" />
+    <polyline points="18 17 13 12 18 7" />
+  </svg>
+);
+
+export const IconChevronsRight = () => (
+  <svg {...strokeProps}>
+    <polyline points="13 17 18 12 13 7" />
+    <polyline points="6 17 11 12 6 7" />
+  </svg>
+);

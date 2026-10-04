@@ -8,6 +8,8 @@ import {
   IconCheck,
   IconChevronLeft,
   IconChevronRight,
+  IconChevronsLeft,
+  IconChevronsRight,
   IconClock,
   IconEdit,
   IconFilter,
@@ -21,6 +23,8 @@ import {
   IconUsers,
   IconXCircle
 } from "../../../components/icons.jsx";
+
+const PAGE_SIZE = 20;
 
 const ACTIONS = {
   login: { label: "Inicio de sesión", icon: IconLogIn, tone: "green" },
@@ -67,7 +71,7 @@ const getInitial = (name) => (name ? name.trim().charAt(0).toUpperCase() : "?");
 
 export const AuditoriaPage = () => {
   const [logs, setLogs] = useState([]);
-  const [meta, setMeta] = useState({ total: 0, page: 1, limit: 20, totalPages: 1 });
+  const [meta, setMeta] = useState({ total: 0, page: 1, limit: PAGE_SIZE, totalPages: 1 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -83,7 +87,7 @@ export const AuditoriaPage = () => {
     setLoading(true);
     setError("");
     try {
-      const result = await getAuditLogs({ page, limit: 20, search, action: actionFilter, entity: entityFilter });
+      const result = await getAuditLogs({ page, limit: PAGE_SIZE, search, action: actionFilter, entity: entityFilter });
       setLogs(result.data);
       setMeta(result.meta);
     } catch {
@@ -114,6 +118,7 @@ export const AuditoriaPage = () => {
     setEntityFilter("");
   };
 
+  const totalPages = Math.max(1, meta.totalPages);
   const rangeStart = meta.total === 0 ? 0 : (meta.page - 1) * meta.limit + 1;
   const rangeEnd = Math.min(meta.page * meta.limit, meta.total);
 
@@ -266,48 +271,66 @@ export const AuditoriaPage = () => {
             </table>
           </div>
 
-          {!loading && meta.total > 0 && (
+          {!loading && (
             <div className="audit-footer">
               <span className="audit-footer-info">
                 Mostrando <strong>{rangeStart}–{rangeEnd}</strong> de <strong>{meta.total}</strong> eventos
               </span>
 
-              {meta.totalPages > 1 && (
-                <div className="pagination-controls">
-                  <button
-                    className="page-btn"
-                    onClick={() => setPage((p) => p - 1)}
-                    disabled={page <= 1}
-                    aria-label="Página anterior"
-                  >
-                    <IconChevronLeft />
-                  </button>
-                  {Array.from({ length: meta.totalPages }, (_, i) => i + 1)
-                    .filter((p) => p === 1 || p === meta.totalPages || Math.abs(p - page) <= 1)
-                    .reduce((acc, p, i, arr) => {
-                      if (i > 0 && p - arr[i - 1] > 1) acc.push("…");
-                      acc.push(p);
-                      return acc;
-                    }, [])
-                    .map((p, i) =>
-                      p === "…" ? (
-                        <span key={`e${i}`} className="page-ellipsis">…</span>
-                      ) : (
-                        <button key={p} className={`page-btn${page === p ? " active" : ""}`} onClick={() => setPage(p)}>
-                          {p}
-                        </button>
-                      )
-                    )}
-                  <button
-                    className="page-btn"
-                    onClick={() => setPage((p) => p + 1)}
-                    disabled={page >= meta.totalPages}
-                    aria-label="Página siguiente"
-                  >
-                    <IconChevronRight />
-                  </button>
-                </div>
-              )}
+              <div className="pagination-controls">
+                <button
+                  className="page-btn"
+                  onClick={() => setPage(1)}
+                  disabled={page <= 1}
+                  aria-label="Primera página"
+                >
+                  <IconChevronsLeft />
+                </button>
+                <button
+                  className="page-btn"
+                  onClick={() => setPage((p) => p - 1)}
+                  disabled={page <= 1}
+                  aria-label="Página anterior"
+                >
+                  <IconChevronLeft />
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter((p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
+                  .reduce((acc, p, i, arr) => {
+                    if (i > 0 && p - arr[i - 1] > 1) acc.push("…");
+                    acc.push(p);
+                    return acc;
+                  }, [])
+                  .map((p, i) =>
+                    p === "…" ? (
+                      <span key={`e${i}`} className="page-ellipsis">…</span>
+                    ) : (
+                      <button key={p} className={`page-btn${page === p ? " active" : ""}`} onClick={() => setPage(p)}>
+                        {p}
+                      </button>
+                    )
+                  )}
+                <button
+                  className="page-btn"
+                  onClick={() => setPage((p) => p + 1)}
+                  disabled={page >= totalPages}
+                  aria-label="Página siguiente"
+                >
+                  <IconChevronRight />
+                </button>
+                <button
+                  className="page-btn"
+                  onClick={() => setPage(totalPages)}
+                  disabled={page >= totalPages}
+                  aria-label="Última página"
+                >
+                  <IconChevronsRight />
+                </button>
+              </div>
+
+              <span className="audit-footer-page">
+                Pág. <strong>{page}</strong> / {totalPages}
+              </span>
             </div>
           )}
         </div>
