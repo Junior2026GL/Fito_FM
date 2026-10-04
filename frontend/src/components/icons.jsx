@@ -231,3 +231,48 @@ export const IconChevronsRight = () => (
     <polyline points="6 17 11 12 6 7" />
   </svg>
 );
+
+export const IconUser = () => (
+  <svg {...strokeProps}>
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </svg>
+);
+
+export const IconMail = () => (
+  <svg {...strokeProps}>
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <polyline points="22 6 12 13 2 6" />
+  </svg>
+);
+
+export const IconAt = () => (
+  <svg {...strokeProps}>
+    <circle cx="12" cy="12" r="4" />
+    <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94" />
+  </svg>
+);
+
+export const IconPower = () => (
+  <svg {...strokeProps}>
+    <path d="M18.36 6.64a9 9 0 1 1-12.73 0" />
+    <line x1="12" y1="2" x2="12" y2="12" />
+  </svg>
+);
+
+export const IconGrid = () => (
+  <svg {...strokeProps}>
+    <rect x="3" y="3" width="7" height="7" rx="1.5" />
+    <rect x="14" y="3" width="7" height="7" rx="1.5" />
+    <rect x="3" y="14" width="7" height="7" rx="1.5" />
+    <rect x="14" y="14" width="7" height="7" rx="1.5" />
+  </svg>
+);
+
+export const IconAlertTriangle = () => (
+  <svg {...strokeProps}>
+    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+    <line x1="12" y1="9" x2="12" y2="13" />
+    <line x1="12" y1="17" x2="12.01" y2="17" />
+  </svg>
+);

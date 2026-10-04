@@ -6,10 +6,6 @@ import {
   IconAuditoria,
   IconBan,
   IconCheck,
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronsLeft,
-  IconChevronsRight,
   IconClock,
   IconEdit,
   IconFilter,
@@ -23,6 +19,7 @@ import {
   IconUsers,
   IconXCircle
 } from "../../../components/icons.jsx";
+import { TablePagination } from "../../../components/TablePagination.jsx";
 
 const PAGE_SIZE = 20;
 
@@ -118,34 +115,30 @@ export const AuditoriaPage = () => {
     setEntityFilter("");
   };
 
-  const totalPages = Math.max(1, meta.totalPages);
-  const rangeStart = meta.total === 0 ? 0 : (meta.page - 1) * meta.limit + 1;
-  const rangeEnd = Math.min(meta.page * meta.limit, meta.total);
-
   return (
     <>
-      <div className="audit-header">
-        <div className="audit-header-main">
-          <span className="audit-header-icon"><IconAuditoria /></span>
+      <div className="dt-header">
+        <div className="dt-header-main">
+          <span className="dt-header-icon"><IconAuditoria /></span>
           <div>
             <h1 className="page-title">Auditoría</h1>
             <p className="page-subtitle">Bitácora de acciones realizadas en el sistema</p>
           </div>
         </div>
-        <div className="audit-header-actions">
+        <div className="dt-header-actions">
           <span className="page-chip">
             {meta.total} evento{meta.total !== 1 ? "s" : ""}
           </span>
-          <button type="button" className="audit-refresh" onClick={fetchLogs} disabled={loading}>
-            <span className={loading ? "audit-spin" : ""}><IconRefresh /></span>
+          <button type="button" className="dt-refresh" onClick={fetchLogs} disabled={loading}>
+            <span className={loading ? "dt-spin" : ""}><IconRefresh /></span>
             Actualizar
           </button>
         </div>
       </div>
 
       {/* Filtros */}
-      <div className="audit-toolbar">
-        <label className="audit-search">
+      <div className="dt-toolbar">
+        <label className="dt-search">
           <IconSearch />
           <input
             type="search"
@@ -155,7 +148,7 @@ export const AuditoriaPage = () => {
           />
         </label>
 
-        <label className="audit-select">
+        <label className="dt-select">
           <IconFilter />
           <select value={actionFilter} onChange={(e) => setActionFilter(e.target.value)} aria-label="Filtrar por acción">
             <option value="">Todas las acciones</option>
@@ -165,7 +158,7 @@ export const AuditoriaPage = () => {
           </select>
         </label>
 
-        <label className="audit-select">
+        <label className="dt-select">
           <IconLock />
           <select value={entityFilter} onChange={(e) => setEntityFilter(e.target.value)} aria-label="Filtrar por entidad">
             <option value="">Todas las entidades</option>
@@ -176,7 +169,7 @@ export const AuditoriaPage = () => {
         </label>
 
         {hasFilters && (
-          <button type="button" className="audit-clear" onClick={clearFilters}>
+          <button type="button" className="dt-clear" onClick={clearFilters}>
             Limpiar filtros
           </button>
         )}
@@ -191,9 +184,9 @@ export const AuditoriaPage = () => {
           </button>
         </div>
       ) : (
-        <div className="audit-card">
-          <div className="audit-table-scroll">
-            <table className="audit-table">
+        <div className="dt-card">
+          <div className="dt-table-scroll">
+            <table className="dt-table">
               <thead>
                 <tr>
                   <th>Fecha</th>
@@ -210,10 +203,10 @@ export const AuditoriaPage = () => {
                 ) : logs.length === 0 ? (
                   <tr>
                     <td colSpan={6}>
-                      <div className="audit-empty">
-                        <span className="audit-empty-icon"><IconInbox /></span>
-                        <p className="audit-empty-title">Sin eventos</p>
-                        <p className="audit-empty-text">
+                      <div className="dt-empty">
+                        <span className="dt-empty-icon"><IconInbox /></span>
+                        <p className="dt-empty-title">Sin eventos</p>
+                        <p className="dt-empty-text">
                           No se encontraron eventos con los filtros aplicados.
                         </p>
                       </div>
@@ -229,39 +222,39 @@ export const AuditoriaPage = () => {
                     const ip = formatIp(log.ip_address);
 
                     return (
-                      <tr key={log.id} className={log.action === "login_failed" ? "audit-row-failed" : ""}>
+                      <tr key={log.id} className={log.action === "login_failed" ? "dt-row-failed" : ""}>
                         <td>
-                          <div className="audit-date">
-                            <span className="audit-date-day">{formatDay(log.created_at)}</span>
-                            <span className="audit-date-time">
+                          <div className="dt-date">
+                            <span className="dt-date-day">{formatDay(log.created_at)}</span>
+                            <span className="dt-date-time">
                               <IconClock />
                               {formatTime(log.created_at)}
                             </span>
                           </div>
                         </td>
                         <td>
-                          <div className="audit-user">
-                            <span className="audit-avatar">{getInitial(log.user_name)}</span>
-                            <span className="audit-user-name">{log.user_name || "—"}</span>
+                          <div className="dt-user">
+                            <span className="dt-avatar">{getInitial(log.user_name)}</span>
+                            <span className="dt-user-name">{log.user_name || "—"}</span>
                           </div>
                         </td>
                         <td>
-                          <span className={`audit-badge tone-${action.tone}`}>
+                          <span className={`dt-badge tone-${action.tone}`}>
                             <ActionIcon />
                             {action.label}
                           </span>
                         </td>
                         <td>
-                          <span className="audit-entity">
-                            <span className="audit-entity-icon"><EntityIcon /></span>
+                          <span className="dt-entity">
+                            <span className="dt-entity-icon"><EntityIcon /></span>
                             {entity.label}
                           </span>
                         </td>
-                        <td className="audit-details">
-                          {details || <span className="audit-none">—</span>}
+                        <td className="dt-details">
+                          {details || <span className="dt-none">—</span>}
                         </td>
                         <td>
-                          {ip ? <span className="audit-ip">{ip}</span> : <span className="audit-none">—</span>}
+                          {ip ? <span className="dt-ip">{ip}</span> : <span className="dt-none">—</span>}
                         </td>
                       </tr>
                     );
@@ -272,66 +265,14 @@ export const AuditoriaPage = () => {
           </div>
 
           {!loading && (
-            <div className="audit-footer">
-              <span className="audit-footer-info">
-                Mostrando <strong>{rangeStart}–{rangeEnd}</strong> de <strong>{meta.total}</strong> eventos
-              </span>
-
-              <div className="pagination-controls">
-                <button
-                  className="page-btn"
-                  onClick={() => setPage(1)}
-                  disabled={page <= 1}
-                  aria-label="Primera página"
-                >
-                  <IconChevronsLeft />
-                </button>
-                <button
-                  className="page-btn"
-                  onClick={() => setPage((p) => p - 1)}
-                  disabled={page <= 1}
-                  aria-label="Página anterior"
-                >
-                  <IconChevronLeft />
-                </button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .filter((p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
-                  .reduce((acc, p, i, arr) => {
-                    if (i > 0 && p - arr[i - 1] > 1) acc.push("…");
-                    acc.push(p);
-                    return acc;
-                  }, [])
-                  .map((p, i) =>
-                    p === "…" ? (
-                      <span key={`e${i}`} className="page-ellipsis">…</span>
-                    ) : (
-                      <button key={p} className={`page-btn${page === p ? " active" : ""}`} onClick={() => setPage(p)}>
-                        {p}
-                      </button>
-                    )
-                  )}
-                <button
-                  className="page-btn"
-                  onClick={() => setPage((p) => p + 1)}
-                  disabled={page >= totalPages}
-                  aria-label="Página siguiente"
-                >
-                  <IconChevronRight />
-                </button>
-                <button
-                  className="page-btn"
-                  onClick={() => setPage(totalPages)}
-                  disabled={page >= totalPages}
-                  aria-label="Última página"
-                >
-                  <IconChevronsRight />
-                </button>
-              </div>
-
-              <span className="audit-footer-page">
-                Pág. <strong>{page}</strong> / {totalPages}
-              </span>
-            </div>
+            <TablePagination
+              page={page}
+              totalPages={meta.totalPages}
+              total={meta.total}
+              limit={meta.limit}
+              itemLabel="eventos"
+              onPageChange={setPage}
+            />
           )}
         </div>
       )}

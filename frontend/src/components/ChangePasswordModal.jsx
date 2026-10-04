@@ -39,15 +39,15 @@ const PasswordField = ({ id, name, label, value, onChange, autoComplete, autoFoc
   const [visible, setVisible] = useState(false);
 
   return (
-    <div className="pw-field">
-      <label className="pw-label" htmlFor={id}>{label}</label>
-      <div className="pw-input-wrap">
-        <span className="pw-input-icon"><IconLock /></span>
+    <div className="dlg-field">
+      <label className="dlg-label" htmlFor={id}>{label}</label>
+      <div className="dlg-input-wrap">
+        <span className="dlg-input-icon"><IconLock /></span>
         <input
           id={id}
           name={name}
           type={visible ? "text" : "password"}
-          className="pw-input"
+          className="dlg-input"
           value={value}
           onChange={onChange}
           autoComplete={autoComplete}
@@ -56,7 +56,7 @@ const PasswordField = ({ id, name, label, value, onChange, autoComplete, autoFoc
         />
         <button
           type="button"
-          className="pw-input-eye"
+          className="dlg-input-eye"
           onClick={() => setVisible((v) => !v)}
           aria-label={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
           tabIndex={-1}
@@ -125,39 +125,39 @@ export const ChangePasswordModal = ({ onClose }) => {
 
   return (
     <div
-      className="pw-backdrop"
+      className="dlg-backdrop"
       role="dialog"
       aria-modal="true"
       aria-labelledby="change-password-title"
       onMouseDown={(event) => event.target === event.currentTarget && onClose()}
     >
-      <div className="pw-modal">
-        <header className="pw-header">
-          <span className="pw-header-icon"><IconShield /></span>
-          <div className="pw-header-text">
-            <h2 className="pw-title" id="change-password-title">Cambiar contraseña</h2>
-            <p className="pw-subtitle">Protege tu cuenta con una contraseña segura</p>
+      <div className="dlg-modal">
+        <header className="dlg-header">
+          <span className="dlg-header-icon"><IconShield /></span>
+          <div className="dlg-header-text">
+            <h2 className="dlg-title" id="change-password-title">Cambiar contraseña</h2>
+            <p className="dlg-subtitle">Protege tu cuenta con una contraseña segura</p>
           </div>
-          <button type="button" className="pw-close" onClick={onClose} aria-label="Cerrar">
+          <button type="button" className="dlg-close" onClick={onClose} aria-label="Cerrar">
             <IconClose />
           </button>
         </header>
 
         {success ? (
-          <div className="pw-body pw-success">
-            <span className="pw-success-icon"><IconCheckCircle /></span>
-            <h3 className="pw-success-title">Contraseña actualizada</h3>
-            <p className="pw-success-text">
+          <div className="dlg-body dlg-success">
+            <span className="dlg-success-icon"><IconCheckCircle /></span>
+            <h3 className="dlg-success-title">Contraseña actualizada</h3>
+            <p className="dlg-success-text">
               Tu contraseña se cambió correctamente. Úsala la próxima vez que inicies sesión.
             </p>
-            <button type="button" className="pw-btn pw-btn-primary" onClick={onClose}>
+            <button type="button" className="dlg-btn dlg-btn-primary" onClick={onClose}>
               Entendido
             </button>
           </div>
         ) : (
-          <form className="pw-body" onSubmit={handleSubmit}>
+          <form className="dlg-body" onSubmit={handleSubmit}>
             {error && (
-              <div className="pw-alert" role="alert">
+              <div className="dlg-alert" role="alert">
                 <IconAlert />
                 <span>{error}</span>
               </div>
@@ -182,21 +182,21 @@ export const ChangePasswordModal = ({ onClose }) => {
               autoComplete="new-password"
               hint={
                 strengthInfo ? (
-                  <div className="pw-strength">
-                    <div className="pw-strength-bars">
+                  <div className="dlg-strength">
+                    <div className="dlg-strength-bars">
                       {[0, 1, 2, 3].map((index) => (
                         <span
                           key={index}
-                          className={`pw-strength-bar${index < STRENGTH_BARS[strength] ? ` ${strengthInfo.className}` : ""}`}
+                          className={`dlg-strength-bar${index < STRENGTH_BARS[strength] ? ` ${strengthInfo.className}` : ""}`}
                         />
                       ))}
                     </div>
-                    <span className={`pw-strength-label ${strengthInfo.className}`}>
+                    <span className={`dlg-strength-label ${strengthInfo.className}`}>
                       {strengthInfo.label}
                     </span>
                   </div>
                 ) : (
-                  <span className="pw-hint">Mínimo 8 caracteres. Combina letras, números y símbolos.</span>
+                  <span className="dlg-hint">Mínimo 8 caracteres. Combina letras, números y símbolos.</span>
                 )
               }
             />
@@ -210,18 +210,18 @@ export const ChangePasswordModal = ({ onClose }) => {
               autoComplete="new-password"
               hint={
                 confirmFilled && (
-                  <span className={`pw-match ${confirmMatches ? "ok" : "bad"}`}>
+                  <span className={`dlg-match ${confirmMatches ? "ok" : "bad"}`}>
                     {confirmMatches ? "Las contraseñas coinciden" : "Las contraseñas no coinciden"}
                   </span>
                 )
               }
             />
 
-            <div className="pw-footer">
-              <button type="button" className="pw-btn pw-btn-secondary" onClick={onClose}>
+            <div className="dlg-footer">
+              <button type="button" className="dlg-btn dlg-btn-secondary" onClick={onClose}>
                 Cancelar
               </button>
-              <button type="submit" className="pw-btn pw-btn-primary" disabled={saving}>
+              <button type="submit" className="dlg-btn dlg-btn-primary" disabled={saving}>
                 {saving ? "Guardando..." : "Guardar contraseña"}
               </button>
             </div>
