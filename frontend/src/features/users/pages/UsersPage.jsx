@@ -3,29 +3,39 @@ import {
   getUsers,
   createUser,
   updateUser,
-  toggleUserStatus
+  toggleUserStatus,
+  resetUserPassword
 } from "../services/users.service.js";
 import { getModules } from "../services/modules.service.js";
 import { TablePagination } from "../../../components/TablePagination.jsx";
+import { Dialog, DialogError, DialogSection } from "../../../components/Dialog.jsx";
+import {
+  PasswordField,
+  PasswordMatch,
+  PasswordStrength,
+  TextField
+} from "../../../components/DialogFields.jsx";
 import {
   IconActivity,
   IconAlert,
   IconAuditoria,
   IconBan,
+  IconBriefcase,
   IconCheck,
-  IconClose,
+  IconCopy,
   IconDashboard,
   IconEdit,
-  IconEye,
-  IconEyeOff,
   IconFilter,
   IconGrid,
   IconInbox,
-  IconLock,
+  IconKey,
   IconMail,
   IconMap,
+  IconMapPin,
+  IconPhone,
   IconPlus,
   IconPower,
+  IconRefresh,
   IconSearch,
   IconShield,
   IconUser,
@@ -43,6 +53,15 @@ const MODULE_ICONS = {
   dashboard: IconDashboard,
   auditoria: IconAuditoria,
   diputados: IconMap
+};
+
+const PASSWORD_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*?";
+
+/** Contraseña aleatoria de 14 caracteres con generador criptográfico del navegador. */
+const generatePassword = (length = 14) => {
+  const values = new Uint32Array(length);
+  window.crypto.getRandomValues(values);
+  return Array.from(values, (v) => PASSWORD_CHARS[v % PASSWORD_CHARS.length]).join("");
 };
 
 const getInitials = (name) =>
@@ -73,99 +92,33 @@ const StatCard = ({ label, value, color, icon }) => (
 
 const SkeletonRow = () => (
   <tr>
-    {[190, 170, 110, 120, 80, 90, 110].map((w, i) => (
+    {[190, 150, 170, 110, 120, 80, 90, 130].map((w, i) => (
       <td key={i}><div className="skeleton" style={{ width: w, height: 14 }} /></td>
     ))}
   </tr>
 );
 
-/** Estructura común de las ventanas: encabezado azul, cierre con Escape o clic fuera. */
-const Dialog = ({ icon: Icon, title, subtitle, size, onClose, children }) => {
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
-
+const RoleBadge = ({ role }) => {
+  const info = ROLES[role] || { label: role, icon: IconUser, tone: "gray" };
+  const Icon = info.icon;
   return (
-    <div
-      className="dlg-backdrop"
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
-      onMouseDown={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div className={`dlg-modal${size ? ` dlg-modal-${size}` : ""}`}>
-        <header className="dlg-header">
-          <span className="dlg-header-icon"><Icon /></span>
-          <div className="dlg-header-text">
-            <h2 className="dlg-title">{title}</h2>
-            {subtitle && <p className="dlg-subtitle">{subtitle}</p>}
-          </div>
-          <button type="button" className="dlg-close" onClick={onClose} aria-label="Cerrar">
-            <IconClose />
-          </button>
-        </header>
-        {children}
-      </div>
-    </div>
+    <span className={`dt-badge tone-${info.tone}`}>
+      <Icon />
+      {info.label}
+    </span>
   );
 };
 
-const DialogError = ({ message }) =>
-  message ? (
-    <div className="dlg-alert" role="alert">
-      <IconAlert />
-      <span>{message}</span>
+const UserCard = ({ user }) => (
+  <div className="dlg-user-card">
+    <span className="dt-avatar">{getInitials(user.name)}</span>
+    <div className="dlg-user-card-info">
+      <span className="dt-user-name">{user.name}</span>
+      <span className="dt-user-sub">@{user.username}</span>
     </div>
-  ) : null;
-
-const TextField = ({ id, label, icon: Icon, hint, ...inputProps }) => (
-  <div className="dlg-field">
-    <label className="dlg-label" htmlFor={id}>{label}</label>
-    <div className="dlg-input-wrap">
-      <span className="dlg-input-icon"><Icon /></span>
-      <input id={id} className="dlg-input" {...inputProps} />
-    </div>
-    {hint && <span className="dlg-hint">{hint}</span>}
+    <RoleBadge role={user.role} />
   </div>
 );
-
-const PasswordField = ({ id, name, label, value, onChange, hint }) => {
-  const [show, setShow] = useState(false);
-
-  return (
-    <div className="dlg-field">
-      <label className="dlg-label" htmlFor={id}>{label}</label>
-      <div className="dlg-input-wrap">
-        <span className="dlg-input-icon"><IconLock /></span>
-        <input
-          id={id}
-          name={name}
-          type={show ? "text" : "password"}
-          className="dlg-input"
-          value={value}
-          onChange={onChange}
-          required
-          minLength={8}
-          autoComplete="new-password"
-        />
-        <button
-          type="button"
-          className="dlg-input-eye"
-          onClick={() => setShow((v) => !v)}
-          tabIndex={-1}
-          aria-label={show ? "Ocultar contraseña" : "Mostrar contraseña"}
-        >
-          {show ? <IconEyeOff /> : <IconEye />}
-        </button>
-      </div>
-      {hint && <span className="dlg-hint">{hint}</span>}
-    </div>
-  );
-};
 
 /**
  * Lista de módulos con switches. Si `readOnly` es true, todos aparecen
@@ -198,42 +151,34 @@ const ModulePermissionList = ({ modules, selected, onToggle, readOnly = false })
   </div>
 );
 
-const RoleBadge = ({ role }) => {
-  const info = ROLES[role] || { label: role, icon: IconUser, tone: "gray" };
-  const Icon = info.icon;
-  return (
-    <span className={`dt-badge tone-${info.tone}`}>
-      <Icon />
-      {info.label}
-    </span>
-  );
-};
-
 /* ────────────────────────────────────────────────────────────
    Modal crear / editar
 ──────────────────────────────────────────────────────────── */
-const UserModal = ({ user, modules, onClose, onSaved, onCreated }) => {
+const UserModal = ({ user, onClose, onSaved, onCreated }) => {
   const isEditing = !!user;
   const [form, setForm] = useState(
     isEditing
-      ? { name: user.name, username: user.username, email: user.email, password: "", role: user.role, modules: user.modules || [] }
-      : { name: "", username: "", email: "", password: "", role: "user", modules: [] }
+      ? {
+          name: user.name,
+          username: user.username,
+          email: user.email,
+          job_title: user.job_title || "",
+          phone: user.phone || "",
+          city: user.city || "",
+          password: "",
+          role: user.role,
+          modules: user.modules || []
+        }
+      : { name: "", username: "", email: "", job_title: "", phone: "", city: "", password: "", role: "user", modules: [] }
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name } = e.target;
+    // El teléfono solo admite números, espacios, +, - y paréntesis
+    const value = name === "phone" ? e.target.value.replace(/[^0-9+()\-\s]/g, "") : e.target.value;
     setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleModuleToggle = (moduleKey) => {
-    setForm((prev) => ({
-      ...prev,
-      modules: prev.modules.includes(moduleKey)
-        ? prev.modules.filter((m) => m !== moduleKey)
-        : [...prev.modules, moduleKey]
-    }));
   };
 
   const handleSubmit = async (e) => {
@@ -264,30 +209,49 @@ const UserModal = ({ user, modules, onClose, onSaved, onCreated }) => {
       size="lg"
       onClose={onClose}
     >
-      <form className="dlg-body" onSubmit={handleSubmit}>
-        <DialogError message={error} />
+      <form className="dlg-form" onSubmit={handleSubmit}>
+        <div className="dlg-body">
+          <DialogError message={error} />
 
-        <div className="dlg-row-2">
-          <TextField id="m-name" name="name" label="Nombre completo" icon={IconUser}
-            type="text" value={form.name} onChange={handleChange} required
-            minLength={2} maxLength={120} placeholder="Juan Pérez" />
-          <TextField id="m-username" name="username" label="Usuario" icon={IconUsers}
-            type="text" value={form.username} onChange={handleChange} required
-            minLength={3} maxLength={80} pattern="[a-zA-Z0-9_-]+"
-            title="Solo letras, números, _ y -" placeholder="juan_perez" />
-        </div>
+          <DialogSection>Datos personales</DialogSection>
+          <div className="dlg-row-2">
+            <TextField id="m-name" name="name" label="Nombre completo" icon={IconUser}
+              type="text" value={form.name} onChange={handleChange} required
+              minLength={2} maxLength={120} placeholder="Juan Pérez" />
+            <TextField id="m-username" name="username" label="Usuario" icon={IconUsers}
+              type="text" value={form.username} onChange={handleChange} required
+              minLength={3} maxLength={80} pattern="[a-zA-Z0-9_\-]+"
+              title="Solo letras, números, _ y -" placeholder="juan_perez" />
+          </div>
 
-        <TextField id="m-email" name="email" label="Correo electrónico" icon={IconMail}
-          type="email" value={form.email} onChange={handleChange} required
-          maxLength={160} placeholder="juan@ejemplo.com" />
+          <TextField id="m-email" name="email" label="Correo electrónico" icon={IconMail}
+            type="email" value={form.email} onChange={handleChange} required
+            maxLength={160} placeholder="juan@ejemplo.com" />
 
-        {!isEditing && (
-          <PasswordField id="m-password" name="password" label="Contraseña"
-            value={form.password} onChange={handleChange} hint="Mínimo 8 caracteres" />
-        )}
+          <DialogSection>Cargo y contacto</DialogSection>
+          <div className="dlg-row-2">
+            <TextField id="m-job" name="job_title" label="Cargo" icon={IconBriefcase}
+              type="text" value={form.job_title} onChange={handleChange}
+              maxLength={100} placeholder="Coordinador" />
+            <TextField id="m-phone" name="phone" label="Teléfono" icon={IconPhone}
+              type="tel" value={form.phone} onChange={handleChange}
+              maxLength={30} inputMode="tel" placeholder="+504 9999-9999" />
+          </div>
 
-        <div className="dlg-field">
-          <span className="dlg-label">Rol</span>
+          <TextField id="m-city" name="city" label="Ciudad" icon={IconMapPin}
+            type="text" value={form.city} onChange={handleChange}
+            maxLength={100} placeholder="Tegucigalpa" />
+
+          {!isEditing && (
+            <>
+              <DialogSection>Acceso</DialogSection>
+              <PasswordField id="m-password" name="password" label="Contraseña"
+                value={form.password} onChange={handleChange} minLength={8}
+                hint={<PasswordStrength password={form.password} />} />
+            </>
+          )}
+
+          <DialogSection>Rol y permisos</DialogSection>
           <div className="dlg-segment" role="radiogroup" aria-label="Rol">
             {Object.entries(ROLES).map(([value, { label, description, icon: Icon }]) => (
               <button
@@ -306,25 +270,18 @@ const UserModal = ({ user, modules, onClose, onSaved, onCreated }) => {
               </button>
             ))}
           </div>
-        </div>
 
-        {!isEditing && (
-          <div className="dlg-field">
-            <span className="dlg-label">
-              {form.role === "admin" ? "Módulos" : "Módulos con acceso"}
-            </span>
-            <span className="dlg-hint">
-              {form.role === "admin"
-                ? "Los administradores tienen acceso a todos los módulos."
-                : "Elige qué secciones podrá ver este usuario al iniciar sesión."}
-            </span>
-            {form.role === "admin" ? (
-              <ModulePermissionList modules={modules} selected={modules.map((m) => m.key)} readOnly />
-            ) : (
-              <ModulePermissionList modules={modules} selected={form.modules} onToggle={handleModuleToggle} />
-            )}
-          </div>
-        )}
+          {!isEditing && (
+            <div className="dlg-note dlg-note-info">
+              <IconGrid />
+              <span>
+                {form.role === "admin"
+                  ? "Los administradores tienen acceso a todos los módulos."
+                  : "Después de crear el usuario, asigna sus módulos con el botón de módulos de la tabla."}
+              </span>
+            </div>
+          )}
+        </div>
 
         <div className="dlg-footer">
           <button type="button" className="dlg-btn dlg-btn-secondary" onClick={onClose} disabled={loading}>
@@ -383,29 +340,23 @@ const ModulesModal = ({ user, modules, onClose, onSaved }) => {
       subtitle="Define a qué secciones puede acceder"
       onClose={onClose}
     >
-      <form className="dlg-body" onSubmit={handleSubmit}>
-        <DialogError message={error} />
+      <form className="dlg-form" onSubmit={handleSubmit}>
+        <div className="dlg-body">
+          <DialogError message={error} />
+          <UserCard user={user} />
 
-        <div className="dlg-user-card">
-          <span className="dt-avatar">{getInitials(user.name)}</span>
-          <div className="dlg-user-card-info">
-            <span className="dt-user-name">{user.name}</span>
-            <span className="dt-user-sub">@{user.username}</span>
+          <div className="dlg-field">
+            <span className="dlg-hint">
+              {isAdmin
+                ? "Los administradores tienen acceso a todos los módulos."
+                : "Elige qué secciones podrá ver este usuario al iniciar sesión."}
+            </span>
+            {isAdmin ? (
+              <ModulePermissionList modules={modules} selected={modules.map((m) => m.key)} readOnly />
+            ) : (
+              <ModulePermissionList modules={modules} selected={selected} onToggle={handleToggle} />
+            )}
           </div>
-          <RoleBadge role={user.role} />
-        </div>
-
-        <div className="dlg-field">
-          <span className="dlg-hint">
-            {isAdmin
-              ? "Los administradores tienen acceso a todos los módulos."
-              : "Elige qué secciones podrá ver este usuario al iniciar sesión."}
-          </span>
-          {isAdmin ? (
-            <ModulePermissionList modules={modules} selected={modules.map((m) => m.key)} readOnly />
-          ) : (
-            <ModulePermissionList modules={modules} selected={selected} onToggle={handleToggle} />
-          )}
         </div>
 
         <div className="dlg-footer">
@@ -416,6 +367,130 @@ const ModulesModal = ({ user, modules, onClose, onSaved }) => {
             {loading
               ? <><span className="spinner" /> Guardando...</>
               : "Guardar módulos"}
+          </button>
+        </div>
+      </form>
+    </Dialog>
+  );
+};
+
+/* ────────────────────────────────────────────────────────────
+   Modal restablecer contraseña
+──────────────────────────────────────────────────────────── */
+const ResetPasswordModal = ({ user, onClose, onDone }) => {
+  const [password, setPassword] = useState("");
+  const [confirmation, setConfirmation] = useState("");
+  const [revealed, setRevealed] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleGenerate = () => {
+    const generated = generatePassword();
+    setPassword(generated);
+    setConfirmation(generated);
+    setRevealed(true);
+    setCopied(false);
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(password);
+      setCopied(true);
+    } catch {
+      setError("No se pudo copiar. Selecciona la contraseña y cópiala manualmente.");
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (password.length < 8) {
+      setError("La contraseña debe tener al menos 8 caracteres");
+      return;
+    }
+
+    if (password !== confirmation) {
+      setError("La confirmación no coincide con la nueva contraseña");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await resetUserPassword(user.id, password);
+      onDone(user);
+    } catch (err) {
+      setError(err.response?.data?.message || "No se pudo restablecer la contraseña");
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Dialog
+      icon={IconKey}
+      title="Cambiar contraseña"
+      subtitle="Define una nueva contraseña para este usuario"
+      onClose={onClose}
+    >
+      <form className="dlg-form" onSubmit={handleSubmit}>
+        <div className="dlg-body">
+          <DialogError message={error} />
+          <UserCard user={user} />
+
+          <PasswordField
+            id="rp-new"
+            name="password"
+            label="Nueva contraseña"
+            value={password}
+            onChange={(e) => { setPassword(e.target.value); setCopied(false); }}
+            forceVisible={revealed}
+            autoFocus
+            minLength={8}
+            hint={<PasswordStrength password={password} />}
+          />
+
+          <PasswordField
+            id="rp-confirm"
+            name="confirmation"
+            label="Confirmar contraseña"
+            value={confirmation}
+            onChange={(e) => setConfirmation(e.target.value)}
+            forceVisible={revealed}
+            minLength={8}
+            hint={<PasswordMatch password={password} confirmation={confirmation} />}
+          />
+
+          <div className="dlg-tools">
+            <button type="button" className="dlg-link-btn" onClick={handleGenerate}>
+              <IconRefresh />
+              Generar contraseña segura
+            </button>
+            {revealed && password && (
+              <button type="button" className="dlg-link-btn" onClick={handleCopy}>
+                {copied ? <IconCheck /> : <IconCopy />}
+                {copied ? "Copiada" : "Copiar"}
+              </button>
+            )}
+          </div>
+
+          <div className="dlg-note">
+            <IconAlert />
+            <span>
+              Comparte la nueva contraseña con el usuario de forma segura. Se pedirá
+              en su próximo inicio de sesión.
+            </span>
+          </div>
+        </div>
+
+        <div className="dlg-footer">
+          <button type="button" className="dlg-btn dlg-btn-secondary" onClick={onClose} disabled={loading}>
+            Cancelar
+          </button>
+          <button type="submit" className="dlg-btn dlg-btn-primary" disabled={loading}>
+            {loading
+              ? <><span className="spinner" /> Guardando...</>
+              : "Guardar contraseña"}
           </button>
         </div>
       </form>
@@ -439,6 +514,7 @@ const ConfirmModal = ({ user, onClose, onConfirm }) => {
     <Dialog
       icon={deactivating ? IconPower : IconCheck}
       title={deactivating ? "Desactivar usuario" : "Activar usuario"}
+      subtitle={`@${user.username}`}
       size="sm"
       onClose={onClose}
     >
@@ -451,22 +527,22 @@ const ConfirmModal = ({ user, onClose, onConfirm }) => {
             ? <><strong>{user.name}</strong> no podrá iniciar sesión hasta que sea reactivado.</>
             : <><strong>{user.name}</strong> podrá iniciar sesión nuevamente.</>}
         </p>
+      </div>
 
-        <div className="dlg-footer">
-          <button type="button" className="dlg-btn dlg-btn-secondary" onClick={onClose} disabled={loading}>
-            Cancelar
-          </button>
-          <button
-            type="button"
-            className={`dlg-btn ${deactivating ? "dlg-btn-danger" : "dlg-btn-success"}`}
-            onClick={handleConfirm}
-            disabled={loading}
-          >
-            {loading
-              ? <><span className="spinner" /> Procesando...</>
-              : deactivating ? "Sí, desactivar" : "Sí, activar"}
-          </button>
-        </div>
+      <div className="dlg-footer">
+        <button type="button" className="dlg-btn dlg-btn-secondary" onClick={onClose} disabled={loading}>
+          Cancelar
+        </button>
+        <button
+          type="button"
+          className={`dlg-btn ${deactivating ? "dlg-btn-danger" : "dlg-btn-success"}`}
+          onClick={handleConfirm}
+          disabled={loading}
+        >
+          {loading
+            ? <><span className="spinner" /> Procesando...</>
+            : deactivating ? "Sí, desactivar" : "Sí, activar"}
+        </button>
       </div>
     </Dialog>
   );
@@ -581,6 +657,11 @@ export const UsersPage = () => {
     showToast("Usuario creado correctamente");
   };
 
+  const handlePasswordReset = (user) => {
+    setModal(null);
+    showToast(`Contraseña de ${user.name} restablecida correctamente`);
+  };
+
   const { stats } = meta;
   const closeModal = () => setModal(null);
 
@@ -589,13 +670,16 @@ export const UsersPage = () => {
       {toast && <div className="toast" role="status">{toast}</div>}
 
       {modal?.type === "create" && (
-        <UserModal modules={modules} onClose={closeModal} onCreated={handleCreated} onSaved={() => {}} />
+        <UserModal onClose={closeModal} onCreated={handleCreated} onSaved={() => {}} />
       )}
       {modal?.type === "edit" && (
-        <UserModal user={modal.user} modules={modules} onClose={closeModal} onSaved={handleSaved} onCreated={() => {}} />
+        <UserModal user={modal.user} onClose={closeModal} onSaved={handleSaved} onCreated={() => {}} />
       )}
       {modal?.type === "modules" && (
         <ModulesModal user={modal.user} modules={modules} onClose={closeModal} onSaved={handleModulesSaved} />
+      )}
+      {modal?.type === "password" && (
+        <ResetPasswordModal user={modal.user} onClose={closeModal} onDone={handlePasswordReset} />
       )}
       {modal?.type === "confirm" && (
         <ConfirmModal user={modal.user} onClose={closeModal} onConfirm={handleToggleConfirm} />
@@ -637,7 +721,7 @@ export const UsersPage = () => {
           <IconSearch />
           <input
             type="search"
-            placeholder="Buscar por nombre, usuario o correo..."
+            placeholder="Buscar por nombre, usuario, correo, cargo o ciudad..."
             value={searchInput}
             onChange={handleSearchInput}
           />
@@ -684,7 +768,8 @@ export const UsersPage = () => {
               <thead>
                 <tr>
                   <th>Usuario</th>
-                  <th>Correo</th>
+                  <th>Cargo</th>
+                  <th>Contacto</th>
                   <th>Rol</th>
                   <th>Módulos</th>
                   <th>Estado</th>
@@ -697,7 +782,7 @@ export const UsersPage = () => {
                   [...Array(6)].map((_, i) => <SkeletonRow key={i} />)
                 ) : users.length === 0 ? (
                   <tr>
-                    <td colSpan={7}>
+                    <td colSpan={8}>
                       <div className="dt-empty">
                         <span className="dt-empty-icon"><IconInbox /></span>
                         <p className="dt-empty-title">Sin usuarios</p>
@@ -724,7 +809,30 @@ export const UsersPage = () => {
                         </div>
                       </td>
                       <td>
-                        <span className="dt-email">{user.email}</span>
+                        {user.job_title || user.city ? (
+                          <div className="dt-stack">
+                            {user.job_title && <span className="dt-stack-main">{user.job_title}</span>}
+                            {user.city && (
+                              <span className="dt-stack-sub">
+                                <IconMapPin />
+                                {user.city}
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="dt-none">—</span>
+                        )}
+                      </td>
+                      <td>
+                        <div className="dt-stack">
+                          <span className="dt-stack-main dt-email">{user.email}</span>
+                          {user.phone && (
+                            <span className="dt-stack-sub">
+                              <IconPhone />
+                              {user.phone}
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td><RoleBadge role={user.role} /></td>
                       <td>
@@ -768,6 +876,15 @@ export const UsersPage = () => {
                             aria-label={`Asignar módulos a ${user.name}`}
                           >
                             <IconGrid />
+                          </button>
+                          <button
+                            type="button"
+                            className="action-icon-btn action-icon-key"
+                            onClick={() => setModal({ type: "password", user })}
+                            title="Cambiar contraseña"
+                            aria-label={`Cambiar contraseña de ${user.name}`}
+                          >
+                            <IconKey />
                           </button>
                           <button
                             type="button"

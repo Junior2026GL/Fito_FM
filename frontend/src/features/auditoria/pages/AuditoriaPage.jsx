@@ -27,6 +27,7 @@ const ACTIONS = {
   login: { label: "Inicio de sesión", icon: IconLogIn, tone: "green" },
   login_failed: { label: "Intento fallido", icon: IconXCircle, tone: "red" },
   password_change: { label: "Cambio de contraseña", icon: IconKey, tone: "amber" },
+  password_reset: { label: "Restablecimiento de contraseña", icon: IconKey, tone: "amber" },
   create: { label: "Creación", icon: IconPlus, tone: "blue" },
   update: { label: "Actualización", icon: IconEdit, tone: "indigo" },
   activate: { label: "Activación", icon: IconCheck, tone: "green" },

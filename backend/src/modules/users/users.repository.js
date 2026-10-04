@@ -34,8 +34,10 @@ export const findAll = async ({ page, limit, search, role, active }) => {
   const params = [];
 
   if (search) {
-    conditions.push("(u.name LIKE ? OR u.email LIKE ? OR u.username LIKE ?)");
-    params.push(`%${search}%`, `%${search}%`, `%${search}%`);
+    conditions.push(
+      "(u.name LIKE ? OR u.email LIKE ? OR u.username LIKE ? OR u.job_title LIKE ? OR u.city LIKE ?)"
+    );
+    params.push(...Array(5).fill(`%${search}%`));
   }
 
   if (role) {
@@ -57,7 +59,7 @@ export const findAll = async ({ page, limit, search, role, active }) => {
 
   const [rows] = await pool.query(
     `SELECT
-       u.id, u.name, u.username, u.email, u.role, ${MODULES_SUBQUERY},
+       u.id, u.name, u.username, u.email, u.job_title, u.phone, u.city, u.role, ${MODULES_SUBQUERY},
        u.is_active, u.created_at, u.updated_at
      FROM users u
      ${where}
@@ -95,7 +97,7 @@ export const findAll = async ({ page, limit, search, role, active }) => {
 export const findById = async (id) => {
   const [rows] = await pool.execute(
     `SELECT
-       u.id, u.name, u.username, u.email, u.role, ${MODULES_SUBQUERY},
+       u.id, u.name, u.username, u.email, u.job_title, u.phone, u.city, u.role, ${MODULES_SUBQUERY},
        u.is_active, u.created_at, u.updated_at
      FROM users u
      WHERE u.id = ?
@@ -125,23 +127,25 @@ export const findByUsername = async (username, excludeId = null) => {
   return rows[0] || null;
 };
 
-export const update = async (id, { name, username, email, role, modules }) => {
+export const update = async (id, { name, username, email, job_title, phone, city, role, modules }) => {
   await withTransaction(async (connection) => {
     await connection.execute(
-      `UPDATE users SET name = ?, username = ?, email = ?, role = ? WHERE id = ?`,
-      [name, username.toLowerCase(), email.toLowerCase(), role, id]
+      `UPDATE users
+       SET name = ?, username = ?, email = ?, job_title = ?, phone = ?, city = ?, role = ?
+       WHERE id = ?`,
+      [name, username.toLowerCase(), email.toLowerCase(), job_title || null, phone || null, city || null, role, id]
     );
     await setUserModules(connection, id, modules);
   });
   return findById(id);
 };
 
-export const create = async ({ name, username, email, passwordHash, role, modules }) => {
+export const create = async ({ name, username, email, job_title, phone, city, passwordHash, role, modules }) => {
   const id = await withTransaction(async (connection) => {
     const [result] = await connection.execute(
-      `INSERT INTO users (name, username, email, password_hash, role)
-       VALUES (?, ?, ?, ?, ?)`,
-      [name, username.toLowerCase(), email.toLowerCase(), passwordHash, role]
+      `INSERT INTO users (name, username, email, job_title, phone, city, password_hash, role)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [name, username.toLowerCase(), email.toLowerCase(), job_title || null, phone || null, city || null, passwordHash, role]
     );
     await setUserModules(connection, result.insertId, modules);
     return result.insertId;
@@ -155,4 +159,8 @@ export const setActive = async (id, isActive) => {
     [isActive ? 1 : 0, id]
   );
   return findById(id);
+};
+
+export const updatePasswordHash = async (id, passwordHash) => {
+  await pool.execute("UPDATE users SET password_hash = ? WHERE id = ?", [passwordHash, id]);
 };

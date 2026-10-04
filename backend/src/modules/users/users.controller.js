@@ -84,3 +84,24 @@ export const toggleUserStatus = asyncHandler(async (req, res) => {
     data: user
   });
 });
+
+export const resetUserPassword = asyncHandler(async (req, res) => {
+  const user = await usersService.resetPassword(
+    req.validated.params.id,
+    req.validated.body.password
+  );
+
+  await auditoriaService.logEvent({
+    userId: req.user.sub,
+    userName: req.user.name,
+    action: "password_reset",
+    entity: "user",
+    entityId: user.id,
+    details: { name: user.name },
+    ipAddress: req.ip
+  });
+
+  return successResponse(res, {
+    message: "Contraseña restablecida correctamente"
+  });
+});

@@ -3,13 +3,20 @@ import { Router } from "express";
 import { requireAuth } from "../../shared/middleware/auth.middleware.js";
 import { allowRoles } from "../../shared/middleware/roles.middleware.js";
 import { validate } from "../../shared/middleware/validate.middleware.js";
-import { listUsersSchema, createUserSchema, updateUserSchema, userIdSchema } from "./users.schema.js";
+import {
+  listUsersSchema,
+  createUserSchema,
+  updateUserSchema,
+  userIdSchema,
+  resetPasswordSchema
+} from "./users.schema.js";
 import {
   createUser,
   listUsers,
   getUser,
   updateUser,
-  toggleUserStatus
+  toggleUserStatus,
+  resetUserPassword
 } from "./users.controller.js";
 
 export const usersRoutes = Router();
@@ -22,3 +29,4 @@ usersRoutes.post("/", validate(createUserSchema), createUser);
 usersRoutes.get("/:id", validate(userIdSchema), getUser);
 usersRoutes.put("/:id", validate(updateUserSchema), updateUser);
 usersRoutes.patch("/:id/status", validate(userIdSchema), toggleUserStatus);
+usersRoutes.patch("/:id/password", validate(resetPasswordSchema), resetUserPassword);

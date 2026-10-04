@@ -12,7 +12,7 @@ const validateModules = async (modules) => {
   }
 };
 
-export const createUser = async ({ name, username, email, password, role, modules }) => {
+export const createUser = async ({ name, username, email, job_title, phone, city, password, role, modules }) => {
   const emailConflict = await usersRepository.findByEmail(email);
   if (emailConflict) throw new AppError("El correo ya está en uso", 409);
 
@@ -22,7 +22,7 @@ export const createUser = async ({ name, username, email, password, role, module
   await validateModules(modules);
 
   const passwordHash = await bcrypt.hash(password, 12);
-  return usersRepository.create({ name, username, email, passwordHash, role, modules });
+  return usersRepository.create({ name, username, email, job_title, phone, city, passwordHash, role, modules });
 };
 
 export const listUsers = async (query) => {
@@ -53,7 +53,14 @@ export const updateUser = async (id, data) => {
 
   await validateModules(data.modules);
 
-  return usersRepository.update(id, data);
+  // Los campos de perfil que no vienen en la petición conservan su valor actual
+  // (por ejemplo al asignar módulos); una cadena vacía los borra.
+  return usersRepository.update(id, {
+    ...data,
+    job_title: data.job_title ?? user.job_title,
+    phone: data.phone ?? user.phone,
+    city: data.city ?? user.city
+  });
 };
 
 export const toggleUserStatus = async (id, requestingUserId) => {
@@ -65,4 +72,14 @@ export const toggleUserStatus = async (id, requestingUserId) => {
   if (!user) throw new AppError("Usuario no encontrado", 404);
 
   return usersRepository.setActive(id, !user.is_active);
+};
+
+export const resetPassword = async (id, password) => {
+  const user = await usersRepository.findById(id);
+  if (!user) throw new AppError("Usuario no encontrado", 404);
+
+  const passwordHash = await bcrypt.hash(password, 12);
+  await usersRepository.updatePasswordHash(id, passwordHash);
+
+  return user;
 };

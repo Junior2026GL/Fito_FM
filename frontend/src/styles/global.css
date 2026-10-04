@@ -2581,9 +2581,11 @@ button {
 }
 
 .dlg-modal {
+  display: flex;
+  flex-direction: column;
   width: min(440px, 100%);
   max-height: calc(100vh - 48px);
-  overflow-y: auto;
+  overflow: hidden;
   background: #ffffff;
   border-radius: 20px;
   box-shadow: 0 28px 70px rgba(7, 18, 50, 0.35);
@@ -2594,9 +2596,12 @@ button {
   display: flex;
   align-items: center;
   gap: 14px;
+  flex-shrink: 0;
   padding: 22px 24px;
   color: #ffffff;
-  background: linear-gradient(120deg, #0b1f4d 0%, #123a8f 100%);
+  background:
+    radial-gradient(circle at 92% -30%, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 55%),
+    linear-gradient(120deg, #0b1f4d 0%, #123a8f 100%);
 }
 
 .dlg-header-icon {
@@ -2649,11 +2654,21 @@ button {
   color: #ffffff;
 }
 
+.dlg-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
 .dlg-body {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  flex: 1;
+  min-height: 0;
   padding: 24px;
+  overflow-y: auto;
 }
 
 .dlg-alert {
@@ -2797,9 +2812,10 @@ button {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 4px;
-  padding-top: 20px;
-  border-top: 1px solid #eef1f6;
+  flex-shrink: 0;
+  padding: 16px 24px;
+  background: #f8fafd;
+  border-top: 1px solid #e9eef6;
 }
 
 .dlg-btn {
@@ -3287,7 +3303,7 @@ button {
    TABLAS DE DATOS – piezas extra (Usuarios)
    ============================================================ */
 .dt-table-wide {
-  min-width: 980px;
+  min-width: 1120px;
 }
 
 .dt-user-info {
@@ -3444,10 +3460,6 @@ button {
   color: #475569;
 }
 
-.dlg-confirm .dlg-footer {
-  align-self: stretch;
-}
-
 .dlg-btn-danger {
   color: #ffffff;
   background: linear-gradient(120deg, #b91c1c 0%, #dc2626 100%);
@@ -3470,4 +3482,128 @@ button {
   .dlg-segment {
     grid-template-columns: 1fr;
   }
+}
+
+/* ============================================================
+   VENTANAS (dlg) – secciones, herramientas y avisos
+   ============================================================ */
+.dlg-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 2px 0 -4px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.dlg-section::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e9eef6;
+}
+
+.dlg-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dlg-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid #dbe3f0;
+  border-radius: 9px;
+  background: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #123a8f;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.dlg-link-btn:hover {
+  background: #eef3fc;
+  border-color: #b9c9ec;
+}
+
+.dlg-link-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.dlg-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 11px 13px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #92400e;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+}
+
+.dlg-note svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.action-icon-key {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.action-icon-key:hover {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* Celdas apiladas (cargo / contacto) */
+.dt-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.dt-stack-main {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.dt-stack-main.dt-email {
+  font-weight: 500;
+  color: #334155;
+}
+
+.dt-stack-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.dt-stack-sub svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.dt-none {
+  color: #cbd5e1;
+}
+
+.dlg-note.dlg-note-info {
+  color: #1e3a8a;
+  background: #eff6ff;
+  border-color: #bfdbfe;
 }

@@ -26,3 +26,8 @@ export const toggleUserStatus = async (id) => {
   const response = await api.patch(`/users/${id}/status`);
   return response.data;
 };
+
+export const resetUserPassword = async (id, password) => {
+  const response = await api.patch(`/users/${id}/password`, { password });
+  return response.data;
+};
