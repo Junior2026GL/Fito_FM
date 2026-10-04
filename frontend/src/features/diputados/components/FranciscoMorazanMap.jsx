@@ -1,133 +1,96 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import geoData from "../data/francisco_morazan.json";
+import { getMunicipioLabel } from "../data/municipios.js";
 
-// Nombres legibles — deben coincidir exactamente con la columna Municipio en la DB
-const MUNICIPIO_LABELS = {
-  Alubarén: "Alubarén",
-  Cedros: "Cedros",
-  Curarén: "Curarén",
-  DistritoCentral: "Distrito Central",
-  ElPorvenir: "El Porvenir",
-  Guaimaca: "Guaimaca",
-  LaLibertad: "La Libertad",
-  LaVenta: "La Venta",
-  Lepaterique: "Lepaterique",
-  Maraita: "Maraita",
-  Marale: "Marale",
-  NuevaArmenia: "Nueva Armenia",
-  Ojojona: "Ojojona",
-  Orica: "Orica",
-  Reitoca: "Reitoca",
-  Sabanagrande: "Sabanagrande",
-  SanAntoniodeOriente: "San Antonio de Oriente",
-  SanBuenaventura: "San Buenaventura",
-  SanIgnacio: "San Ignacio",
-  SanJuandeFlores: "Cantarranas",          // antes: San Juan de Flores
-  SanMiguelito: "San Miguelito",
-  SantaAna: "Santa Ana",
-  SantaLucía: "Santa Lucía",
-  Talanga: "Talanga",
-  Tatumbla: "Tatumbla",
-  "ValledeÁngeles": "Valle de Ángeles",
-  Vallecillo: "Vallecillos",               // DB usa plural
-  VilladeSanFrancisco: "Villa San Francisco", // DB sin "de"
-};
-
-export const FranciscoMorazanMap = ({ onMunicipioClick }) => {
+export const FranciscoMorazanMap = ({
+  selectedKey,
+  hoverKey,
+  onMunicipioClick,
+  onMunicipioHover
+}) => {
   const svgRef = useRef(null);
   const containerRef = useRef(null);
+  const zoomRef = useRef(null);
   const [tooltip, setTooltip] = useState({ visible: false, name: "", x: 0, y: 0 });
-  const [selected, setSelected] = useState(null);
+  const [size, setSize] = useState({ width: 0, height: 0 });
 
+  // Observar el tamaño del contenedor para redibujar al redimensionar
   useEffect(() => {
-    if (!svgRef.current || !containerRef.current) return;
-
     const container = containerRef.current;
-    const width = container.clientWidth || 700;
-    const height = container.clientHeight || 680;
+    if (!container) return undefined;
 
+    const observer = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      setSize({ width: Math.round(width), height: Math.round(height) });
+    });
+    observer.observe(container);
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Dibujo del mapa (no depende de la selección, así el zoom no se reinicia al hacer clic)
+  useEffect(() => {
+    if (!svgRef.current || size.width === 0 || size.height === 0) return undefined;
+
+    const { width, height } = size;
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
     // Proyección con padding para que no queden cortados los bordes
-    const projection = d3.geoMercator().fitExtent([[24, 24], [width - 24, height - 24]], geoData);
+    const projection = d3.geoMercator().fitExtent([[32, 32], [width - 32, height - 32]], geoData);
     const pathGen = d3.geoPath().projection(projection);
 
     const g = svg.append("g");
 
-    // Dibujar municipios
     g.selectAll("path")
       .data(geoData.features)
       .join("path")
       .attr("d", pathGen)
       .attr("class", "municipio-path")
       .attr("data-name", (d) => d.properties.NAME_2)
-      .on("mouseenter", function (event, d) {
+      .on("mouseenter", (event, d) => {
         const name = d.properties.NAME_2;
-        if (name !== selected) {
-          d3.select(this).classed("municipio-hover", true);
-        }
         const rect = svgRef.current.getBoundingClientRect();
         setTooltip({
           visible: true,
-          name: MUNICIPIO_LABELS[name] || name,
+          name: getMunicipioLabel(name),
           x: event.clientX - rect.left,
-          y: event.clientY - rect.top - 14,
+          y: event.clientY - rect.top - 14
         });
+        onMunicipioHover?.(name);
       })
-      .on("mousemove", function (event) {
+      .on("mousemove", (event) => {
         const rect = svgRef.current.getBoundingClientRect();
         setTooltip((t) => ({
           ...t,
           x: event.clientX - rect.left,
-          y: event.clientY - rect.top - 14,
+          y: event.clientY - rect.top - 14
         }));
       })
-      .on("mouseleave", function (_, d) {
-        const name = d.properties.NAME_2;
-        if (name !== selected) {
-          d3.select(this).classed("municipio-hover", false);
-        }
+      .on("mouseleave", () => {
         setTooltip((t) => ({ ...t, visible: false }));
+        onMunicipioHover?.(null);
       })
-      .on("click", function (_, d) {
+      .on("click", (_, d) => {
         const name = d.properties.NAME_2;
-        const label = MUNICIPIO_LABELS[name] || name;
-
-        // Deseleccionar anterior
-        g.selectAll("path").classed("municipio-selected", false);
-        d3.select(this).classed("municipio-selected", true);
-        setSelected(name);
-
-        if (onMunicipioClick) onMunicipioClick({ key: name, label });
+        onMunicipioClick?.({ key: name, label: getMunicipioLabel(name) });
       });
 
-    // Labels de texto sobre cada municipio
+    // Etiquetas de texto sobre cada municipio
     g.selectAll("text")
       .data(geoData.features)
       .join("text")
-      .attr("x", (d) => pathGen.centroid(d)[0])
-      .attr("y", (d) => pathGen.centroid(d)[1])
       .attr("text-anchor", "middle")
       .attr("dominant-baseline", "central")
       .attr("pointer-events", "none")
-      .attr("fill", "rgba(255,255,255,0.9)")
-      .attr("font-size", "7.5px")
-      .attr("font-weight", "700")
-      .attr("font-family", "Inter, system-ui, sans-serif")
-      .attr("paint-order", "stroke")
-      .attr("stroke", "rgba(0,0,0,0.45)")
-      .attr("stroke-width", "2px")
-      .attr("stroke-linejoin", "round")
+      .attr("class", "municipio-label")
       .each(function (d) {
-        const name = d.properties.NAME_2;
-        const label = MUNICIPIO_LABELS[name] || name;
+        const label = getMunicipioLabel(d.properties.NAME_2);
         const words = label.split(" ");
         const el = d3.select(this);
-        const cx = pathGen.centroid(d)[0];
-        const cy = pathGen.centroid(d)[1];
-        const lineH = 9;
+        const [cx, cy] = pathGen.centroid(d);
+        const lineH = 10.5;
         // Partir en líneas de máx 2 palabras
         const lines = [];
         for (let i = 0; i < words.length; i += 2) {
@@ -147,13 +110,40 @@ export const FranciscoMorazanMap = ({ onMunicipioClick }) => {
       .scaleExtent([1, 8])
       .on("zoom", (event) => g.attr("transform", event.transform));
     svg.call(zoom);
+    zoomRef.current = zoom;
 
     return () => svg.on(".zoom", null);
-  }, [selected, onMunicipioClick]);
+  }, [size, onMunicipioClick, onMunicipioHover]);
+
+  // Sincronizar selección y hover (también los provocados desde el panel lateral)
+  useEffect(() => {
+    if (!svgRef.current) return;
+
+    d3.select(svgRef.current)
+      .selectAll("path.municipio-path")
+      .classed("municipio-selected", (d) => d.properties.NAME_2 === selectedKey)
+      .classed("municipio-hover", (d) => d.properties.NAME_2 === hoverKey);
+  }, [selectedKey, hoverKey, size]);
+
+  const zoomBy = (factor) => {
+    if (!zoomRef.current) return;
+    d3.select(svgRef.current).transition().duration(200).call(zoomRef.current.scaleBy, factor);
+  };
+
+  const resetZoom = () => {
+    if (!zoomRef.current) return;
+    d3.select(svgRef.current).transition().duration(300).call(zoomRef.current.transform, d3.zoomIdentity);
+  };
 
   return (
     <div className="map-wrapper" ref={containerRef}>
       <svg ref={svgRef} className="map-svg" />
+
+      <div className="map-controls">
+        <button type="button" onClick={() => zoomBy(1.5)} aria-label="Acercar" title="Acercar">+</button>
+        <button type="button" onClick={() => zoomBy(1 / 1.5)} aria-label="Alejar" title="Alejar">&minus;</button>
+        <button type="button" onClick={resetZoom} aria-label="Restablecer vista" title="Restablecer vista">&#8634;</button>
+      </div>
 
       {tooltip.visible && (
         <div
