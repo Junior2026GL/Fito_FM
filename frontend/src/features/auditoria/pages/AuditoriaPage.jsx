@@ -1,37 +1,69 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { getAuditLogs } from "../services/auditoria.service.js";
+import {
+  IconActivity,
+  IconAlert,
+  IconAuditoria,
+  IconBan,
+  IconCheck,
+  IconChevronLeft,
+  IconChevronRight,
+  IconClock,
+  IconEdit,
+  IconFilter,
+  IconInbox,
+  IconKey,
+  IconLock,
+  IconLogIn,
+  IconPlus,
+  IconRefresh,
+  IconSearch,
+  IconUsers,
+  IconXCircle
+} from "../../../components/icons.jsx";
 
-const ACTION_LABEL = {
-  login: { label: "Inicio de sesión", className: "badge-active" },
-  login_failed: { label: "Intento fallido", className: "badge-inactive" },
-  password_change: { label: "Cambio de contraseña", className: "badge-user" },
-  create: { label: "Creación", className: "badge-admin" },
-  update: { label: "Actualización", className: "badge-user" },
-  activate: { label: "Activación", className: "badge-active" },
-  deactivate: { label: "Desactivación", className: "badge-inactive" }
+const ACTIONS = {
+  login: { label: "Inicio de sesión", icon: IconLogIn, tone: "green" },
+  login_failed: { label: "Intento fallido", icon: IconXCircle, tone: "red" },
+  password_change: { label: "Cambio de contraseña", icon: IconKey, tone: "amber" },
+  create: { label: "Creación", icon: IconPlus, tone: "blue" },
+  update: { label: "Actualización", icon: IconEdit, tone: "indigo" },
+  activate: { label: "Activación", icon: IconCheck, tone: "green" },
+  deactivate: { label: "Desactivación", icon: IconBan, tone: "gray" }
 };
 
-const ENTITY_LABEL = {
-  auth: "Autenticación",
-  user: "Usuario"
+const ENTITIES = {
+  auth: { label: "Autenticación", icon: IconLock },
+  user: { label: "Usuario", icon: IconUsers }
 };
 
 const SkeletonRow = () => (
   <tr>
-    {[140, 160, 120, 100, 220, 110].map((w, i) => (
+    {[130, 150, 130, 110, 200, 110].map((w, i) => (
       <td key={i}><div className="skeleton" style={{ width: w, height: 14 }} /></td>
     ))}
   </tr>
 );
 
 const formatDetails = (details) => {
-  if (!details) return "—";
+  if (!details) return "";
   const parts = [];
   if (details.name) parts.push(details.name);
   if (details.email) parts.push(details.email);
   if (details.role) parts.push(details.role === "admin" ? "Administrador" : "Usuario");
-  return parts.length ? parts.join(" · ") : "—";
+  return parts.join(" · ");
 };
+
+const formatDay = (d) =>
+  new Date(d).toLocaleDateString("es-MX", { day: "2-digit", month: "short", year: "numeric" });
+
+const formatTime = (d) =>
+  new Date(d).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" });
+
+// Las IPs llegan como "::ffff:100.64.0.8" (IPv4 mapeada); mostramos solo la IPv4
+const formatIp = (ip) => (ip ? ip.replace(/^::ffff:/, "") : "");
+
+const getInitial = (name) => (name ? name.trim().charAt(0).toUpperCase() : "?");
 
 export const AuditoriaPage = () => {
   const [logs, setLogs] = useState([]);
@@ -39,6 +71,7 @@ export const AuditoriaPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [actionFilter, setActionFilter] = useState("");
   const [entityFilter, setEntityFilter] = useState("");
@@ -62,131 +95,219 @@ export const AuditoriaPage = () => {
 
   useEffect(() => { fetchLogs(); }, [fetchLogs]);
   useEffect(() => { setPage(1); }, [search, actionFilter, entityFilter]);
+  useEffect(() => () => clearTimeout(searchTimer.current), []);
 
   const handleSearchInput = (e) => {
     const val = e.target.value;
+    setSearchInput(val);
     clearTimeout(searchTimer.current);
     searchTimer.current = setTimeout(() => setSearch(val), 380);
   };
 
-  const formatDate = (d) =>
-    new Date(d).toLocaleString("es-MX", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  const hasFilters = Boolean(searchInput || actionFilter || entityFilter);
+
+  const clearFilters = () => {
+    clearTimeout(searchTimer.current);
+    setSearchInput("");
+    setSearch("");
+    setActionFilter("");
+    setEntityFilter("");
+  };
+
+  const rangeStart = meta.total === 0 ? 0 : (meta.page - 1) * meta.limit + 1;
+  const rangeEnd = Math.min(meta.page * meta.limit, meta.total);
 
   return (
     <>
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Auditoría</h1>
-          <p className="page-subtitle">Bitácora de acciones realizadas en el sistema</p>
+      <div className="audit-header">
+        <div className="audit-header-main">
+          <span className="audit-header-icon"><IconAuditoria /></span>
+          <div>
+            <h1 className="page-title">Auditoría</h1>
+            <p className="page-subtitle">Bitácora de acciones realizadas en el sistema</p>
+          </div>
+        </div>
+        <div className="audit-header-actions">
+          <span className="page-chip">
+            {meta.total} evento{meta.total !== 1 ? "s" : ""}
+          </span>
+          <button type="button" className="audit-refresh" onClick={fetchLogs} disabled={loading}>
+            <span className={loading ? "audit-spin" : ""}><IconRefresh /></span>
+            Actualizar
+          </button>
         </div>
       </div>
 
-      {/* Toolbar */}
-      <div className="toolbar">
-        <input
-          type="search"
-          className="search-input"
-          placeholder="Buscar por usuario..."
-          onChange={handleSearchInput}
-        />
-        <select className="select-filter" value={actionFilter} onChange={(e) => setActionFilter(e.target.value)}>
-          <option value="">Todas las acciones</option>
-          <option value="login">Inicio de sesión</option>
-          <option value="login_failed">Intento fallido</option>
-          <option value="password_change">Cambio de contraseña</option>
-          <option value="create">Creación</option>
-          <option value="update">Actualización</option>
-          <option value="activate">Activación</option>
-          <option value="deactivate">Desactivación</option>
-        </select>
-        <select className="select-filter" value={entityFilter} onChange={(e) => setEntityFilter(e.target.value)}>
-          <option value="">Todas las entidades</option>
-          <option value="auth">Autenticación</option>
-          <option value="user">Usuario</option>
-        </select>
+      {/* Filtros */}
+      <div className="audit-toolbar">
+        <label className="audit-search">
+          <IconSearch />
+          <input
+            type="search"
+            placeholder="Buscar por usuario..."
+            value={searchInput}
+            onChange={handleSearchInput}
+          />
+        </label>
+
+        <label className="audit-select">
+          <IconFilter />
+          <select value={actionFilter} onChange={(e) => setActionFilter(e.target.value)} aria-label="Filtrar por acción">
+            <option value="">Todas las acciones</option>
+            {Object.entries(ACTIONS).map(([value, { label }]) => (
+              <option key={value} value={value}>{label}</option>
+            ))}
+          </select>
+        </label>
+
+        <label className="audit-select">
+          <IconLock />
+          <select value={entityFilter} onChange={(e) => setEntityFilter(e.target.value)} aria-label="Filtrar por entidad">
+            <option value="">Todas las entidades</option>
+            {Object.entries(ENTITIES).map(([value, { label }]) => (
+              <option key={value} value={value}>{label}</option>
+            ))}
+          </select>
+        </label>
+
+        {hasFilters && (
+          <button type="button" className="audit-clear" onClick={clearFilters}>
+            Limpiar filtros
+          </button>
+        )}
       </div>
 
       {error ? (
         <div className="alert alert-error">
-          <span className="alert-icon">!</span>
+          <span className="alert-icon"><IconAlert /></span>
           {error}
           <button className="btn btn-sm btn-ghost" style={{ marginLeft: "auto" }} onClick={fetchLogs}>
             Reintentar
           </button>
         </div>
       ) : (
-        <div className="table-wrapper">
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Usuario</th>
-                <th>Acción</th>
-                <th>Entidad</th>
-                <th>Detalle</th>
-                <th>IP</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                [...Array(8)].map((_, i) => <SkeletonRow key={i} />)
-              ) : logs.length === 0 ? (
+        <div className="audit-card">
+          <div className="audit-table-scroll">
+            <table className="audit-table">
+              <thead>
                 <tr>
-                  <td colSpan={6}>
-                    <div className="empty-state">
-                      <div className="empty-state-icon">📋</div>
-                      <p className="empty-state-title">Sin eventos</p>
-                      <p className="empty-state-desc">
-                        No se encontraron eventos con los filtros aplicados.
-                      </p>
-                    </div>
-                  </td>
+                  <th>Fecha</th>
+                  <th>Usuario</th>
+                  <th>Acción</th>
+                  <th>Entidad</th>
+                  <th>Detalle</th>
+                  <th>IP</th>
                 </tr>
-              ) : (
-                logs.map((log) => {
-                  const actionInfo = ACTION_LABEL[log.action] || { label: log.action, className: "badge-user" };
-                  return (
-                    <tr key={log.id}>
-                      <td className="text-muted">{formatDate(log.created_at)}</td>
-                      <td>{log.user_name || "—"}</td>
-                      <td>
-                        <span className={`badge ${actionInfo.className}`}>{actionInfo.label}</span>
-                      </td>
-                      <td className="text-muted">{ENTITY_LABEL[log.entity] || log.entity}</td>
-                      <td className="text-muted">{formatDetails(log.details)}</td>
-                      <td className="text-muted">{log.ip_address || "—"}</td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {loading ? (
+                  [...Array(8)].map((_, i) => <SkeletonRow key={i} />)
+                ) : logs.length === 0 ? (
+                  <tr>
+                    <td colSpan={6}>
+                      <div className="audit-empty">
+                        <span className="audit-empty-icon"><IconInbox /></span>
+                        <p className="audit-empty-title">Sin eventos</p>
+                        <p className="audit-empty-text">
+                          No se encontraron eventos con los filtros aplicados.
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  logs.map((log) => {
+                    const action = ACTIONS[log.action] || { label: log.action, icon: IconActivity, tone: "gray" };
+                    const entity = ENTITIES[log.entity] || { label: log.entity, icon: IconActivity };
+                    const ActionIcon = action.icon;
+                    const EntityIcon = entity.icon;
+                    const details = formatDetails(log.details);
+                    const ip = formatIp(log.ip_address);
 
-          {!loading && meta.totalPages > 1 && (
-            <div className="pagination">
-              <span className="pagination-info">
-                Página {meta.page} de {meta.totalPages} — {meta.total} resultado{meta.total !== 1 ? "s" : ""}
+                    return (
+                      <tr key={log.id} className={log.action === "login_failed" ? "audit-row-failed" : ""}>
+                        <td>
+                          <div className="audit-date">
+                            <span className="audit-date-day">{formatDay(log.created_at)}</span>
+                            <span className="audit-date-time">
+                              <IconClock />
+                              {formatTime(log.created_at)}
+                            </span>
+                          </div>
+                        </td>
+                        <td>
+                          <div className="audit-user">
+                            <span className="audit-avatar">{getInitial(log.user_name)}</span>
+                            <span className="audit-user-name">{log.user_name || "—"}</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span className={`audit-badge tone-${action.tone}`}>
+                            <ActionIcon />
+                            {action.label}
+                          </span>
+                        </td>
+                        <td>
+                          <span className="audit-entity">
+                            <span className="audit-entity-icon"><EntityIcon /></span>
+                            {entity.label}
+                          </span>
+                        </td>
+                        <td className="audit-details">
+                          {details || <span className="audit-none">—</span>}
+                        </td>
+                        <td>
+                          {ip ? <span className="audit-ip">{ip}</span> : <span className="audit-none">—</span>}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {!loading && meta.total > 0 && (
+            <div className="audit-footer">
+              <span className="audit-footer-info">
+                Mostrando <strong>{rangeStart}–{rangeEnd}</strong> de <strong>{meta.total}</strong> eventos
               </span>
-              <div className="pagination-controls">
-                <button className="page-btn" onClick={() => setPage((p) => p - 1)} disabled={page <= 1}>‹</button>
-                {Array.from({ length: meta.totalPages }, (_, i) => i + 1)
-                  .filter((p) => p === 1 || p === meta.totalPages || Math.abs(p - page) <= 1)
-                  .reduce((acc, p, i, arr) => {
-                    if (i > 0 && p - arr[i - 1] > 1) acc.push("…");
-                    acc.push(p);
-                    return acc;
-                  }, [])
-                  .map((p, i) =>
-                    p === "…" ? (
-                      <span key={`e${i}`} className="page-ellipsis">…</span>
-                    ) : (
-                      <button key={p} className={`page-btn${page === p ? " active" : ""}`} onClick={() => setPage(p)}>
-                        {p}
-                      </button>
-                    )
-                  )}
-                <button className="page-btn" onClick={() => setPage((p) => p + 1)} disabled={page >= meta.totalPages}>›</button>
-              </div>
+
+              {meta.totalPages > 1 && (
+                <div className="pagination-controls">
+                  <button
+                    className="page-btn"
+                    onClick={() => setPage((p) => p - 1)}
+                    disabled={page <= 1}
+                    aria-label="Página anterior"
+                  >
+                    <IconChevronLeft />
+                  </button>
+                  {Array.from({ length: meta.totalPages }, (_, i) => i + 1)
+                    .filter((p) => p === 1 || p === meta.totalPages || Math.abs(p - page) <= 1)
+                    .reduce((acc, p, i, arr) => {
+                      if (i > 0 && p - arr[i - 1] > 1) acc.push("…");
+                      acc.push(p);
+                      return acc;
+                    }, [])
+                    .map((p, i) =>
+                      p === "…" ? (
+                        <span key={`e${i}`} className="page-ellipsis">…</span>
+                      ) : (
+                        <button key={p} className={`page-btn${page === p ? " active" : ""}`} onClick={() => setPage(p)}>
+                          {p}
+                        </button>
+                      )
+                    )}
+                  <button
+                    className="page-btn"
+                    onClick={() => setPage((p) => p + 1)}
+                    disabled={page >= meta.totalPages}
+                    aria-label="Página siguiente"
+                  >
+                    <IconChevronRight />
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

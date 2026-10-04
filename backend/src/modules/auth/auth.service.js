@@ -71,7 +71,7 @@ export const changePassword = async (userId, { currentPassword, newPassword }, {
 
   await auditoriaService.logEvent({
     action: "password_change",
-    entity: "users",
+    entity: "user",
     entityId: String(user.id),
     userId: user.id,
     userName: user.name,
