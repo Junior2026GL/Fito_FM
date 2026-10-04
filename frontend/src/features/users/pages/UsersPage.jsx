@@ -224,23 +224,24 @@ const UserModal = ({ user, onClose, onSaved, onCreated }) => {
               title="Solo letras, números, _ y -" placeholder="juan_perez" />
           </div>
 
-          <TextField id="m-email" name="email" label="Correo electrónico" icon={IconMail}
-            type="email" value={form.email} onChange={handleChange} required
-            maxLength={160} placeholder="juan@ejemplo.com" />
-
-          <DialogSection>Cargo y contacto</DialogSection>
           <div className="dlg-row-2">
-            <TextField id="m-job" name="job_title" label="Cargo" icon={IconBriefcase}
-              type="text" value={form.job_title} onChange={handleChange}
-              maxLength={100} placeholder="Coordinador" />
+            <TextField id="m-email" name="email" label="Correo electrónico" icon={IconMail}
+              type="email" value={form.email} onChange={handleChange} required
+              maxLength={160} placeholder="juan@ejemplo.com" />
             <TextField id="m-phone" name="phone" label="Teléfono" icon={IconPhone}
               type="tel" value={form.phone} onChange={handleChange}
               maxLength={30} inputMode="tel" placeholder="+504 9999-9999" />
           </div>
 
-          <TextField id="m-city" name="city" label="Ciudad" icon={IconMapPin}
-            type="text" value={form.city} onChange={handleChange}
-            maxLength={100} placeholder="Tegucigalpa" />
+          <DialogSection>Cargo y ubicación</DialogSection>
+          <div className="dlg-row-2">
+            <TextField id="m-job" name="job_title" label="Cargo" icon={IconBriefcase}
+              type="text" value={form.job_title} onChange={handleChange}
+              maxLength={100} placeholder="Coordinador" />
+            <TextField id="m-city" name="city" label="Ciudad" icon={IconMapPin}
+              type="text" value={form.city} onChange={handleChange}
+              maxLength={100} placeholder="Tegucigalpa" />
+          </div>
 
           {!isEditing && (
             <>
