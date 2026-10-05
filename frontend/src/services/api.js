@@ -26,7 +26,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !isLoginRequest) {
       localStorage.removeItem("fito_fm_token");
       localStorage.removeItem("fito_fm_user");
-      window.location.replace("/login");
+      window.location.replace("/login?expired=1");
     }
 
     return Promise.reject(error);

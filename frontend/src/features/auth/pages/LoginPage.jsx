@@ -1,17 +1,19 @@
 import { useState } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, useSearchParams, Navigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext.jsx";
 import { login } from "../services/auth.service.js";
 import { DialogError } from "../../../components/Dialog.jsx";
 import { PasswordField, TextField } from "../../../components/DialogFields.jsx";
-import { IconLogIn, IconUser } from "../../../components/icons.jsx";
+import { IconAlert, IconLogIn, IconUser } from "../../../components/icons.jsx";
 import logoGorra from "../../../assets/gorra.PNG";
 import mascota from "../../../assets/animado.PNG";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { isAuthenticated, loginAction } = useAuth();
+  const sessionExpired = searchParams.get("expired") === "1";
 
   const [form, setForm] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
@@ -70,6 +72,13 @@ export const LoginPage = () => {
           <p className="login-eyebrow">Panel de administración</p>
           <h2 className="login-title">Acceso al sistema</h2>
           <p className="login-subtitle">Ingresa tus credenciales para continuar.</p>
+
+          {sessionExpired && !error && (
+            <div className="dlg-note dlg-note-info login-notice" role="status">
+              <IconAlert />
+              <span>Tu sesión se cerró o expiró. Inicia sesión nuevamente.</span>
+            </div>
+          )}
 
           <DialogError message={error} />
 

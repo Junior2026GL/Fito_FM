@@ -11,18 +11,25 @@ import { errorHandler } from "./shared/middleware/error.middleware.js";
 export const createApp = () => {
   const app = express();
 
+  // Detrás del proxy del hosting, req.ip debe ser la IP real del cliente (no la del proxy):
+  // se usa en la auditoría y en el límite de intentos de login.
+  app.set("trust proxy", env.TRUST_PROXY ?? (env.NODE_ENV === "production" ? 1 : 0));
+
   app.disable("x-powered-by");
   app.use(helmet());
   app.use(
     cors({
       origin: (origin, callback) => {
-        // En desarrollo: permitir cualquier localhost (el puerto de Vite varía)
-        if (env.NODE_ENV === "development") {
-          if (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin)) {
-            return callback(null, true);
-          }
+        // Sin cabecera Origin (chequeos de salud, curl, servidor a servidor) CORS no aplica:
+        // solo protege a los navegadores, y las rutas privadas siguen exigiendo token.
+        if (!origin) {
+          return callback(null, true);
         }
-        // En producción: solo el dominio configurado
+        // En desarrollo: permitir cualquier localhost (el puerto de Vite varía)
+        if (env.NODE_ENV === "development" && /^http:\/\/localhost(:\d+)?$/.test(origin)) {
+          return callback(null, true);
+        }
+        // Cualquier otro entorno: solo el dominio configurado
         if (origin === env.FRONTEND_URL) {
           return callback(null, true);
         }

@@ -6,6 +6,8 @@ export const login = async (credentials) => {
   return response.data.data;
 };
 
+// Devuelve { token }: un token nuevo para esta sesión (las demás quedan cerradas)
 export const changePassword = async ({ currentPassword, newPassword }) => {
-  await api.post("/auth/change-password", { currentPassword, newPassword });
+  const response = await api.post("/auth/change-password", { currentPassword, newPassword });
+  return response.data.data;
 };

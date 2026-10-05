@@ -6,6 +6,10 @@ const envSchema = z.object({
   PORT: z.coerce.number().int().positive().default(3000),
   FRONTEND_URL: z.string().url().default("http://localhost:5173"),
 
+  // Cantidad de proxies delante de la app (para obtener la IP real del cliente).
+  // Si no se define: 1 en producción (hosting con proxy) y 0 en desarrollo.
+  TRUST_PROXY: z.coerce.number().int().min(0).optional(),
+
   DB_HOST: z.string().min(1),
   DB_PORT: z.coerce.number().int().positive().default(3306),
   DB_NAME: z.string().min(1),

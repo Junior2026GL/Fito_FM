@@ -55,12 +55,21 @@ export const updateUser = async (id, data) => {
 
   // Los campos de perfil que no vienen en la petición conservan su valor actual
   // (por ejemplo al asignar módulos); una cadena vacía los borra.
-  return usersRepository.update(id, {
+  const updated = await usersRepository.update(id, {
     ...data,
     job_title: data.job_title ?? user.job_title,
     phone: data.phone ?? user.phone,
     city: data.city ?? user.city
   });
+
+  // El rol y los módulos viajan en el token: si cambian, se cierra la sesión del usuario
+  // para que no conserve permisos que ya no tiene.
+  const modulesKey = (list) => [...(list ?? [])].sort().join(",");
+  if (user.role !== data.role || modulesKey(user.modules) !== modulesKey(data.modules)) {
+    await usersRepository.bumpTokenVersion(id);
+  }
+
+  return updated;
 };
 
 export const toggleUserStatus = async (id, requestingUserId) => {

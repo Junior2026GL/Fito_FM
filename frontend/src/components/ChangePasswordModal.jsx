@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuth } from "../features/auth/context/AuthContext.jsx";
 import { changePassword } from "../features/auth/services/auth.service.js";
 import { Dialog, DialogError } from "./Dialog.jsx";
 import { PasswordField, PasswordMatch, PasswordStrength } from "./DialogFields.jsx";
@@ -7,6 +8,7 @@ import { IconCheckCircle, IconShield } from "./icons.jsx";
 const EMPTY = { currentPassword: "", newPassword: "", confirmPassword: "" };
 
 export const ChangePasswordModal = ({ onClose }) => {
+  const { updateToken } = useAuth();
   const [form, setForm] = useState(EMPTY);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -33,10 +35,12 @@ export const ChangePasswordModal = ({ onClose }) => {
     setSaving(true);
 
     try {
-      await changePassword({
+      const result = await changePassword({
         currentPassword: form.currentPassword,
         newPassword: form.newPassword
       });
+      // Conserva esta sesión con el token nuevo (el anterior ya no es válido)
+      if (result?.token) updateToken(result.token);
       setSuccess(true);
       setForm(EMPTY);
     } catch (err) {

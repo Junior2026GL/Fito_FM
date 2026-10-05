@@ -6,6 +6,21 @@ import { AppError } from "../../shared/errors/app-error.js";
 import * as authRepository from "./auth.repository.js";
 import * as auditoriaService from "../auditoria/auditoria.service.js";
 
+const signToken = (user) =>
+  jwt.sign(
+    {
+      sub: user.id,
+      name: user.name,
+      role: user.role,
+      modules: user.modules ?? [],
+      ver: user.token_version
+    },
+    env.JWT_SECRET,
+    {
+      expiresIn: env.JWT_EXPIRES_IN
+    }
+  );
+
 export const login = async ({ username, password }, { ip } = {}) => {
   const user = await authRepository.findUserByUsername(username);
 
@@ -21,18 +36,7 @@ export const login = async ({ username, password }, { ip } = {}) => {
     throw new AppError("Credenciales incorrectas", 401);
   }
 
-  const token = jwt.sign(
-    {
-      sub: user.id,
-      name: user.name,
-      role: user.role,
-      modules: user.modules ?? []
-    },
-    env.JWT_SECRET,
-    {
-      expiresIn: env.JWT_EXPIRES_IN
-    }
-  );
+  const token = signToken(user);
 
   await auditoriaService.logEvent({ action: "login", entity: "auth", userId: user.id, userName: user.name, ipAddress: ip });
 
@@ -50,7 +54,7 @@ export const login = async ({ username, password }, { ip } = {}) => {
 };
 
 export const changePassword = async (userId, { currentPassword, newPassword }, { ip } = {}) => {
-  const user = await authRepository.findPasswordHashById(userId);
+  const user = await authRepository.findActiveUserById(userId);
 
   if (!user) {
     throw new AppError("Usuario no encontrado", 404);
@@ -77,4 +81,9 @@ export const changePassword = async (userId, { currentPassword, newPassword }, {
     userName: user.name,
     ipAddress: ip
   });
+
+  // Las demás sesiones quedaron cerradas; se entrega un token nuevo para esta sesión
+  const updated = await authRepository.findActiveUserById(user.id);
+
+  return { token: signToken(updated) };
 };

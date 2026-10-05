@@ -153,14 +153,22 @@ export const create = async ({ name, username, email, job_title, phone, city, pa
   return findById(id);
 };
 
+// Subir token_version cierra todas las sesiones abiertas del usuario
+export const bumpTokenVersion = async (id) => {
+  await pool.execute("UPDATE users SET token_version = token_version + 1 WHERE id = ?", [id]);
+};
+
 export const setActive = async (id, isActive) => {
   await pool.execute(
-    `UPDATE users SET is_active = ? WHERE id = ?`,
+    `UPDATE users SET is_active = ?, token_version = token_version + 1 WHERE id = ?`,
     [isActive ? 1 : 0, id]
   );
   return findById(id);
 };
 
 export const updatePasswordHash = async (id, passwordHash) => {
-  await pool.execute("UPDATE users SET password_hash = ? WHERE id = ?", [passwordHash, id]);
+  await pool.execute(
+    "UPDATE users SET password_hash = ?, token_version = token_version + 1 WHERE id = ?",
+    [passwordHash, id]
+  );
 };

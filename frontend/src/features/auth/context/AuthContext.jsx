@@ -23,6 +23,12 @@ export const AuthProvider = ({ children }) => {
     setUser(newUser);
   }, []);
 
+  // Reemplaza solo el token (p. ej. tras cambiar la contraseña, que cierra las demás sesiones)
+  const updateToken = useCallback((newToken) => {
+    localStorage.setItem(TOKEN_KEY, newToken);
+    setToken(newToken);
+  }, []);
+
   const logout = useCallback(() => {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
@@ -36,6 +42,7 @@ export const AuthProvider = ({ children }) => {
         token,
         user,
         loginAction,
+        updateToken,
         logout,
         isAuthenticated: !!token
       }}

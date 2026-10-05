@@ -3621,3 +3621,7 @@ button {
     text-align: center;
   }
 }
+
+.login-form-box .login-notice {
+  margin-bottom: 18px;
+}
