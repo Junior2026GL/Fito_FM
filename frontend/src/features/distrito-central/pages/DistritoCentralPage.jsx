@@ -3,9 +3,8 @@ import { getFiltros, getResumen } from "../services/distrito-central.service.js"
 import { FiltrosDistrito } from "../components/FiltrosDistrito.jsx";
 import { VotosPorPosicion } from "../components/VotosPorPosicion.jsx";
 import { DesgloseTabla } from "../components/DesgloseTabla.jsx";
-import { UrnasModal } from "../components/UrnasModal.jsx";
 import { centroKey, centroLabel, formatCiudad, formatNumber } from "../utils.js";
-import { IconAlert, IconCheck, IconCity, IconInbox, IconList, IconMap, IconUsers } from "../../../components/icons.jsx";
+import { IconAlert, IconCheck, IconCity, IconInbox, IconMap, IconUsers } from "../../../components/icons.jsx";
 
 const Kpi = ({ label, value, color, icon, cargando }) => (
   <div className="stat-card">
@@ -38,7 +37,6 @@ export const DistritoCentralPage = () => {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
   const [intento, setIntento] = useState(0);
-  const [urnasAbiertas, setUrnasAbiertas] = useState(false);
 
   // Opciones de los desplegables (una sola vez)
   useEffect(() => {
@@ -77,7 +75,6 @@ export const DistritoCentralPage = () => {
     let cancelado = false;
     setCargando(true);
     setError("");
-    setUrnasAbiertas(false);
 
     getResumen({
       ciudad,
@@ -141,13 +138,11 @@ export const DistritoCentralPage = () => {
   const sinDatos = !cargando && !error && totales?.total_jrv === 0;
 
   // Nivel que corresponde a los filtros actuales (igual que en el backend). Al elegir un centro
-  // no se muestra una tabla de urnas: se ofrece un botón que las abre en una ventana.
+  // no se muestra tabla de desglose.
   const nivelActual = centroSeleccionado ? "urna" : sector ? "centro" : ciudad ? "sector" : "ciudad";
 
   // Sin filtros solo se ven los totales; la papeleta y los resultados aparecen al filtrar
   const hayFiltro = Boolean(ciudad || sector || centro);
-  const urnasListas = !cargando && resumen?.desglose?.nivel === "urna";
-  const urnas = urnasListas ? resumen.desglose.filas : [];
 
   return (
     <>
@@ -233,41 +228,12 @@ export const DistritoCentralPage = () => {
             <>
               <VotosPorPosicion votos={resumen?.votos ?? []} cargando={cargando} />
 
-              {nivelActual === "urna" ? (
-                <section className="dc-section dc-urnas-cta">
-                  <span className="dc-urnas-cta-icon"><IconList /></span>
-                  <div className="dc-urnas-cta-text">
-                    <h2 className="dc-section-title">Urnas del centro</h2>
-                    <p className="dc-section-sub">
-                      {urnasListas
-                        ? `Este centro tiene ${urnas.length} ${urnas.length === 1 ? "urna" : "urnas"}. Consulta la casilla líder de cada una.`
-                        : "Cargando urnas..."}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={() => setUrnasAbiertas(true)}
-                    disabled={!urnasListas || urnas.length === 0}
-                  >
-                    <IconList />
-                    Ver urnas del centro
-                  </button>
-                </section>
-              ) : nivelActual !== "sector" && (
+              {nivelActual !== "urna" && nivelActual !== "sector" && (
                 <DesgloseTabla
                   nivel={nivelActual}
                   desglose={resumen?.desglose}
                   cargando={cargando}
                   onSeleccionar={bajarNivel}
-                />
-              )}
-
-              {urnasAbiertas && urnasListas && centroSeleccionado && (
-                <UrnasModal
-                  centro={centroLabel(centroSeleccionado)}
-                  urnas={urnas}
-                  onClose={() => setUrnasAbiertas(false)}
                 />
               )}
             </>
