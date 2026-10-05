@@ -4122,3 +4122,15 @@ button.dc-crumb:hover {
   z-index: 1;
   background: #f4f7fc;
 }
+
+/* Aviso inicial de Distrito Central (sin filtros) */
+.dc-hint {
+  margin: 0;
+  padding: 18px 20px;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #64748b;
+  background: #ffffff;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 14px;
+}

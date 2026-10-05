@@ -143,6 +143,9 @@ export const DistritoCentralPage = () => {
   // Nivel que corresponde a los filtros actuales (igual que en el backend). Al elegir un centro
   // no se muestra una tabla de urnas: se ofrece un botón que las abre en una ventana.
   const nivelActual = centroSeleccionado ? "urna" : sector ? "centro" : ciudad ? "sector" : "ciudad";
+
+  // Sin filtros solo se ven los totales; la papeleta y los resultados aparecen al filtrar
+  const hayFiltro = Boolean(ciudad || sector || centro);
   const urnasListas = !cargando && resumen?.desglose?.nivel === "urna";
   const urnas = urnasListas ? resumen.desglose.filas : [];
 
@@ -222,44 +225,52 @@ export const DistritoCentralPage = () => {
             <Kpi label="Centros de votación" value={totales?.total_centros} color="#1d4ed8" icon={<IconMap />} cargando={cargando} />
           </div>
 
-          <VotosPorPosicion votos={resumen?.votos ?? []} cargando={cargando} />
-
-          {nivelActual === "urna" ? (
-            <section className="dc-section dc-urnas-cta">
-              <span className="dc-urnas-cta-icon"><IconList /></span>
-              <div className="dc-urnas-cta-text">
-                <h2 className="dc-section-title">Urnas del centro</h2>
-                <p className="dc-section-sub">
-                  {urnasListas
-                    ? `Este centro tiene ${urnas.length} ${urnas.length === 1 ? "urna" : "urnas"}. Consulta la casilla líder de cada una.`
-                    : "Cargando urnas..."}
-                </p>
-              </div>
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => setUrnasAbiertas(true)}
-                disabled={!urnasListas || urnas.length === 0}
-              >
-                <IconList />
-                Ver urnas del centro
-              </button>
-            </section>
+          {!hayFiltro ? (
+            <p className="dc-hint">
+              Elige una ciudad, un sector o un centro de votación para ver la papeleta y los resultados.
+            </p>
           ) : (
-            <DesgloseTabla
-              nivel={nivelActual}
-              desglose={resumen?.desglose}
-              cargando={cargando}
-              onSeleccionar={bajarNivel}
-            />
-          )}
+            <>
+              <VotosPorPosicion votos={resumen?.votos ?? []} cargando={cargando} />
 
-          {urnasAbiertas && urnasListas && centroSeleccionado && (
-            <UrnasModal
-              centro={centroLabel(centroSeleccionado)}
-              urnas={urnas}
-              onClose={() => setUrnasAbiertas(false)}
-            />
+              {nivelActual === "urna" ? (
+                <section className="dc-section dc-urnas-cta">
+                  <span className="dc-urnas-cta-icon"><IconList /></span>
+                  <div className="dc-urnas-cta-text">
+                    <h2 className="dc-section-title">Urnas del centro</h2>
+                    <p className="dc-section-sub">
+                      {urnasListas
+                        ? `Este centro tiene ${urnas.length} ${urnas.length === 1 ? "urna" : "urnas"}. Consulta la casilla líder de cada una.`
+                        : "Cargando urnas..."}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => setUrnasAbiertas(true)}
+                    disabled={!urnasListas || urnas.length === 0}
+                  >
+                    <IconList />
+                    Ver urnas del centro
+                  </button>
+                </section>
+              ) : (
+                <DesgloseTabla
+                  nivel={nivelActual}
+                  desglose={resumen?.desglose}
+                  cargando={cargando}
+                  onSeleccionar={bajarNivel}
+                />
+              )}
+
+              {urnasAbiertas && urnasListas && centroSeleccionado && (
+                <UrnasModal
+                  centro={centroLabel(centroSeleccionado)}
+                  urnas={urnas}
+                  onClose={() => setUrnasAbiertas(false)}
+                />
+              )}
+            </>
           )}
         </>
       )}
