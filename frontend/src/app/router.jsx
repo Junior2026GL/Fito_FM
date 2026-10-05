@@ -7,6 +7,7 @@ import { NotFoundPage } from "../pages/NotFoundPage.jsx";
 import { LoginPage } from "../features/auth/pages/LoginPage.jsx";
 import { UsersPage } from "../features/users/pages/UsersPage.jsx";
 import { DiputadosPage } from "../features/diputados/pages/DiputadosPage.jsx";
+import { DistritoCentralPage } from "../features/distrito-central/pages/DistritoCentralPage.jsx";
 import { DashboardPage } from "../features/dashboard/pages/DashboardPage.jsx";
 import { AuditoriaPage } from "../features/auditoria/pages/AuditoriaPage.jsx";
 
@@ -28,6 +29,11 @@ export const AppRoutes = () => (
         {/* Requiere el módulo "diputados" */}
         <Route element={<ProtectedRoute requiredModule="diputados" />}>
           <Route path="/diputados" element={<DiputadosPage />} />
+        </Route>
+
+        {/* Requiere el módulo "distrito_central" */}
+        <Route element={<ProtectedRoute requiredModule="distrito_central" />}>
+          <Route path="/distrito-central" element={<DistritoCentralPage />} />
         </Route>
 
         {/* Requiere el módulo "auditoria" */}

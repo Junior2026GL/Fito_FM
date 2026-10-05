@@ -4,7 +4,7 @@ import { useAuth } from "../features/auth/context/AuthContext.jsx";
 import { hasModuleAccess } from "../config/modules.js";
 import {
   IconHome, IconUsers, IconMap, IconDashboard, IconAuditoria, IconLogout,
-  IconKey, IconChevronDown, IconMenu
+  IconKey, IconChevronDown, IconMenu, IconCity
 } from "../components/icons.jsx";
 import { ChangePasswordModal } from "../components/ChangePasswordModal.jsx";
 import { ErrorBoundary } from "../components/ErrorBoundary.jsx";
@@ -14,6 +14,7 @@ const PAGE_TITLES = {
   "/": "Inicio",
   "/dashboard": "Dashboard",
   "/diputados": "Diputados Elecciones Generales 2025",
+  "/distrito-central": "Distrito Central",
   "/auditoria": "Auditoría",
   "/usuarios": "Usuarios"
 };
@@ -129,6 +130,16 @@ export const MainLayout = () => {
             >
               <span className="sidebar-icon"><IconMap /></span>
               <span className="sidebar-label">Diputados Elecciones Generales 2025</span>
+            </NavLink>
+          )}
+
+          {hasModuleAccess(user, "distrito_central") && (
+            <NavLink
+              to="/distrito-central"
+              className={({ isActive }) => `sidebar-link${isActive ? " active" : ""}`}
+            >
+              <span className="sidebar-icon"><IconCity /></span>
+              <span className="sidebar-label">Distrito Central</span>
             </NavLink>
           )}
 

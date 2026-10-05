@@ -22,6 +22,7 @@ import {
   IconBan,
   IconBriefcase,
   IconCheck,
+  IconCity,
   IconCopy,
   IconDashboard,
   IconEdit,
@@ -52,7 +53,8 @@ const ROLES = {
 const MODULE_ICONS = {
   dashboard: IconDashboard,
   auditoria: IconAuditoria,
-  diputados: IconMap
+  diputados: IconMap,
+  distrito_central: IconCity
 };
 
 const PASSWORD_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*?";
