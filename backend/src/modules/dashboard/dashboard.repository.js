@@ -36,10 +36,33 @@ export const getElectoralSummary = async () => {
      FROM dip_fito_fm`
   );
 
+  const [municipioRows] = await pool.execute(
+    `SELECT
+       municipio,
+       SUM(carga_electoral) AS carga_electoral
+     FROM (
+       SELECT DISTINCT Municipio AS municipio, \`Centro de Votación\` AS centro, \`Carga Electoral\` AS carga_electoral
+       FROM dip_fito_fm
+     ) t
+     GROUP BY municipio
+     ORDER BY carga_electoral DESC`
+  );
+
+  const cargaTotal = municipioRows.reduce((acc, row) => acc + (Number(row.carga_electoral) || 0), 0);
+  const municipios = municipioRows.map((row) => {
+    const carga = Number(row.carga_electoral) || 0;
+    return {
+      municipio: row.municipio,
+      carga_electoral: carga,
+      porcentaje: cargaTotal ? (carga / cargaTotal) * 100 : 0
+    };
+  });
+
   return {
     carga_electoral: Number(cargaRow.carga_electoral) || 0,
     total_centros: Number(cargaRow.total_centros) || 0,
     total_jrv: Number(totalsRow.total_jrv) || 0,
-    total_municipios: Number(totalsRow.total_municipios) || 0
+    total_municipios: Number(totalsRow.total_municipios) || 0,
+    municipios
   };
 };

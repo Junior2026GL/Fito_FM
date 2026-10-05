@@ -99,6 +99,29 @@ export const DashboardPage = () => {
             <StatCard label="Carga electoral" value={summary.electoral.carga_electoral?.toLocaleString("es-HN")} color="#7c3aed" icon={<IconUsersGroup />} />
             <StatCard label="Total JRV" value={summary.electoral.total_jrv} color="#15803d" icon={<IconCheck />} />
           </div>
+
+          {summary.electoral.municipios?.length > 0 && (
+            <section className="dc-section">
+              <div className="dc-section-header">
+                <div>
+                  <h2 className="dc-section-title">Municipios por carga electoral</h2>
+                  <p className="dc-section-sub">Porcentaje que representa cada municipio del total</p>
+                </div>
+              </div>
+              <ul className="muni-pct-list">
+                {summary.electoral.municipios.map((m) => (
+                  <li className="muni-pct-row" key={m.municipio}>
+                    <span className="muni-pct-name">{m.municipio}</span>
+                    <div className="muni-pct-bar" aria-hidden="true">
+                      <div className="muni-pct-fill" style={{ width: `${m.porcentaje}%` }} />
+                    </div>
+                    <span className="muni-pct-carga">{m.carga_electoral.toLocaleString("es-HN")}</span>
+                    <span className="muni-pct-value">{m.porcentaje.toFixed(1)}%</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </>
       )}
     </>

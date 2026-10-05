@@ -3813,55 +3813,6 @@ button {
   color: #64748b;
 }
 
-.dc-select {
-  position: relative;
-}
-
-.dc-select-icon {
-  position: absolute;
-  left: 13px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  color: #94a3b8;
-  pointer-events: none;
-}
-
-.dc-select:focus-within .dc-select-icon {
-  color: #123a8f;
-}
-
-.dc-select select {
-  width: 100%;
-  height: 46px;
-  padding: 0 38px 0 40px;
-  border: 1.5px solid #dbe3f0;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #0f172a;
-  background-color: #f8fafd;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 13px center;
-  appearance: none;
-  outline: none;
-  text-overflow: ellipsis;
-  cursor: pointer;
-  transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
-}
-
-.dc-select select:focus {
-  border-color: #123a8f;
-  background-color: #ffffff;
-  box-shadow: 0 0 0 3px rgba(18, 58, 143, 0.14);
-}
-
-.dc-select select:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 .dc-clear {
   height: 46px;
   padding: 0 18px;
@@ -4133,4 +4084,283 @@ button.dc-crumb:hover {
   background: #ffffff;
   border: 1.5px dashed #cbd5e1;
   border-radius: 14px;
+}
+
+/* ============================================================
+   COMBOBOX – selector desplegable con panel propio
+   ============================================================ */
+.cb {
+  position: relative;
+}
+
+.cb-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  border: 1.5px solid #dbe3f0;
+  border-radius: 12px;
+  background: #f8fafd;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.cb-trigger:hover:not(:disabled) {
+  border-color: #b9c9ec;
+}
+
+.cb-trigger:focus-visible,
+.cb.open .cb-trigger {
+  outline: none;
+  border-color: #123a8f;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(18, 58, 143, 0.14);
+}
+
+.cb-trigger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cb-icon {
+  display: flex;
+  flex-shrink: 0;
+  color: #94a3b8;
+}
+
+.cb.open .cb-icon {
+  color: #123a8f;
+}
+
+.cb-value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cb-value.placeholder {
+  color: #475569;
+}
+
+.cb-chevron {
+  display: flex;
+  flex-shrink: 0;
+  color: #94a3b8;
+  transition: transform 0.18s;
+}
+
+.cb.open .cb-chevron {
+  transform: rotate(180deg);
+  color: #123a8f;
+}
+
+.cb-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 40;
+  width: 100%;
+  min-width: 270px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #dbe3f0;
+  border-radius: 14px;
+  box-shadow: 0 18px 44px rgba(11, 31, 77, 0.2), 0 2px 8px rgba(11, 31, 77, 0.06);
+  animation: slideUp 0.15s ease;
+}
+
+.cb-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  color: #94a3b8;
+  background: #f8fafd;
+  border-bottom: 1px solid #e9eef6;
+}
+
+.cb-search:focus-within {
+  color: #123a8f;
+}
+
+.cb-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.875rem;
+  color: #0f172a;
+}
+
+.cb-count {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #0e2460;
+  background: #e3ebfb;
+}
+
+.cb-list {
+  max-height: 300px;
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  list-style: none;
+  outline: none;
+}
+
+.cb-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.cb-option.active {
+  background: #eef3fc;
+}
+
+.cb-option.selected {
+  background: #e3ebfb;
+}
+
+.cb-option-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cb-option-main {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cb-option.selected .cb-option-main {
+  font-weight: 800;
+  color: #0e2460;
+}
+
+.cb-option.all .cb-option-main {
+  color: #475569;
+}
+
+.cb-option-sub {
+  font-size: 0.75rem;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cb-option-hint {
+  flex-shrink: 0;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  background: #f1f5f9;
+}
+
+.cb-option.active .cb-option-hint,
+.cb-option.selected .cb-option-hint {
+  color: #0e2460;
+  background: #ffffff;
+}
+
+.cb-check {
+  display: flex;
+  width: 16px;
+  flex-shrink: 0;
+  color: #123a8f;
+}
+
+.cb-empty {
+  padding: 22px 12px;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: #94a3b8;
+}
+
+@media (max-width: 700px) {
+  .cb-panel {
+    min-width: 0;
+  }
+}
+
+/* Dashboard: porcentaje de cada municipio */
+.muni-pct-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.muni-pct-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 200px) 1fr 90px 60px;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.88rem;
+}
+
+.muni-pct-name {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.muni-pct-bar {
+  height: 10px;
+  background: #eef1f7;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.muni-pct-fill {
+  height: 100%;
+  background: #7c3aed;
+  border-radius: 999px;
+}
+
+.muni-pct-carga {
+  text-align: right;
+  color: #64748b;
+}
+
+.muni-pct-value {
+  text-align: right;
+  font-weight: 800;
+  color: #7c3aed;
+}
+
+@media (max-width: 640px) {
+  .muni-pct-row {
+    grid-template-columns: 1fr 70px 56px;
+  }
+
+  .muni-pct-bar {
+    grid-column: 1 / -1;
+    order: 4;
+  }
 }
