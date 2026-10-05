@@ -1,10 +1,12 @@
 import express from "express";
+import compression from "compression";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 
 import { env } from "./config/env.js";
 import { apiRouter } from "./routes/index.js";
+import { apiLimiter } from "./shared/middleware/rate-limit.middleware.js";
 import { notFoundHandler } from "./shared/middleware/not-found.middleware.js";
 import { errorHandler } from "./shared/middleware/error.middleware.js";
 
@@ -17,6 +19,7 @@ export const createApp = () => {
 
   app.disable("x-powered-by");
   app.use(helmet());
+  app.use(compression());
   app.use(
     cors({
       origin: (origin, callback) => {
@@ -42,7 +45,7 @@ export const createApp = () => {
   app.use(express.urlencoded({ extended: true }));
   app.use(morgan(env.NODE_ENV === "production" ? "combined" : "dev"));
 
-  app.use("/api", apiRouter);
+  app.use("/api", apiLimiter, apiRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

@@ -10,6 +10,9 @@ const envSchema = z.object({
   // Si no se define: 1 en producción (hosting con proxy) y 0 en desarrollo.
   TRUST_PROXY: z.coerce.number().int().min(0).optional(),
 
+  // Máximo de peticiones por minuto y por IP en toda la API
+  API_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(300),
+
   DB_HOST: z.string().min(1),
   DB_PORT: z.coerce.number().int().positive().default(3306),
   DB_NAME: z.string().min(1),
