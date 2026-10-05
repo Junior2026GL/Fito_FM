@@ -319,3 +319,14 @@ export const IconCity = () => (
     <path d="M8 7h1M8 11h1M8 15h1M16 13h1M16 17h1" />
   </svg>
 );
+
+export const IconList = () => (
+  <svg {...strokeProps}>
+    <line x1="8" y1="6" x2="21" y2="6" />
+    <line x1="8" y1="12" x2="21" y2="12" />
+    <line x1="8" y1="18" x2="21" y2="18" />
+    <line x1="3" y1="6" x2="3.01" y2="6" />
+    <line x1="3" y1="12" x2="3.01" y2="12" />
+    <line x1="3" y1="18" x2="3.01" y2="18" />
+  </svg>
+);

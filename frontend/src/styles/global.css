@@ -4068,3 +4068,57 @@ button.dc-crumb:hover {
     padding: 16px;
   }
 }
+
+/* Botón "Ver urnas del centro" y ventana de urnas */
+.dc-urnas-cta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.dc-urnas-cta-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 13px;
+  color: #123a8f;
+  background: #e3ebfb;
+}
+
+.dc-urnas-cta-text {
+  flex: 1;
+  min-width: 220px;
+}
+
+.dc-urnas-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dc-urnas-toolbar .dt-search {
+  flex: 1;
+  min-width: 0;
+}
+
+.dc-urnas-scroll {
+  max-height: 46vh;
+  overflow-y: auto;
+  border: 1px solid #e4e8f0;
+  border-radius: 12px;
+}
+
+.dc-urnas-table {
+  min-width: 0;
+}
+
+.dc-urnas-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f4f7fc;
+}
