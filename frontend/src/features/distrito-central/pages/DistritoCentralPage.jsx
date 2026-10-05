@@ -254,7 +254,7 @@ export const DistritoCentralPage = () => {
                     Ver urnas del centro
                   </button>
                 </section>
-              ) : (
+              ) : nivelActual !== "sector" && (
                 <DesgloseTabla
                   nivel={nivelActual}
                   desglose={resumen?.desglose}
