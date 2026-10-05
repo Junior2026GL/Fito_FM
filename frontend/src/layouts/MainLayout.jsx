@@ -4,9 +4,10 @@ import { useAuth } from "../features/auth/context/AuthContext.jsx";
 import { hasModuleAccess } from "../config/modules.js";
 import {
   IconHome, IconUsers, IconMap, IconDashboard, IconAuditoria, IconLogout,
-  IconKey, IconChevronDown
+  IconKey, IconChevronDown, IconMenu
 } from "../components/icons.jsx";
 import { ChangePasswordModal } from "../components/ChangePasswordModal.jsx";
+import { ErrorBoundary } from "../components/ErrorBoundary.jsx";
 import gorraLogo from "../assets/gorra.PNG";
 
 const PAGE_TITLES = {
@@ -24,7 +25,26 @@ export const MainLayout = () => {
   const pageTitle = PAGE_TITLES[pathname] ?? "Panel de administración";
   const [menuOpen, setMenuOpen] = useState(false);
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const menuRef = useRef(null);
+
+  // Menú lateral en pantallas pequeñas: se cierra con Escape y bloquea el scroll del fondo mientras está abierto
+  useEffect(() => {
+    if (!sidebarOpen) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setSidebarOpen(false);
+    };
+    const previousOverflow = document.body.style.overflow;
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [sidebarOpen]);
 
   useEffect(() => {
     if (!menuOpen) return undefined;
@@ -62,7 +82,10 @@ export const MainLayout = () => {
   return (
     <div className="app-shell">
       {/* ── SIDEBAR ── */}
-      <aside className="sidebar">
+      {sidebarOpen && (
+        <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} aria-hidden="true" />
+      )}
+      <aside id="sidebar" className={`sidebar${sidebarOpen ? " open" : ""}`}>
         {/* Brand */}
         <div className="sidebar-brand">
           <div className="sidebar-brand-circle">
@@ -71,7 +94,13 @@ export const MainLayout = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="sidebar-nav">
+        <nav
+          className="sidebar-nav"
+          onClick={(event) => {
+            // Al elegir una sección, el menú se cierra (solo se nota en pantallas pequeñas)
+            if (event.target.closest("a")) setSidebarOpen(false);
+          }}
+        >
           <div className="sidebar-section">Menú</div>
           <NavLink
             to="/"
@@ -128,6 +157,17 @@ export const MainLayout = () => {
       <div className="app-main">
         {/* ── HEADER ── */}
         <header className="topbar">
+          <button
+            type="button"
+            className="topbar-menu-btn"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Abrir menú"
+            aria-controls="sidebar"
+            aria-expanded={sidebarOpen}
+          >
+            <IconMenu />
+          </button>
+
           <div className="topbar-title">
             <span className="topbar-eyebrow">Panel de administración</span>
             <span className="topbar-page">{pageTitle}</span>
@@ -183,7 +223,9 @@ export const MainLayout = () => {
         {/* ── CONTENT ── */}
         <main className="page-content">
           <div className="page-container">
-            <Outlet />
+            <ErrorBoundary variant="section" resetKey={pathname}>
+              <Outlet />
+            </ErrorBoundary>
           </div>
         </main>
 
