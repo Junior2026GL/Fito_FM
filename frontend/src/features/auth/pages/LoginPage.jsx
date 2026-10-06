@@ -58,6 +58,14 @@ export const LoginPage = () => {
         <div className="login-mascot-stage">
           <div className="login-mascot-card">
             <img src={mascota} alt="Mascota La Gorra Azul" />
+            <div className="login-mascot-caption">
+              <h2 className="login-mascot-title">Resultados electorales en un solo lugar</h2>
+              <ul className="login-mascot-chips">
+                <li>Municipios</li>
+                <li>Centros</li>
+                <li>Urnas</li>
+              </ul>
+            </div>
           </div>
         </div>
       </aside>
