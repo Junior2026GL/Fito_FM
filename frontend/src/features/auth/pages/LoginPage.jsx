@@ -3,7 +3,6 @@ import { useNavigate, useSearchParams, Navigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext.jsx";
 import { login } from "../services/auth.service.js";
-import { DialogError } from "../../../components/Dialog.jsx";
 import { PasswordField, TextField } from "../../../components/DialogFields.jsx";
 import { IconAlert, IconLogIn, IconUser } from "../../../components/icons.jsx";
 import logoGorra from "../../../assets/gorra.PNG";
@@ -16,7 +15,7 @@ export const LoginPage = () => {
   const sessionExpired = searchParams.get("expired") === "1";
 
   const [form, setForm] = useState({ username: "", password: "" });
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   // Si ya está autenticado, redirigir al inicio
@@ -29,17 +28,50 @@ export const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setError(null);
+
+    const username = form.username.trim();
+    if (!username || !form.password) {
+      setError({
+        title: "Faltan datos",
+        text: !username && !form.password
+          ? "Escribe tu usuario y tu contraseña para continuar."
+          : !username
+            ? "Escribe tu usuario para continuar."
+            : "Escribe tu contraseña para continuar."
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const result = await login(form);
+      const result = await login({ ...form, username });
       loginAction(result);
       navigate("/");
     } catch (err) {
-      setError(
-        err.response?.data?.message || "No fue posible iniciar sesión"
-      );
+      const status = err.response?.status;
+      if (status === 400) {
+        setError({
+          title: "Revisa tus datos",
+          text: "El usuario o la contraseña no tienen un formato válido. Verifícalos e inténtalo de nuevo."
+        });
+      } else if (status === 401) {
+        setError({
+          title: "No pudimos iniciar tu sesión",
+          text: err.response?.data?.message || "Usuario o contraseña incorrectos."
+        });
+      } else if (!err.response) {
+        setError({
+          title: "Sin conexión con el servidor",
+          text: "Revisa tu conexión a internet e inténtalo de nuevo."
+        });
+      } else {
+        setError({
+          title: "No fue posible iniciar sesión",
+          text: err.response?.data?.message || "Inténtalo de nuevo en unos minutos."
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -80,7 +112,15 @@ export const LoginPage = () => {
             </div>
           )}
 
-          <DialogError message={error} />
+          {error && (
+            <div className="login-alert" role="alert">
+              <span className="login-alert-icon"><IconAlert /></span>
+              <div className="login-alert-body">
+                <strong>{error.title}</strong>
+                <span>{error.text}</span>
+              </div>
+            </div>
+          )}
 
           <form className="login-form" onSubmit={handleSubmit} noValidate>
             <TextField

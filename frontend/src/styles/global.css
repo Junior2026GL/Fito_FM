@@ -753,8 +753,58 @@ button {
   gap: 18px;
 }
 
-.login-form-box .dlg-alert {
+.login-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
   margin-bottom: 18px;
+  padding: 12px 14px;
+  border: 1px solid #fecaca;
+  border-left: 4px solid #dc2626;
+  border-radius: 12px;
+  background: #fef2f2;
+  animation: loginAlertIn 0.25s ease;
+}
+
+.login-alert-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.login-alert-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.login-alert-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.login-alert-body strong {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #991b1b;
+}
+
+.login-alert-body span {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #b91c1c;
+}
+
+@keyframes loginAlertIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .login-form-box .dlg-input {
