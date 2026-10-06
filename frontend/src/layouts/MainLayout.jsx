@@ -90,7 +90,7 @@ export const MainLayout = () => {
         {/* Brand */}
         <div className="sidebar-brand">
           <div className="sidebar-brand-circle">
-            <img src={gorraLogo} alt="fito_fm" className="sidebar-brand-logo" />
+            <img src={gorraLogo} alt="FITO" className="sidebar-brand-logo" />
           </div>
         </div>
 
