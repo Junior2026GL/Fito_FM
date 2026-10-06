@@ -654,7 +654,7 @@ button {
 .login-mascot {
   position: relative;
   display: block;
-  height: min(86vh, 760px);
+  height: min(76vh, 660px);
   width: auto;
   filter: drop-shadow(0 22px 28px rgba(2, 8, 23, 0.45));
 }
@@ -985,7 +985,7 @@ button {
   }
 
   .login-mascot {
-    height: min(78vh, 640px);
+    height: min(68vh, 560px);
   }
 }
 
