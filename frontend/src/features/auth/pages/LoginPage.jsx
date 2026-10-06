@@ -4,9 +4,23 @@ import { useNavigate, useSearchParams, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { login } from "../services/auth.service.js";
 import { PasswordField, TextField } from "../../../components/DialogFields.jsx";
-import { IconAlert, IconLogIn, IconUser } from "../../../components/icons.jsx";
+import { IconAlert, IconLogIn, IconShield, IconUser, IconUsers } from "../../../components/icons.jsx";
 import logoGorra from "../../../assets/gorra.PNG";
 import mascota from "../../../assets/animado.PNG";
+
+const IconChart = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="6" y1="20" x2="6" y2="13" />
+    <line x1="12" y1="20" x2="12" y2="6" />
+    <line x1="18" y1="20" x2="18" y2="10" />
+  </svg>
+);
+
+const FEATURES = [
+  { icon: IconUsers, title: "Gestión más sencilla", text: "Accede a lo que necesitas, de forma rápida y organizada." },
+  { icon: IconShield, title: "Información segura", text: "Tus datos siempre protegidos con los más altos estándares." },
+  { icon: IconChart, title: "Un equipo más fuerte", text: "Herramientas que impulsan tu crecimiento." }
+];
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -92,6 +106,30 @@ export const LoginPage = () => {
             <img src={mascota} alt="Mascota La Gorra Azul" />
           </div>
         </div>
+
+        <div className="login-brand-content">
+          <p className="login-brand-kicker">La Gorra Azul</p>
+          <h1 className="login-brand-headline">
+            Personas que hacen <span>posible más.</span>
+          </h1>
+          <p className="login-brand-lead">
+            Un sistema pensado para nuestro equipo, con herramientas simples, seguras y siempre a tu alcance.
+          </p>
+
+          <ul className="login-features">
+            {FEATURES.map(({ icon: Icon, title, text }) => (
+              <li key={title}>
+                <span className="login-feature-icon"><Icon /></span>
+                <div>
+                  <strong>{title}</strong>
+                  <span>{text}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <p className="login-brand-tagline">Juntos llegamos más lejos</p>
+        </div>
       </aside>
 
       {/* Lado derecho – formulario */}
@@ -102,8 +140,8 @@ export const LoginPage = () => {
 
         <div className="login-form-box">
           <p className="login-eyebrow">Panel de administración</p>
-          <h2 className="login-title">Acceso al sistema</h2>
-          <p className="login-subtitle">Ingresa tus credenciales para continuar.</p>
+          <h2 className="login-title">Ingresa al sistema</h2>
+          <p className="login-subtitle">Utiliza tus credenciales para continuar.</p>
 
           {sessionExpired && !error && (
             <div className="dlg-note dlg-note-info login-notice" role="status">
@@ -168,6 +206,11 @@ export const LoginPage = () => {
 
           <p className="login-help">
             ¿Olvidaste tu contraseña? Contacta al administrador del sistema.
+          </p>
+
+          <p className="login-secure">
+            <IconShield />
+            <span>Acceso exclusivo para personal autorizado de La Gorra Azul.</span>
           </p>
         </div>
 

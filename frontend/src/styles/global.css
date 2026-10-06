@@ -572,11 +572,11 @@ button {
 .login-brand-side {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 32px 40px;
+  justify-content: center;
+  gap: clamp(20px, 3vw, 48px);
+  padding: 40px clamp(24px, 4vw, 56px);
   overflow: hidden;
   color: #ffffff;
   background:
@@ -631,15 +631,14 @@ button {
 .login-mascot-stage {
   position: relative;
   z-index: 1;
-  flex: 1;
-  width: 100%;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .login-mascot-card {
-  height: min(540px, 58vh);
+  height: min(560px, 70vh);
   aspect-ratio: 2 / 3;
   overflow: hidden;
   border-radius: 28px;
@@ -654,6 +653,108 @@ button {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Mensaje de marca */
+.login-brand-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  max-width: 400px;
+  min-width: 0;
+}
+
+.login-brand-kicker {
+  margin: 0 0 14px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.login-brand-headline {
+  margin: 0 0 16px;
+  font-size: clamp(2rem, 3.4vw, 3.1rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.login-brand-headline span {
+  display: block;
+  color: #7dd3fc;
+}
+
+.login-brand-lead {
+  margin: 0 0 28px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(226, 238, 255, 0.85);
+}
+
+.login-features {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0 0 28px;
+  padding: 0;
+  list-style: none;
+}
+
+.login-features li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.login-feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.login-feature-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.login-features li div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.login-features strong {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.login-features li span:not(.login-feature-icon) {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: rgba(226, 238, 255, 0.75);
+}
+
+.login-brand-tagline {
+  margin: 0;
+  font-family: "Brush Script MT", "Segoe Script", "Snell Roundhand", cursive;
+  font-size: 1.7rem;
+  font-style: italic;
+  color: #7dd3fc;
+  transform: rotate(-3deg);
+  transform-origin: left center;
 }
 
 /* ── Panel derecho ────────────────────────────────────── */
@@ -843,6 +944,26 @@ button {
   color: #94a3b8;
 }
 
+.login-secure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid #e8eef7;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.login-secure svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
 .login-form-foot {
   position: absolute;
   bottom: 20px;
@@ -852,6 +973,17 @@ button {
 }
 
 /* ── Responsive ───────────────────────────────────────── */
+@media (max-width: 1280px) {
+  .login-features,
+  .login-brand-tagline {
+    display: none;
+  }
+
+  .login-mascot-card {
+    height: min(480px, 64vh);
+  }
+}
+
 @media (max-width: 900px) {
   .login-layout {
     grid-template-columns: 1fr;
