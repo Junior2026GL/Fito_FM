@@ -6,7 +6,7 @@ import { login } from "../services/auth.service.js";
 import { PasswordField, TextField } from "../../../components/DialogFields.jsx";
 import { IconAlert, IconLogIn, IconShield, IconUser, IconUsers } from "../../../components/icons.jsx";
 import logoGorra from "../../../assets/gorra.PNG";
-import mascota from "../../../assets/animado.PNG";
+import mascota from "../../../assets/animado_sin_fondo.png";
 
 const IconChart = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -102,9 +102,7 @@ export const LoginPage = () => {
         <div className="login-deco login-deco-3" />
 
         <div className="login-mascot-stage">
-          <div className="login-mascot-card">
-            <img src={mascota} alt="Mascota La Gorra Azul" />
-          </div>
+          <img className="login-mascot" src={mascota} alt="Mascota La Gorra Azul" />
         </div>
 
         <div className="login-brand-content">
