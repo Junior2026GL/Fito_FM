@@ -94,7 +94,7 @@ const StatCard = ({ label, value, color, icon }) => (
 
 const SkeletonRow = () => (
   <tr>
-    {[190, 150, 170, 110, 120, 80, 90, 130].map((w, i) => (
+    {[190, 150, 170, 110, 80, 90, 130].map((w, i) => (
       <td key={i}><div className="skeleton" style={{ width: w, height: 14 }} /></td>
     ))}
   </tr>
@@ -774,7 +774,6 @@ export const UsersPage = () => {
                   <th>Cargo</th>
                   <th>Contacto</th>
                   <th>Rol</th>
-                  <th>Módulos</th>
                   <th>Estado</th>
                   <th>Registrado</th>
                   <th>Acciones</th>
@@ -785,7 +784,7 @@ export const UsersPage = () => {
                   [...Array(6)].map((_, i) => <SkeletonRow key={i} />)
                 ) : users.length === 0 ? (
                   <tr>
-                    <td colSpan={8}>
+                    <td colSpan={7}>
                       <div className="dt-empty">
                         <span className="dt-empty-icon"><IconInbox /></span>
                         <p className="dt-empty-title">Sin usuarios</p>
@@ -838,21 +837,6 @@ export const UsersPage = () => {
                         </div>
                       </td>
                       <td><RoleBadge role={user.role} /></td>
-                      <td>
-                        {user.role === "admin" ? (
-                          <span className="module-chip module-chip-all">Todos</span>
-                        ) : user.modules?.length ? (
-                          <div className="module-chip-list">
-                            {user.modules.map((key) => (
-                              <span key={key} className="module-chip">
-                                {modules.find((m) => m.key === key)?.label ?? key}
-                              </span>
-                            ))}
-                          </div>
-                        ) : (
-                          <span className="module-chip module-chip-empty">Sin acceso</span>
-                        )}
-                      </td>
                       <td>
                         <span className={`dt-badge ${user.is_active ? "tone-green" : "tone-gray"}`}>
                           <span className="dt-dot" />
