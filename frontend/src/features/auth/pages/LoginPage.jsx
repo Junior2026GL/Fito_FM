@@ -167,7 +167,7 @@ export const LoginPage = () => {
               type="text"
               value={form.username}
               onChange={handleChange}
-              placeholder="tu_usuario"
+              placeholder="Ingresa tu usuario"
               autoComplete="username"
               autoFocus
               required
