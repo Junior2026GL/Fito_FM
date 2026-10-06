@@ -632,9 +632,10 @@ button {
   position: relative;
   z-index: 1;
   flex: 0 0 auto;
-  align-self: flex-end;
+  align-self: center;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  margin-bottom: 6vh;
 }
 
 /* Resplandor detrás del personaje */
