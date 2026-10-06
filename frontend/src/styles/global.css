@@ -575,8 +575,7 @@ button {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: clamp(8px, 2vw, 32px);
-  padding: 0 clamp(24px, 3vw, 48px) 0 clamp(12px, 2vw, 32px);
+  padding: 40px;
   overflow: hidden;
   color: #ffffff;
   background:
@@ -632,10 +631,8 @@ button {
   position: relative;
   z-index: 1;
   flex: 0 0 auto;
-  align-self: center;
   display: flex;
   align-items: center;
-  margin-bottom: 6vh;
 }
 
 /* Resplandor detrás del personaje */
@@ -643,10 +640,10 @@ button {
   content: "";
   position: absolute;
   left: 50%;
-  bottom: 8%;
+  top: 50%;
   width: 120%;
   aspect-ratio: 1;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(circle, rgba(96, 165, 250, 0.45) 0%, rgba(96, 165, 250, 0) 68%);
 }
@@ -654,112 +651,9 @@ button {
 .login-mascot {
   position: relative;
   display: block;
-  height: min(76vh, 660px);
+  height: min(82vh, 720px);
   width: auto;
   filter: drop-shadow(0 22px 28px rgba(2, 8, 23, 0.45));
-}
-
-/* Mensaje de marca */
-.login-brand-content {
-  position: relative;
-  z-index: 1;
-  align-self: center;
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 0;
-  max-width: 400px;
-  min-width: 0;
-}
-
-.login-brand-kicker {
-  margin: 0 0 14px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.login-brand-headline {
-  margin: 0 0 16px;
-  font-size: clamp(2rem, 3.4vw, 3.1rem);
-  font-weight: 900;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  color: #ffffff;
-}
-
-.login-brand-headline span {
-  display: block;
-  color: #7dd3fc;
-}
-
-.login-brand-lead {
-  margin: 0 0 28px;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: rgba(226, 238, 255, 0.85);
-}
-
-.login-features {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 0 0 28px;
-  padding: 0;
-  list-style: none;
-}
-
-.login-features li {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.login-feature-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  flex-shrink: 0;
-  border-radius: 14px;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-}
-
-.login-feature-icon svg {
-  width: 24px;
-  height: 24px;
-}
-
-.login-features li div {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.login-features strong {
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: #ffffff;
-}
-
-.login-features li span:not(.login-feature-icon) {
-  font-size: 0.8rem;
-  line-height: 1.45;
-  color: rgba(226, 238, 255, 0.75);
-}
-
-.login-brand-tagline {
-  margin: 0;
-  font-family: "Brush Script MT", "Segoe Script", "Snell Roundhand", cursive;
-  font-size: 1.7rem;
-  font-style: italic;
-  color: #7dd3fc;
-  transform: rotate(-3deg);
-  transform-origin: left center;
 }
 
 /* ── Panel derecho ────────────────────────────────────── */
@@ -978,17 +872,6 @@ button {
 }
 
 /* ── Responsive ───────────────────────────────────────── */
-@media (max-width: 1280px) {
-  .login-features,
-  .login-brand-tagline {
-    display: none;
-  }
-
-  .login-mascot {
-    height: min(68vh, 560px);
-  }
-}
-
 @media (max-width: 900px) {
   .login-layout {
     grid-template-columns: 1fr;
