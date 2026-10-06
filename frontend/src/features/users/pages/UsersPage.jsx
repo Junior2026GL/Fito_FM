@@ -521,7 +521,7 @@ const ConfirmModal = ({ user, onClose, onConfirm }) => {
       size="sm"
       onClose={onClose}
     >
-      <div className="dlg-body dlg-confirm">
+      <div className="dlg-body dlg-confirm-body">
         <span className={`dlg-confirm-icon ${deactivating ? "danger" : "success"}`}>
           {deactivating ? <IconBan /> : <IconCheck />}
         </span>

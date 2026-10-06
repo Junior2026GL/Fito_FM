@@ -3442,3 +3442,972 @@ button {
 @media (prefers-reduced-motion: reduce) {
   .dlg-shake { animation: none; }
 }
+
+.dlg-btn-danger {
+  color: #ffffff;
+  background: linear-gradient(120deg, #b91c1c 0%, #dc2626 100%);
+  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.28);
+}
+
+.dlg-btn-success {
+  color: #ffffff;
+  background: linear-gradient(120deg, #166534 0%, #16a34a 100%);
+  box-shadow: 0 4px 12px rgba(22, 101, 52, 0.28);
+}
+
+.dlg-btn-danger:hover:not(:disabled),
+.dlg-btn-success:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+@media (max-width: 520px) {
+  .dlg-row-2,
+  .dlg-segment {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   VENTANAS (dlg) – secciones, herramientas y avisos
+   ============================================================ */
+.dlg-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 2px 0 -4px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.dlg-section::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e9eef6;
+}
+
+.dlg-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dlg-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid #dbe3f0;
+  border-radius: 9px;
+  background: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #123a8f;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.dlg-link-btn:hover {
+  background: #eef3fc;
+  border-color: #b9c9ec;
+}
+
+.dlg-link-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.dlg-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 11px 13px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #92400e;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+}
+
+.dlg-note svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.action-icon-key {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.action-icon-key:hover {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* Celdas apiladas (cargo / contacto) */
+.dt-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.dt-stack-main {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.dt-stack-main.dt-email {
+  font-weight: 500;
+  color: #334155;
+}
+
+.dt-stack-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.dt-stack-sub svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.dt-none {
+  color: #cbd5e1;
+}
+
+.dlg-note.dlg-note-info {
+  color: #1e3a8a;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.app-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 32px;
+  font-size: 0.78rem;
+  color: #64748b;
+  background: #ffffff;
+  border-top: 1px solid #e4e8f0;
+}
+
+.app-footer strong {
+  color: #0e2460;
+}
+
+.app-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-footer-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .app-footer {
+    padding: 14px 16px;
+    text-align: center;
+  }
+}
+
+.login-form-box .login-notice {
+  margin-bottom: 18px;
+}
+
+/* ============================================================
+   MENÚ MÓVIL
+   ============================================================ */
+.topbar-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+  background: transparent;
+  color: #ffffff;
+  transition: background 0.15s;
+}
+
+.topbar-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .topbar {
+    padding: 0 16px;
+  }
+
+  .topbar-menu-btn {
+    display: flex;
+  }
+
+  .topbar-title {
+    flex: 1;
+  }
+
+  /* El menú pasa a ser un panel que se desliza sobre el contenido */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(280px, 85vw);
+    min-width: 0;
+    height: 100%;
+    min-height: 0;
+    z-index: 50;
+    transform: translateX(-100%);
+    visibility: hidden;
+    box-shadow: none;
+    transition: transform 0.25s ease, visibility 0s linear 0.25s;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    visibility: visible;
+    box-shadow: 8px 0 32px rgba(7, 18, 50, 0.45);
+    transition: transform 0.25s ease, visibility 0s;
+  }
+
+  .sidebar-nav {
+    overflow-y: auto;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    background: rgba(7, 18, 50, 0.55);
+    backdrop-filter: blur(2px);
+    animation: fadeIn 0.2s ease;
+  }
+}
+
+/* ============================================================
+   ERROR DE INTERFAZ (ErrorBoundary)
+   ============================================================ */
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+}
+
+.error-boundary-page {
+  min-height: 100vh;
+  background: #f0f4fb;
+}
+
+.error-boundary-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(460px, 100%);
+  padding: 36px 32px 32px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #e4e8f0;
+  border-radius: 20px;
+  box-shadow: 0 8px 28px rgba(12, 36, 97, 0.1);
+}
+
+.error-boundary-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  color: #b45309;
+  background: #fef3c7;
+}
+
+.error-boundary-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.error-boundary-title {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.error-boundary-text {
+  margin: 0 0 20px;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+.error-boundary-detail {
+  width: 100%;
+  margin: 0 0 20px;
+  padding: 10px 12px;
+  overflow-x: auto;
+  text-align: left;
+  font-size: 0.75rem;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+}
+
+.error-boundary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* ============================================================
+   DISTRITO CENTRAL
+   ============================================================ */
+.dc-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr auto;
+  gap: 16px;
+  align-items: end;
+  margin-bottom: 14px;
+  padding: 18px 20px;
+  background: #ffffff;
+  border: 1px solid #e4e8f0;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(20, 32, 58, 0.04);
+}
+
+.dc-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.dc-filter-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.dc-clear {
+  height: 46px;
+  padding: 0 18px;
+  border: 1px solid #dbe3f0;
+  border-radius: 12px;
+  background: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0e2460;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.dc-clear:hover:not(:disabled) {
+  background: #eef3fc;
+  border-color: #b9c9ec;
+}
+
+.dc-clear:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Ruta del alcance: Distrito Central › Ciudad › Sector › Centro */
+.dc-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 20px;
+  font-size: 0.8125rem;
+}
+
+.dc-crumb-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.dc-crumb-sep {
+  color: #94a3b8;
+}
+
+.dc-crumb {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  font-weight: 600;
+  color: #64748b;
+}
+
+button.dc-crumb {
+  cursor: pointer;
+}
+
+button.dc-crumb:hover {
+  background: #e3ebfb;
+  color: #0e2460;
+}
+
+.dc-crumb.active {
+  font-weight: 800;
+  color: #0e2460;
+  background: #e3ebfb;
+}
+
+.dc-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.dc-section {
+  margin-bottom: 20px;
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #e4e8f0;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(20, 32, 58, 0.04);
+}
+
+.dc-section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.dc-section-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.dc-section-sub {
+  margin: 3px 0 0;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+/* Votos por posición: mismas tarjetas del detalle de Diputados, en una sola línea */
+.dc-votos-scroll {
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.dc-votos-inner {
+  min-width: calc(23 * var(--dc-col-min, 52px) + 22 * 6px);
+}
+
+/* La papeleta ocupa exactamente el ancho de la fila de tarjetas */
+.dc-votos-inner .modal-papeleta-banner {
+  padding: 12px 0;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid #e4e8f0;
+}
+
+.dc-votos-inner .casilla-votos {
+  font-size: var(--dc-votos-size, 0.75rem);
+}
+
+.dc-votos-inner .casillas-pos-row,
+.dc-votos-inner .casillas-grid,
+.dc-votos-inner .casillas-skeleton {
+  grid-template-columns: repeat(23, minmax(0, 1fr));
+}
+
+.dc-empty-inline,
+.dc-empty-cell {
+  margin: 0;
+  padding: 24px 8px;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.dc-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 48px 16px;
+}
+
+/* Tabla de desglose */
+.dc-section .dt-table {
+  min-width: 640px;
+}
+
+.dc-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.dc-name {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.dc-go {
+  width: 36px;
+  text-align: right;
+  color: #94a3b8;
+}
+
+.dt-row-link {
+  cursor: pointer;
+}
+
+.dt-table tbody tr.dt-row-link:hover .dc-go {
+  color: #0e2460;
+}
+
+@media (max-width: 1100px) {
+  .dc-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dc-filters .dc-filter:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+
+  .dc-clear {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 700px) {
+  .dc-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .dc-kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .dc-section {
+    padding: 16px;
+  }
+}
+
+/* Botón "Ver urnas del centro" y ventana de urnas */
+.dc-urnas-cta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.dc-urnas-cta-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 13px;
+  color: #123a8f;
+  background: #e3ebfb;
+}
+
+.dc-urnas-cta-text {
+  flex: 1;
+  min-width: 220px;
+}
+
+.dc-urnas-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dc-urnas-toolbar .dt-search {
+  flex: 1;
+  min-width: 0;
+}
+
+.dc-urnas-scroll {
+  max-height: 46vh;
+  overflow-y: auto;
+  border: 1px solid #e4e8f0;
+  border-radius: 12px;
+}
+
+.dc-urnas-table {
+  min-width: 0;
+}
+
+.dc-urnas-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f4f7fc;
+}
+
+/* Aviso inicial de Distrito Central (sin filtros) */
+.dc-hint {
+  margin: 0;
+  padding: 18px 20px;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #64748b;
+  background: #ffffff;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 14px;
+}
+
+/* ============================================================
+   COMBOBOX – selector desplegable con panel propio
+   ============================================================ */
+.cb {
+  position: relative;
+}
+
+.cb-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  border: 1.5px solid #dbe3f0;
+  border-radius: 12px;
+  background: #f8fafd;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.cb-trigger:hover:not(:disabled) {
+  border-color: #b9c9ec;
+}
+
+.cb-trigger:focus-visible,
+.cb.open .cb-trigger {
+  outline: none;
+  border-color: #123a8f;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(18, 58, 143, 0.14);
+}
+
+.cb-trigger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cb-icon {
+  display: flex;
+  flex-shrink: 0;
+  color: #94a3b8;
+}
+
+.cb.open .cb-icon {
+  color: #123a8f;
+}
+
+.cb-value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cb-value.placeholder {
+  color: #475569;
+}
+
+.cb-chevron {
+  display: flex;
+  flex-shrink: 0;
+  color: #94a3b8;
+  transition: transform 0.18s;
+}
+
+.cb.open .cb-chevron {
+  transform: rotate(180deg);
+  color: #123a8f;
+}
+
+.cb-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 40;
+  width: 100%;
+  min-width: 270px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #dbe3f0;
+  border-radius: 14px;
+  box-shadow: 0 18px 44px rgba(11, 31, 77, 0.2), 0 2px 8px rgba(11, 31, 77, 0.06);
+  animation: slideUp 0.15s ease;
+}
+
+.cb-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  color: #94a3b8;
+  background: #f8fafd;
+  border-bottom: 1px solid #e9eef6;
+}
+
+.cb-search:focus-within {
+  color: #123a8f;
+}
+
+.cb-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.875rem;
+  color: #0f172a;
+}
+
+.cb-count {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #0e2460;
+  background: #e3ebfb;
+}
+
+.cb-list {
+  max-height: 300px;
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  list-style: none;
+  outline: none;
+}
+
+.cb-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.cb-option.active {
+  background: #eef3fc;
+}
+
+.cb-option.selected {
+  background: #e3ebfb;
+}
+
+.cb-option-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cb-option-main {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cb-option.selected .cb-option-main {
+  font-weight: 800;
+  color: #0e2460;
+}
+
+.cb-option.all .cb-option-main {
+  color: #475569;
+}
+
+.cb-option-sub {
+  font-size: 0.75rem;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cb-option-hint {
+  flex-shrink: 0;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  background: #f1f5f9;
+}
+
+.cb-option.active .cb-option-hint,
+.cb-option.selected .cb-option-hint {
+  color: #0e2460;
+  background: #ffffff;
+}
+
+.cb-check {
+  display: flex;
+  width: 16px;
+  flex-shrink: 0;
+  color: #123a8f;
+}
+
+.cb-empty {
+  padding: 22px 12px;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: #94a3b8;
+}
+
+@media (max-width: 700px) {
+  .cb-panel {
+    min-width: 0;
+  }
+}
+
+/* Dashboard: porcentaje de cada municipio */
+.muni-pct-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.muni-pct-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 200px) 1fr 90px 60px;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.88rem;
+}
+
+.muni-pct-name {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.muni-pct-bar {
+  height: 10px;
+  background: #eef1f7;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.muni-pct-fill {
+  height: 100%;
+  background: #7c3aed;
+  border-radius: 999px;
+}
+
+.muni-pct-carga {
+  text-align: right;
+  color: #64748b;
+}
+
+.muni-pct-value {
+  text-align: right;
+  font-weight: 800;
+  color: #7c3aed;
+}
+
+@media (max-width: 640px) {
+  .muni-pct-row {
+    grid-template-columns: 1fr 70px 56px;
+  }
+
+  .muni-pct-bar {
+    grid-column: 1 / -1;
+    order: 4;
+  }
+}
+
+.dlg-confirm-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+.dlg-confirm-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.dlg-confirm-icon.danger {
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.dlg-confirm-icon.success {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.dlg-confirm-body {
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding-top: 28px;
+}
+
+.dlg-confirm-body .dlg-confirm-text {
+  margin: 0;
+  max-width: 300px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #475569;
+}
