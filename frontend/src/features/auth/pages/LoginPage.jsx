@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 import { login } from "../services/auth.service.js";
 import { DialogError } from "../../../components/Dialog.jsx";
 import { PasswordField, TextField } from "../../../components/DialogFields.jsx";
-import { IconAlert, IconLogIn, IconUser } from "../../../components/icons.jsx";
+import { IconAlert, IconCheck, IconLogIn, IconMap, IconUser, IconUsers } from "../../../components/icons.jsx";
 import logoGorra from "../../../assets/gorra.PNG";
 import mascota from "../../../assets/animado.PNG";
 
@@ -48,38 +48,40 @@ export const LoginPage = () => {
   const year = new Date().getFullYear();
 
   return (
-    <div className="login-layout">
-      {/* Lado izquierdo – branding */}
-      <aside className="login-brand-side">
-        <div className="login-deco login-deco-1" />
-        <div className="login-deco login-deco-2" />
-        <div className="login-deco login-deco-3" />
+    <div className="lg">
+      <div className="lg-bg" aria-hidden="true">
+        <span className="lg-blob lg-blob-1" />
+        <span className="lg-blob lg-blob-2" />
+      </div>
 
-        <div className="login-mascot-stage">
-          <div className="login-mascot-card">
+      {/* Lado izquierdo – mascota */}
+      <aside className="lg-hero">
+        <div className="lg-arch-wrap">
+          <span className="lg-chip lg-chip-1"><IconMap /> Municipios</span>
+          <span className="lg-chip lg-chip-2"><IconUsers /> Carga electoral</span>
+          <span className="lg-chip lg-chip-3"><IconCheck /> Urnas y centros</span>
+
+          <div className="lg-arch">
             <img src={mascota} alt="Mascota La Gorra Azul" />
-            <div className="login-mascot-caption">
-              <h2 className="login-mascot-title">Resultados electorales en un solo lugar</h2>
-              <ul className="login-mascot-chips">
-                <li>Municipios</li>
-                <li>Centros</li>
-                <li>Urnas</li>
-              </ul>
+            <div className="lg-arch-caption">
+              <h2 className="lg-arch-title">Resultados electorales en un solo lugar</h2>
+              <p className="lg-arch-text">Consulta, compara y sigue cada municipio.</p>
             </div>
           </div>
         </div>
       </aside>
 
       {/* Lado derecho – formulario */}
-      <div className="login-form-side">
-        <div className="login-logo-circle">
-          <img src={logoGorra} alt="La Gorra Azul" className="login-outer-logo" />
-        </div>
-
-        <div className="login-form-box">
-          <p className="login-eyebrow">Panel de administración</p>
-          <h2 className="login-title">Acceso al sistema</h2>
-          <p className="login-subtitle">Ingresa tus credenciales para continuar.</p>
+      <main className="lg-panel">
+        <div className="lg-card">
+          <header className="lg-card-head">
+            <div className="lg-logo">
+              <img src={logoGorra} alt="La Gorra Azul" />
+            </div>
+            <p className="lg-eyebrow">Panel de administración</p>
+            <h1 className="lg-title">Acceso al sistema</h1>
+            <p className="lg-subtitle">Ingresa tus credenciales para continuar.</p>
+          </header>
 
           {sessionExpired && !error && (
             <div className="dlg-note dlg-note-info login-notice" role="status">
@@ -90,7 +92,7 @@ export const LoginPage = () => {
 
           <DialogError message={error} />
 
-          <form className="login-form" onSubmit={handleSubmit} noValidate>
+          <form className="lg-form" onSubmit={handleSubmit} noValidate>
             <TextField
               id="username"
               name="username"
@@ -118,7 +120,7 @@ export const LoginPage = () => {
 
             <button
               type="submit"
-              className="btn btn-primary btn-full login-submit"
+              className="btn btn-primary btn-full lg-submit"
               disabled={loading}
             >
               {loading ? (
@@ -134,13 +136,13 @@ export const LoginPage = () => {
             </button>
           </form>
 
-          <p className="login-help">
+          <p className="lg-help">
             ¿Olvidaste tu contraseña? Contacta al administrador del sistema.
           </p>
         </div>
 
-        <p className="login-form-foot">© {year} FITO · Todos los derechos reservados</p>
-      </div>
+        <p className="lg-foot">© {year} FITO · Todos los derechos reservados</p>
+      </main>
     </div>
   );
 };
