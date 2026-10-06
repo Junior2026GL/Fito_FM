@@ -94,7 +94,7 @@ const StatCard = ({ label, value, color, icon }) => (
 
 const SkeletonRow = () => (
   <tr>
-    {[190, 150, 170, 110, 80, 90, 130].map((w, i) => (
+    {[190, 170, 110, 80, 90, 130].map((w, i) => (
       <td key={i}><div className="skeleton" style={{ width: w, height: 14 }} /></td>
     ))}
   </tr>
@@ -771,7 +771,6 @@ export const UsersPage = () => {
               <thead>
                 <tr>
                   <th>Usuario</th>
-                  <th>Cargo</th>
                   <th>Contacto</th>
                   <th>Rol</th>
                   <th>Estado</th>
@@ -784,7 +783,7 @@ export const UsersPage = () => {
                   [...Array(6)].map((_, i) => <SkeletonRow key={i} />)
                 ) : users.length === 0 ? (
                   <tr>
-                    <td colSpan={7}>
+                    <td colSpan={6}>
                       <div className="dt-empty">
                         <span className="dt-empty-icon"><IconInbox /></span>
                         <p className="dt-empty-title">Sin usuarios</p>
@@ -809,21 +808,6 @@ export const UsersPage = () => {
                             <span className="dt-user-sub">@{user.username}</span>
                           </div>
                         </div>
-                      </td>
-                      <td>
-                        {user.job_title || user.city ? (
-                          <div className="dt-stack">
-                            {user.job_title && <span className="dt-stack-main">{user.job_title}</span>}
-                            {user.city && (
-                              <span className="dt-stack-sub">
-                                <IconMapPin />
-                                {user.city}
-                              </span>
-                            )}
-                          </div>
-                        ) : (
-                          <span className="dt-none">—</span>
-                        )}
                       </td>
                       <td>
                         <div className="dt-stack">
