@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/context/AuthContext.jsx";
 import { changePassword } from "../features/auth/services/auth.service.js";
 import { Dialog, DialogError } from "./Dialog.jsx";
@@ -8,11 +9,18 @@ import { IconCheckCircle, IconShield } from "./icons.jsx";
 const EMPTY = { currentPassword: "", newPassword: "", confirmPassword: "" };
 
 export const ChangePasswordModal = ({ onClose }) => {
-  const { updateToken } = useAuth();
+  const { updateToken, logout } = useAuth();
+  const navigate = useNavigate();
   const [form, setForm] = useState(EMPTY);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  const handleAccept = () => {
+    onClose();
+    logout();
+    navigate("/login");
+  };
 
   const handleChange = (event) => {
     setForm((prev) => ({ ...prev, [event.target.name]: event.target.value }));
@@ -39,7 +47,7 @@ export const ChangePasswordModal = ({ onClose }) => {
         currentPassword: form.currentPassword,
         newPassword: form.newPassword
       });
-      // Conserva esta sesión con el token nuevo (el anterior ya no es válido)
+      // Mantiene el token nuevo hasta que el usuario confirme y se cierre la sesión
       if (result?.token) updateToken(result.token);
       setSuccess(true);
       setForm(EMPTY);
@@ -67,7 +75,7 @@ export const ChangePasswordModal = ({ onClose }) => {
             </p>
           </div>
           <div className="dlg-footer">
-            <button type="button" className="dlg-btn dlg-btn-primary" onClick={onClose}>
+            <button type="button" className="dlg-btn dlg-btn-primary" onClick={handleAccept}>
               Entendido
             </button>
           </div>
