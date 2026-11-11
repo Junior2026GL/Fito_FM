@@ -43,6 +43,9 @@ const JrvCard = ({ jrv, onSaved }) => {
     0
   );
 
+  // Casilla con más votos (solo si hay al menos un voto)
+  const maximo = Math.max(0, ...CASILLAS.map((c) => Number(jrv[`c${c}`]) || 0));
+
   const empezar = () => {
     setValores(inicial);
     setError("");
@@ -94,9 +97,18 @@ const JrvCard = ({ jrv, onSaved }) => {
     <article className={`jrv-card${editando ? " is-editing" : ""}`}>
       <header className="jrv-card-head">
         <div className="jrv-card-title">
-          <span className="jrv-urna-badge">{editando ? "EDITANDO" : "JRV"}</span>
-          <h2>Urna {jrv.urna}</h2>
-          <span className="jrv-muni">{jrv.municipio}</span>
+          <div className="jrv-urna-block">
+            <span>URNA</span>
+            <strong>{jrv.urna}</strong>
+          </div>
+          <div className="jrv-chips">
+            <span className="jrv-chip">{jrv.municipio}</span>
+            {editando && (
+              <span className="jrv-chip is-editing">
+                <i className="jrv-chip-dot" /> Editando
+              </span>
+            )}
+          </div>
         </div>
         <div className="jrv-total">
           <span className="jrv-total-label">Total de votos</span>
@@ -123,18 +135,34 @@ const JrvCard = ({ jrv, onSaved }) => {
         </div>
       )}
 
-      {editando && (
-        <p className="jrv-edit-hint">
-          Arriba va el número de casilla; escribe los votos en el recuadro blanco de abajo.
-        </p>
-      )}
+      <div className="jrv-section-head">
+        <h3 className="jrv-section-title">Votos por casilla</h3>
+        <div className="jrv-legend">
+          <span className="jrv-legend-item">
+            <i className="jrv-legend-swatch" /> Número de casilla
+          </span>
+          {editando ? (
+            <span className="jrv-legend-item">
+              <i className="jrv-legend-swatch is-input" /> Escribe los votos aquí
+            </span>
+          ) : (
+            maximo > 0 && (
+              <span className="jrv-legend-item">
+                <i className="jrv-legend-swatch is-leader" /> Más votos
+              </span>
+            )
+          )}
+        </div>
+      </div>
 
       <div className="jrv-casillas" aria-label="Votos por casilla">
         {CASILLAS.map((c) => {
           const votos = jrv[`c${c}`];
           if (!editando) {
+            const numero = Number(votos) || 0;
+            const clase = numero === 0 ? " is-empty" : numero === maximo ? " is-leader" : "";
             return (
-              <div key={c} className={`jrv-casilla${Number(votos) > 0 ? " has-votos" : ""}`}>
+              <div key={c} className={`jrv-casilla${clase}`}>
                 <span>{c}</span>
                 <strong>{votos == null ? "—" : formatNumber(votos)}</strong>
               </div>

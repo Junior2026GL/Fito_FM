@@ -4486,65 +4486,99 @@ button.dc-crumb:hover {
   color: #475569;
 }
 
-/* ───────────── Módulo Editar JRV ───────────── */
+/* ============================================================
+   MÓDULO EDITAR JRV
+   ============================================================ */
+
+/* ── Banner con el buscador ── */
 .jrv-hero {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  gap: 22px;
-  padding: 28px;
-  margin-bottom: 22px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 32px;
+  padding: 26px 30px;
+  margin-bottom: 20px;
+  overflow: hidden;
   color: #ffffff;
   background: linear-gradient(120deg, #0b1f4d 0%, #123a8f 100%);
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(11, 31, 77, 0.25);
+  border-radius: 22px;
+  box-shadow: 0 12px 32px rgba(11, 31, 77, 0.24);
 }
 
-.jrv-hero-text {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+/* Círculos decorativos */
+.jrv-hero::before,
+.jrv-hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
 }
+
+.jrv-hero::before {
+  top: -90px;
+  right: -60px;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(255, 210, 74, 0.28) 0%, rgba(255, 210, 74, 0) 70%);
+}
+
+.jrv-hero::after {
+  bottom: -120px;
+  left: 32%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+}
+
+.jrv-hero > * { position: relative; z-index: 1; }
+
+.jrv-hero-text { display: flex; align-items: center; gap: 16px; }
 
 .jrv-hero-icon {
   display: grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   flex-shrink: 0;
   background: rgba(255, 255, 255, 0.14);
-  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
 }
 
-.jrv-hero-icon svg { width: 22px; height: 22px; }
+.jrv-hero-icon svg { width: 24px; height: 24px; }
+.jrv-hero-title { margin: 0; font-size: 1.6rem; font-weight: 800; letter-spacing: -0.01em; }
+.jrv-hero-sub { margin: 3px 0 0; font-size: 0.9rem; color: rgba(255, 255, 255, 0.72); }
 
-.jrv-hero-title { margin: 0; font-size: 1.5rem; font-weight: 800; }
-.jrv-hero-sub { margin: 2px 0 0; font-size: 0.9rem; color: rgba(255, 255, 255, 0.72); }
-
-.jrv-search {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-  max-width: 300px;
-}
+.jrv-search { display: flex; gap: 10px; }
 
 .jrv-search-field {
   display: flex;
-  flex: 0 1 190px;
+  flex: 0 1 200px;
   min-width: 0;
   align-items: center;
   gap: 12px;
   padding: 0 18px;
-  background: #ffffff;
-  border-radius: 14px;
   color: #64748b;
+  background: #ffffff;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-.jrv-search-field svg { width: 20px; height: 20px; }
+.jrv-search-field:focus-within {
+  border-color: #ffd24a;
+  box-shadow: 0 0 0 4px rgba(255, 210, 74, 0.28);
+}
+
+.jrv-search-field svg { width: 20px; height: 20px; flex-shrink: 0; }
 
 .jrv-search-field input {
   flex: 1;
   min-width: 0;
-  height: 58px;
+  height: 56px;
   border: none;
   outline: none;
   background: transparent;
@@ -4567,131 +4601,195 @@ button.dc-crumb:hover {
   gap: 8px;
   padding: 0 28px;
   font-size: 0.95rem;
-  font-weight: 700;
+  font-weight: 800;
   color: #0b1f4d;
   background: #ffd24a;
   border: none;
   border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
   cursor: pointer;
   transition: transform 0.15s, filter 0.15s;
 }
 
-.jrv-search-btn:hover:not(:disabled) { filter: brightness(1.05); transform: translateY(-1px); }
+.jrv-search-btn:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
 .jrv-search-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
+/* ── Estado inicial ── */
 .jrv-placeholder {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  padding: 48px 20px;
+  padding: 56px 20px;
   text-align: center;
   color: #64748b;
   background: #ffffff;
-  border: 1px dashed #cbd5e1;
-  border-radius: 18px;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 20px;
 }
 
-.jrv-placeholder p { margin: 0; max-width: 340px; font-size: 0.9rem; }
+.jrv-placeholder p { margin: 0; max-width: 340px; font-size: 0.92rem; }
 
 .jrv-placeholder-icon {
   display: grid;
   place-items: center;
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   color: #123a8f;
   background: #eaf0fc;
-  border-radius: 16px;
+  border-radius: 18px;
 }
 
-.jrv-results { display: flex; flex-direction: column; gap: 16px; }
+.jrv-placeholder-icon svg { width: 24px; height: 24px; }
+
+/* ── Tarjeta de la JRV ── */
+.jrv-results { display: flex; flex-direction: column; gap: 18px; }
 .jrv-count { margin: 0; font-size: 0.85rem; font-weight: 600; color: #64748b; }
 
 .jrv-card {
-  padding: 22px;
+  padding: 24px;
   background: #ffffff;
-  border: 1px solid #e4e8f0;
-  border-radius: 18px;
-  box-shadow: 0 2px 10px rgba(20, 32, 58, 0.05);
+  border: 1.5px solid #e4e8f0;
+  border-radius: 22px;
+  box-shadow: 0 4px 18px rgba(20, 32, 58, 0.06);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.jrv-card.is-editing {
+  border-color: #6f9bf0;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12), 0 8px 26px rgba(20, 32, 58, 0.08);
 }
 
 .jrv-card-head {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 16px 28px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid #eef1f6;
+  gap: 16px 20px;
+  margin-bottom: 20px;
 }
 
 .jrv-card-title {
   display: flex;
   flex: 1;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-  min-width: 200px;
+  gap: 16px;
+  min-width: 260px;
 }
 
-.jrv-card-title h2 { margin: 0; font-size: 1.35rem; font-weight: 800; color: #0f172a; }
-
-.jrv-urna-badge {
-  padding: 4px 10px;
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: #123a8f;
-  background: #eaf0fc;
-  border-radius: 999px;
+/* Bloque con el número de urna */
+.jrv-urna-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 9px 20px 10px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0b1f4d 0%, #1a3a8a 100%);
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(11, 31, 77, 0.28);
 }
 
-.jrv-muni {
-  padding: 4px 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
+.jrv-urna-block span { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.16em; color: #ffd24a; }
+.jrv-urna-block strong { font-size: 1.6rem; font-weight: 800; line-height: 1.1; letter-spacing: 0.01em; }
+
+.jrv-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.jrv-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
   color: #475569;
   background: #f1f5f9;
   border-radius: 999px;
 }
 
-.jrv-total { display: flex; flex-direction: column; align-items: flex-end; }
-.jrv-total-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #94a3b8; }
-.jrv-total strong { font-size: 1.6rem; line-height: 1.1; color: #0b1f4d; }
+.jrv-chip.is-editing { color: #92400e; background: #fef3c7; }
 
-.jrv-datos {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  padding: 18px 0;
+.jrv-chip-dot {
+  width: 7px;
+  height: 7px;
+  background: currentColor;
+  border-radius: 50%;
 }
 
-.jrv-dato { display: flex; align-items: center; gap: 12px; }
+/* Total de votos */
+.jrv-total {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 8px 18px;
+  background: linear-gradient(120deg, #f4f7fd 0%, #eaf0fc 100%);
+  border: 1px solid #d9e3f7;
+  border-radius: 14px;
+}
+
+.jrv-total-label { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #6b82b3; }
+.jrv-total strong { font-size: 1.7rem; font-weight: 800; line-height: 1.1; color: #0b1f4d; }
+
+/* Datos de ubicación */
+.jrv-datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.jrv-dato {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 12px 14px;
+  background: #f8fafc;
+  border: 1px solid #eef1f6;
+  border-radius: 14px;
+}
 
 .jrv-dato-icon {
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
   color: #123a8f;
-  background: #f1f5fb;
+  background: #e6edfb;
   border-radius: 12px;
 }
 
 .jrv-dato-icon svg { width: 18px; height: 18px; }
-.jrv-dato-label { display: block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #94a3b8; }
-.jrv-dato-value { display: block; font-size: 0.9rem; font-weight: 600; color: #0f172a; }
+.jrv-dato-label { display: block; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #94a3b8; }
+.jrv-dato-value { display: block; font-size: 0.92rem; font-weight: 700; color: #0f172a; overflow-wrap: anywhere; }
 
-/* Las 23 casillas en una sola línea; si la pantalla es angosta, se desplaza horizontalmente */
-.jrv-casillas {
-  display: grid;
-  grid-template-columns: repeat(23, minmax(54px, 1fr));
-  gap: 6px;
-  overflow-x: auto;
-  padding-bottom: 4px;
+/* Encabezado de la sección de votos */
+.jrv-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 12px;
 }
 
-/* Número de casilla arriba, línea en medio y cantidad de votos abajo */
+.jrv-section-title { margin: 0; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #475569; }
+
+.jrv-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; font-size: 0.8rem; color: #64748b; }
+.jrv-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.jrv-legend-swatch { width: 12px; height: 12px; border-radius: 4px; background: #1a3a8a; }
+.jrv-legend-swatch.is-leader { background: #f59e0b; }
+.jrv-legend-swatch.is-input { background: #ffffff; border: 2px solid #9db8ec; }
+
+/* ── Casillas: 23 en una sola línea (se desplaza si la pantalla es angosta) ── */
+.jrv-casillas {
+  display: grid;
+  grid-template-columns: repeat(23, minmax(56px, 1fr));
+  gap: 6px;
+  padding: 4px 2px 8px;
+  overflow-x: auto;
+}
+
+/* Cabecera = número de casilla; debajo, la cantidad de votos */
 .jrv-casilla {
   display: flex;
   flex-direction: column;
@@ -4699,140 +4797,67 @@ button.dc-crumb:hover {
   min-width: 0;
   overflow: hidden;
   text-align: center;
-  background: #f8fafc;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 12px;
+  background: #eef3fd;
+  border: 1.5px solid #c7d7f5;
+  border-radius: 14px;
+  transition: transform 0.15s, box-shadow 0.15s;
 }
 
-/* Cabecera oscura = número de casilla */
+.jrv-casilla:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(11, 31, 77, 0.12); }
+
 .jrv-casilla span {
-  padding: 7px 0;
+  padding: 8px 0;
   font-size: 1.05rem;
   font-weight: 800;
   color: #ffffff;
   background: linear-gradient(135deg, #0b1f4d 0%, #1a3a8a 100%);
 }
 
-.jrv-casilla strong {
-  padding: 9px 0 10px;
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: #94a3b8;
-}
+.jrv-casilla strong { padding: 10px 0 12px; font-size: 1.3rem; font-weight: 800; color: #0b1f4d; }
 
-.jrv-casilla.has-votos { background: #eaf0fc; border-color: #c7d7f5; }
-.jrv-casilla.has-votos strong { color: #0b1f4d; }
+.jrv-casilla.is-empty { background: #f8fafc; border-color: #e2e8f0; }
+.jrv-casilla.is-empty strong { color: #94a3b8; }
 
-@media (max-width: 640px) {
-  .jrv-hero { padding: 20px; }
-  .jrv-search { flex-direction: column; }
-  .jrv-search-btn { height: 48px; justify-content: center; }
-  .jrv-total { align-items: flex-start; }
-}
+/* Casilla con más votos */
+.jrv-casilla.is-leader { background: #fff8e6; border-color: #f5b73b; }
+.jrv-casilla.is-leader span { background: linear-gradient(135deg, #b45309 0%, #f59e0b 100%); }
+.jrv-casilla.is-leader strong { color: #92400e; }
 
-/* Ventana de edición de JRV: ancha, con la tira de las 23 casillas en una sola línea */
-.dlg-modal-xxl {
-  width: min(1500px, calc(100% - 32px));
-}
-
-.jrv-edit-info {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 14px 32px;
-  padding: 16px 20px;
-  margin-bottom: 18px;
-  background: linear-gradient(120deg, #f4f7fd 0%, #eaf0fc 100%);
-  border: 1px solid #d9e3f7;
-  border-radius: 14px;
-}
-
-.jrv-edit-info-main {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.jrv-edit-info-main h2 { margin: 0; font-size: 1.25rem; font-weight: 800; color: #0f172a; }
-
-.jrv-datos-compact {
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-  gap: 14px 28px;
-  padding: 0;
-}
-
-.casilla-edit { cursor: text; }
-.casilla-edit:focus-within { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18); }
-.casilla-edit.changed { border-color: #f59e0b; background: #fffbeb; }
-
-.casilla-input {
-  width: 100%;
-  min-width: 0;
-  padding: 2px 0;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-align: center;
-  color: #1d4ed8;
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid #e2e8f0;
-  outline: none;
-}
-
-.casilla-input:focus { border-bottom-color: #3b82f6; }
-
-/* Edición en la propia tarjeta de la JRV */
-.jrv-card.is-editing { border-color: #93b4f0; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12); }
-
-.jrv-casilla-edit { cursor: text; }
-.jrv-casilla-edit:focus-within { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18); background: #ffffff; }
-.jrv-casilla-edit.changed { border-color: #f59e0b; background: #fffbeb; }
-
-/* En edición, debajo de la cabecera aparece un recuadro blanco: ahí se escriben los votos */
-.jrv-casilla-edit { background: #e8eefb; border-color: #b9ccf1; }
+/* ── Edición en la propia tarjeta ── */
+.jrv-casilla-edit { cursor: text; background: #e8eefb; border-color: #b9ccf1; }
+.jrv-casilla-edit:hover { transform: none; box-shadow: none; }
+.jrv-casilla-edit:focus-within { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.22); }
+.jrv-casilla-edit.changed { background: #fef3c7; border-color: #f59e0b; }
 
 .jrv-casilla-edit input {
   width: calc(100% - 10px);
   min-width: 0;
   margin: 5px;
   padding: 8px 0;
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 800;
   text-align: center;
   color: #0b1f4d;
   background: #ffffff;
   border: 1.5px solid #9db8ec;
-  border-radius: 8px;
+  border-radius: 9px;
   box-shadow: inset 0 1px 3px rgba(11, 31, 77, 0.12);
   outline: none;
 }
 
-.jrv-casilla-edit input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
-}
-
-.jrv-casilla-edit.changed { background: #fef3c7; border-color: #f59e0b; }
+.jrv-casilla-edit input:focus { border-color: #3b82f6; }
 .jrv-casilla-edit.changed input { border-color: #f59e0b; }
-
-.jrv-edit-hint {
-  margin: 0 0 10px;
-  font-size: 0.85rem;
-  color: #475569;
-}
 
 .jrv-card-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 18px;
-  padding-top: 16px;
+  padding-top: 18px;
   border-top: 1px solid #eef1f6;
 }
 
-/* Aviso flotante de éxito (verde con check) */
+/* ── Aviso flotante de éxito (verde con check) ── */
 .toast.toast-success {
   display: flex;
   align-items: center;
@@ -4855,3 +4880,11 @@ button.dc-crumb:hover {
 }
 
 .toast-success .toast-icon svg { width: 15px; height: 15px; }
+
+@media (max-width: 640px) {
+  .jrv-hero { padding: 20px; }
+  .jrv-search { width: 100%; }
+  .jrv-search-field { flex: 1 1 auto; }
+  .jrv-card { padding: 18px; }
+  .jrv-total { align-items: flex-start; }
+}
