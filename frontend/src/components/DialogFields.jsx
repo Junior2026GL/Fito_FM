@@ -23,14 +23,22 @@ export const PasswordField = ({
   autoComplete = "new-password",
   autoFocus = false,
   minLength,
-  forceVisible = false
+  forceVisible = false,
+  labelAction
 }) => {
   const [show, setShow] = useState(false);
   const visible = show || forceVisible;
 
   return (
     <div className="dlg-field">
-      <label className="dlg-label" htmlFor={id}>{label}</label>
+      {labelAction ? (
+        <div className="dlg-label-row">
+          <label className="dlg-label" htmlFor={id}>{label}</label>
+          {labelAction}
+        </div>
+      ) : (
+        <label className="dlg-label" htmlFor={id}>{label}</label>
+      )}
       <div className="dlg-input-wrap">
         <span className="dlg-input-icon"><IconLock /></span>
         <input

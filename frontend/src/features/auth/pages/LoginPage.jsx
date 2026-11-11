@@ -144,6 +144,12 @@ export const LoginPage = () => {
               onChange={handleChange}
               autoComplete="current-password"
               minLength={8}
+              labelAction={
+                // Pendiente: todavía no hay flujo para recuperar la contraseña
+                <button type="button" className="login-forgot">
+                  ¿Olvidaste tu contraseña?
+                </button>
+              }
             />
 
             <button
@@ -163,10 +169,6 @@ export const LoginPage = () => {
               )}
             </button>
           </form>
-
-          <p className="login-help">
-            ¿Olvidaste tu contraseña? Contacta al administrador del sistema.
-          </p>
 
           <p className="login-secure">
             <IconShield />
