@@ -81,6 +81,7 @@ export const LoginPage = () => {
 
   return (
     <div className="login-layout">
+      <div className="login-shell">
       {/* Lado izquierdo – branding */}
       <aside className="login-brand-side">
         <div className="login-deco login-deco-1" />
@@ -177,6 +178,7 @@ export const LoginPage = () => {
         </div>
 
         <p className="login-form-foot">© {year} FITO · Todos los derechos reservados</p>
+      </div>
       </div>
     </div>
   );
