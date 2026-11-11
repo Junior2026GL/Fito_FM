@@ -622,6 +622,7 @@ button {
 
 /* ── Panel izquierdo ──────────────────────────────────── */
 .login-brand-side {
+  container-type: inline-size;
   position: relative;
   display: flex;
   flex-direction: row;
@@ -709,25 +710,24 @@ button {
 }
 
 /* Barra de carga bajo los zapatos: misma animación que el anillo del logo del menú */
+/* Ocupa todo el ancho del panel azul (el panel tiene 40px de relleno a cada lado) */
 .login-mascot-bar {
   position: absolute;
   left: 50%;
   bottom: 3%;
-  width: 78%;
-  height: 6px;
+  width: calc(100cqw + 80px);
+  height: 7px;
   transform: translateX(-50%);
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.16);
-  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .login-mascot-bar span {
   display: block;
   width: 100%;
   height: 100%;
-  background: #ffffff;
-  border-radius: 999px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.55);
+  background: linear-gradient(90deg, rgba(122, 167, 234, 0.1) 0%, rgba(255, 255, 255, 0.75) 70%, #ffffff 100%);
+  box-shadow: 0 0 14px 2px rgba(255, 255, 255, 0.55);
   transform-origin: left center;
   animation: loginBarLoad 2.6s ease-in-out infinite;
 }
