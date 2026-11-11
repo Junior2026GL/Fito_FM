@@ -4782,11 +4782,17 @@ button.dc-crumb:hover {
 
 /* ── Casillas: 23 en una sola línea (se desplaza si la pantalla es angosta) ── */
 .jrv-casillas {
-  display: grid;
-  grid-template-columns: repeat(23, minmax(56px, 1fr));
+  display: flex;
   gap: 6px;
-  padding: 4px 2px 8px;
+  padding: 4px 0 8px;
   overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+/* Cada casilla toma una parte igual del ancho: nunca se sale de la tarjeta */
+.jrv-casillas > .jrv-casilla {
+  flex: 1 1 0;
+  min-width: 44px;
 }
 
 /* Cabecera = número de casilla; debajo, la cantidad de votos */
@@ -4807,13 +4813,13 @@ button.dc-crumb:hover {
 
 .jrv-casilla span {
   padding: 8px 0;
-  font-size: 1.05rem;
+  font-size: clamp(0.8rem, 0.85vw, 1.05rem);
   font-weight: 800;
   color: #ffffff;
   background: linear-gradient(135deg, #0b1f4d 0%, #1a3a8a 100%);
 }
 
-.jrv-casilla strong { padding: 10px 0 12px; font-size: 1.3rem; font-weight: 800; color: #0b1f4d; }
+.jrv-casilla strong { padding: 10px 0 12px; font-size: clamp(0.95rem, 1.1vw, 1.3rem); font-weight: 800; color: #0b1f4d; }
 
 .jrv-casilla.is-empty { background: #f8fafc; border-color: #e2e8f0; }
 .jrv-casilla.is-empty strong { color: #94a3b8; }

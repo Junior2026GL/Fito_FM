@@ -43,6 +43,16 @@ const JrvCard = ({ jrv, onSaved }) => {
     0
   );
 
+  // De la casilla más votada a la menos votada (empates por número de casilla).
+  // Depende solo de los votos guardados: mientras se edita el orden no cambia.
+  const orden = useMemo(
+    () =>
+      [...CASILLAS].sort(
+        (a, b) => (Number(jrv[`c${b}`]) || 0) - (Number(jrv[`c${a}`]) || 0) || a - b
+      ),
+    [jrv]
+  );
+
   // Casilla con más votos (solo si hay al menos un voto)
   const maximo = Math.max(0, ...CASILLAS.map((c) => Number(jrv[`c${c}`]) || 0));
 
@@ -139,7 +149,7 @@ const JrvCard = ({ jrv, onSaved }) => {
         <h3 className="jrv-section-title">Votos por casilla</h3>
         <div className="jrv-legend">
           <span className="jrv-legend-item">
-            <i className="jrv-legend-swatch" /> Número de casilla
+            <i className="jrv-legend-swatch" /> Número de casilla · de mayor a menor votación
           </span>
           {editando ? (
             <span className="jrv-legend-item">
@@ -156,7 +166,7 @@ const JrvCard = ({ jrv, onSaved }) => {
       </div>
 
       <div className="jrv-casillas" aria-label="Votos por casilla">
-        {CASILLAS.map((c) => {
+        {orden.map((c) => {
           const votos = jrv[`c${c}`];
           if (!editando) {
             const numero = Number(votos) || 0;
