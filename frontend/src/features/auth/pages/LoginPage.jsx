@@ -26,6 +26,12 @@ export const LoginPage = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  // El aviso de campo vacío lo muestra el navegador en su propio idioma; así se fija en español
+  const avisoCampoVacio = {
+    onInvalid: (e) => e.target.setCustomValidity("Completa este campo."),
+    onInput: (e) => e.target.setCustomValidity("")
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -127,6 +133,7 @@ export const LoginPage = () => {
               autoComplete="username"
               autoFocus
               required
+              {...avisoCampoVacio}
             />
 
             <PasswordField
@@ -136,6 +143,7 @@ export const LoginPage = () => {
               value={form.password}
               onChange={handleChange}
               autoComplete="current-password"
+              {...avisoCampoVacio}
               labelAction={
                 // Pendiente: todavía no hay flujo para recuperar la contraseña
                 <button type="button" className="login-forgot">

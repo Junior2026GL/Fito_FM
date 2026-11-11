@@ -24,7 +24,8 @@ export const PasswordField = ({
   autoFocus = false,
   minLength,
   forceVisible = false,
-  labelAction
+  labelAction,
+  ...inputProps
 }) => {
   const [show, setShow] = useState(false);
   const visible = show || forceVisible;
@@ -52,6 +53,7 @@ export const PasswordField = ({
           autoFocus={autoFocus}
           minLength={minLength}
           required
+          {...inputProps}
         />
         <button
           type="button"
