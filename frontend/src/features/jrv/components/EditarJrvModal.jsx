@@ -1,11 +1,22 @@
 import { useMemo, useState } from "react";
-import { Dialog, DialogError, DialogSection } from "../../../components/Dialog.jsx";
-import { IconEdit } from "../../../components/icons.jsx";
+import { Dialog, DialogError } from "../../../components/Dialog.jsx";
+import { IconCity, IconEdit, IconGrid, IconMapPin } from "../../../components/icons.jsx";
+import papeleta from "../../../assets/papeleta.png";
 import { actualizarJrv } from "../services/jrv.service.js";
 
 export const CASILLAS = Array.from({ length: 23 }, (_, i) => 93 + i);
 
 const aTexto = (valor) => (valor == null ? "" : String(valor));
+
+const Dato = ({ icon: Icon, label, value }) => (
+  <div className="jrv-dato">
+    <span className="jrv-dato-icon"><Icon /></span>
+    <div>
+      <span className="jrv-dato-label">{label}</span>
+      <span className="jrv-dato-value">{value || "—"}</span>
+    </div>
+  </div>
+);
 
 /** Ventana para corregir los votos (Casilla 93–115) de una JRV. */
 export const EditarJrvModal = ({ jrv, onClose, onSaved }) => {
@@ -56,30 +67,61 @@ export const EditarJrvModal = ({ jrv, onClose, onSaved }) => {
   return (
     <Dialog
       icon={IconEdit}
-      title={`Editar urna ${jrv.urna}`}
-      subtitle={`${jrv.centro} · ${jrv.sector_electoral}`}
-      size="lg"
+      title="Editar"
+      subtitle={`Urna ${jrv.urna}`}
+      size="xxl"
       onClose={onClose}
     >
       <form className="dlg-form" onSubmit={handleSubmit}>
         <div className="dlg-body">
           <DialogError message={error} />
 
-          <DialogSection>Votos por casilla</DialogSection>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: 12 }}>
-            {CASILLAS.map((casilla) => (
-              <div className="dlg-field" key={casilla}>
-                <label className="dlg-label" htmlFor={`casilla-${casilla}`}>Casilla {casilla}</label>
-                <input
-                  id={`casilla-${casilla}`}
-                  className="dlg-input"
-                  inputMode="numeric"
-                  maxLength={7}
-                  value={valores[casilla]}
-                  onChange={(event) => handleChange(casilla, event.target.value)}
-                />
+          {/* Información de la JRV */}
+          <div className="jrv-edit-info">
+            <div className="jrv-edit-info-main">
+              <span className="jrv-urna-badge">EDITAR</span>
+              <h2>Urna {jrv.urna}</h2>
+              <span className="jrv-muni">{jrv.municipio}</span>
+            </div>
+            <div className="jrv-datos jrv-datos-compact">
+              <Dato icon={IconCity} label="Ciudad" value={jrv.ciudad} />
+              <Dato icon={IconMapPin} label="Sector electoral" value={jrv.sector_electoral} />
+              <Dato icon={IconGrid} label="Centro de votación" value={jrv.centro} />
+            </div>
+          </div>
+
+          {/* Posiciones 1–23 y una casilla editable por posición */}
+          <div className="dc-votos-scroll">
+            <div className="dc-votos-inner" style={{ "--dc-col-min": "58px" }}>
+              <div className="modal-papeleta-banner">
+                <img src={papeleta} alt="Papeleta electoral" className="modal-papeleta-img" />
               </div>
-            ))}
+
+              <div className="casillas-pos-row">
+                {CASILLAS.map((_, index) => (
+                  <div key={index} className="casilla-pos-box">{index + 1}</div>
+                ))}
+              </div>
+
+              <div className="casillas-grid">
+                {CASILLAS.map((casilla) => {
+                  const cambiado = valores[casilla] !== inicial[casilla];
+                  return (
+                    <label key={casilla} className={`casilla-card casilla-edit${cambiado ? " changed" : ""}`}>
+                      <span className="casilla-numero">{casilla}</span>
+                      <input
+                        className="casilla-input"
+                        inputMode="numeric"
+                        maxLength={7}
+                        value={valores[casilla]}
+                        onChange={(event) => handleChange(casilla, event.target.value)}
+                        aria-label={`Votos de la casilla ${casilla}`}
+                      />
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
 

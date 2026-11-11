@@ -3396,6 +3396,10 @@ button {
   width: min(560px, 100%);
 }
 
+.dlg-modal-xl {
+  width: min(980px, 100%);
+}
+
 .dlg-header-icon svg {
   width: 22px;
   height: 22px;
@@ -4481,3 +4485,272 @@ button.dc-crumb:hover {
   line-height: 1.55;
   color: #475569;
 }
+
+/* ───────────── Módulo Editar JRV ───────────── */
+.jrv-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 28px;
+  margin-bottom: 22px;
+  color: #ffffff;
+  background: linear-gradient(120deg, #0b1f4d 0%, #123a8f 100%);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(11, 31, 77, 0.25);
+}
+
+.jrv-hero-text {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.jrv-hero-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+}
+
+.jrv-hero-icon svg { width: 22px; height: 22px; }
+
+.jrv-hero-title { margin: 0; font-size: 1.5rem; font-weight: 800; }
+.jrv-hero-sub { margin: 2px 0 0; font-size: 0.9rem; color: rgba(255, 255, 255, 0.72); }
+
+.jrv-search {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 480px;
+}
+
+.jrv-search-field {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  padding: 0 18px;
+  background: #ffffff;
+  border-radius: 14px;
+  color: #64748b;
+}
+
+.jrv-search-field svg { width: 20px; height: 20px; }
+
+.jrv-search-field input {
+  flex: 1;
+  min-width: 0;
+  height: 52px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 1.05rem;
+  color: #0f172a;
+}
+
+.jrv-search-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 28px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0b1f4d;
+  background: #ffd24a;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.15s, filter 0.15s;
+}
+
+.jrv-search-btn:hover:not(:disabled) { filter: brightness(1.05); transform: translateY(-1px); }
+.jrv-search-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.jrv-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 20px;
+  text-align: center;
+  color: #64748b;
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 18px;
+}
+
+.jrv-placeholder p { margin: 0; max-width: 340px; font-size: 0.9rem; }
+
+.jrv-placeholder-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  color: #123a8f;
+  background: #eaf0fc;
+  border-radius: 16px;
+}
+
+.jrv-results { display: flex; flex-direction: column; gap: 16px; }
+.jrv-count { margin: 0; font-size: 0.85rem; font-weight: 600; color: #64748b; }
+
+.jrv-card {
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #e4e8f0;
+  border-radius: 18px;
+  box-shadow: 0 2px 10px rgba(20, 32, 58, 0.05);
+}
+
+.jrv-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 28px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #eef1f6;
+}
+
+.jrv-card-title {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  min-width: 200px;
+}
+
+.jrv-card-title h2 { margin: 0; font-size: 1.35rem; font-weight: 800; color: #0f172a; }
+
+.jrv-urna-badge {
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #123a8f;
+  background: #eaf0fc;
+  border-radius: 999px;
+}
+
+.jrv-muni {
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+  border-radius: 999px;
+}
+
+.jrv-total { display: flex; flex-direction: column; align-items: flex-end; }
+.jrv-total-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #94a3b8; }
+.jrv-total strong { font-size: 1.6rem; line-height: 1.1; color: #0b1f4d; }
+
+.jrv-datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  padding: 18px 0;
+}
+
+.jrv-dato { display: flex; align-items: center; gap: 12px; }
+
+.jrv-dato-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  color: #123a8f;
+  background: #f1f5fb;
+  border-radius: 12px;
+}
+
+.jrv-dato-icon svg { width: 18px; height: 18px; }
+.jrv-dato-label { display: block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #94a3b8; }
+.jrv-dato-value { display: block; font-size: 0.9rem; font-weight: 600; color: #0f172a; }
+
+.jrv-casillas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+  gap: 8px;
+}
+
+.jrv-casilla {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 6px;
+  background: #f8fafc;
+  border: 1px solid #eef1f6;
+  border-radius: 12px;
+}
+
+.jrv-casilla span { font-size: 0.68rem; font-weight: 700; color: #94a3b8; }
+.jrv-casilla strong { font-size: 0.95rem; color: #94a3b8; }
+.jrv-casilla.has-votos { background: #eaf0fc; border-color: #c7d7f5; }
+.jrv-casilla.has-votos span { color: #3b5fae; }
+.jrv-casilla.has-votos strong { color: #0b1f4d; }
+
+@media (max-width: 640px) {
+  .jrv-hero { padding: 20px; }
+  .jrv-search { flex-direction: column; }
+  .jrv-search-btn { height: 48px; justify-content: center; }
+  .jrv-total { align-items: flex-start; }
+}
+
+/* Ventana de edición de JRV: ancha, con la tira de las 23 casillas en una sola línea */
+.dlg-modal-xxl {
+  width: min(1500px, calc(100% - 32px));
+}
+
+.jrv-edit-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 32px;
+  padding: 16px 20px;
+  margin-bottom: 18px;
+  background: linear-gradient(120deg, #f4f7fd 0%, #eaf0fc 100%);
+  border: 1px solid #d9e3f7;
+  border-radius: 14px;
+}
+
+.jrv-edit-info-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.jrv-edit-info-main h2 { margin: 0; font-size: 1.25rem; font-weight: 800; color: #0f172a; }
+
+.jrv-datos-compact {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+  padding: 0;
+}
+
+.casilla-edit { cursor: text; }
+.casilla-edit:focus-within { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18); }
+.casilla-edit.changed { border-color: #f59e0b; background: #fffbeb; }
+
+.casilla-input {
+  width: 100%;
+  min-width: 0;
+  padding: 2px 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+  color: #1d4ed8;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #e2e8f0;
+  outline: none;
+}
+
+.casilla-input:focus { border-bottom-color: #3b82f6; }
