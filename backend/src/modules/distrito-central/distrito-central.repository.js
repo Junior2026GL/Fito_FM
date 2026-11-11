@@ -81,7 +81,16 @@ export const getTotales = async (filtros) => {
     params
   );
 
-  return { votos, centros };
+  // Categorías distintas dentro del alcance (con un centro elegido suele ser una sola)
+  const [categorias] = await pool.execute(
+    `SELECT DISTINCT TRIM(Categoria) AS categoria
+     FROM dip_fito_fm
+     WHERE ${where} AND Categoria IS NOT NULL AND TRIM(Categoria) <> ''
+     ORDER BY categoria`,
+    params
+  );
+
+  return { votos, centros, categorias: categorias.map((c) => c.categoria) };
 };
 
 // Una fila por grupo (ciudad, sector o centro) con su cantidad de urnas y sus marcas por casilla

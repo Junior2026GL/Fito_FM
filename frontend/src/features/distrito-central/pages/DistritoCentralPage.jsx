@@ -4,9 +4,10 @@ import { FiltrosDistrito } from "../components/FiltrosDistrito.jsx";
 import { VotosPorPosicion } from "../components/VotosPorPosicion.jsx";
 import { DesgloseTabla } from "../components/DesgloseTabla.jsx";
 import { centroKey, centroLabel, formatCiudad, formatNumber } from "../utils.js";
-import { IconAlert, IconCheck, IconCity, IconInbox, IconMap, IconUsers } from "../../../components/icons.jsx";
+import { IconAlert, IconCheck, IconCity, IconInbox, IconList, IconMap, IconUsers } from "../../../components/icons.jsx";
 
-const Kpi = ({ label, value, color, icon, cargando }) => (
+// `texto` muestra un valor que no es numérico (ej. la categoría) tal cual
+const Kpi = ({ label, value, texto, color, icon, cargando }) => (
   <div className="stat-card">
     <div className="stat-card-icon" style={{ background: color + "18", color }}>{icon}</div>
     <div className="stat-card-body">
@@ -17,7 +18,7 @@ const Kpi = ({ label, value, color, icon, cargando }) => (
         </>
       ) : (
         <>
-          <div className="stat-value" style={{ color }}>{formatNumber(value)}</div>
+          <div className="stat-value" style={{ color }}>{texto ?? formatNumber(value)}</div>
           <div className="stat-label">{label}</div>
         </>
       )}
@@ -218,6 +219,7 @@ export const DistritoCentralPage = () => {
             <Kpi label="Carga electoral" value={totales?.carga_electoral} color="#7c3aed" icon={<IconUsers />} cargando={cargando} />
             <Kpi label="Urnas (JRV)" value={totales?.total_jrv} color="#15803d" icon={<IconCheck />} cargando={cargando} />
             <Kpi label="Centros de votación" value={totales?.total_centros} color="#1d4ed8" icon={<IconMap />} cargando={cargando} />
+            <Kpi label="Categoría" texto={resumen?.categorias?.length ? resumen.categorias.join(", ") : "—"} color="#d97706" icon={<IconList />} cargando={cargando} />
           </div>
 
           {!hayFiltro ? (

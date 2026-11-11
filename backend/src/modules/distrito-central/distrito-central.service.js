@@ -102,7 +102,7 @@ const getDesglose = async (nivelDesglose, filtros) => {
 export const getResumen = async (filtros) => {
   const nivelDesglose = getNivelDesglose(filtros);
 
-  const [{ votos, centros }, desglose] = await Promise.all([
+  const [{ votos, centros, categorias }, desglose] = await Promise.all([
     repository.getTotales(filtros),
     getDesglose(nivelDesglose, filtros)
   ]);
@@ -119,6 +119,7 @@ export const getResumen = async (filtros) => {
       total_centros: Number(centros.total_centros) || 0,
       carga_electoral: Number(centros.carga_electoral) || 0
     },
+    categorias: categorias ?? [],
     votos: Number(votos.total_jrv) ? sumVotos(votos) : [],
     desglose
   };
