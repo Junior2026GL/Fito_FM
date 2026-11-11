@@ -90,6 +90,7 @@ export const LoginPage = () => {
         <div className="login-mascot-stage">
           <img className="login-mascot" src={mascota} alt="Mascota La Gorra Azul" />
           <div className="login-mascot-bar" aria-hidden="true"><span /></div>
+          <span className="login-mascot-name">FITO</span>
         </div>
       </aside>
 
