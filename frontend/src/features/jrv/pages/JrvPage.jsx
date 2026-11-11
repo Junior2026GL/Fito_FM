@@ -220,7 +220,7 @@ export const JrvPage = () => {
             <input
               type="search"
               inputMode="numeric"
-              placeholder="Escribe el número de urna, ej. 10135"
+              placeholder="N.º de urna"
               value={urna}
               onChange={(event) => setUrna(event.target.value.replace(/\D/g, ""))}
               autoFocus
