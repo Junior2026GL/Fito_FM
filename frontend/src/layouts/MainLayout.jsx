@@ -90,8 +90,10 @@ export const MainLayout = () => {
       <aside id="sidebar" className={`sidebar${sidebarOpen ? " open" : ""}`}>
         {/* Brand */}
         <div className="sidebar-brand">
-          <div className="sidebar-brand-circle">
-            <img src={gorraLogo} alt="FITO" className="sidebar-brand-logo" />
+          <div className="sidebar-brand-ring">
+            <div className="sidebar-brand-circle">
+              <img src={gorraLogo} alt="FITO" className="sidebar-brand-logo" />
+            </div>
           </div>
         </div>
 

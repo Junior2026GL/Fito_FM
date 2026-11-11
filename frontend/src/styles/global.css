@@ -242,6 +242,43 @@ button {
   justify-content: center;
 }
 
+/* Anillo blanco que se va llenando alrededor del círculo, como una barra de carga */
+@property --brand-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.sidebar-brand-ring {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 106px;
+  height: 106px;
+  flex-shrink: 0;
+}
+
+.sidebar-brand-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(#ffffff var(--brand-angle), rgba(255, 255, 255, 0.16) 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+  animation: brandRingLoad 2.6s ease-in-out infinite;
+}
+
+@keyframes brandRingLoad {
+  0%   { --brand-angle: 0deg; }
+  80%  { --brand-angle: 360deg; }
+  100% { --brand-angle: 360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-brand-ring::before { animation: none; --brand-angle: 360deg; }
+}
+
 .sidebar-brand-circle {
   width: 90px;
   height: 90px;
