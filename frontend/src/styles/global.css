@@ -732,24 +732,6 @@ button {
   animation: loginBarLoad 2.6s ease-in-out infinite;
 }
 
-/* Nombre bajo la barra: blanco, grande y proporcional al alto de la pantalla */
-.login-mascot-name {
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  transform: translateX(-50%);
-  font-family: Montserrat, "Segoe UI Black", "Arial Black", Impact, sans-serif;
-  font-size: clamp(1.8rem, 5.6vh, 3.9rem);
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: 0.22em;
-  -webkit-text-stroke: 1.5px #ffffff; /* engrosa un poco más las letras */
-  padding-left: 0.22em; /* compensa el espacio final del letter-spacing para centrarlo */
-  color: #ffffff;
-  white-space: nowrap;
-  text-shadow: 0 4px 18px rgba(2, 8, 23, 0.45);
-}
-
 @keyframes loginBarLoad {
   0%   { transform: scaleX(0); }
   80%  { transform: scaleX(1); }
