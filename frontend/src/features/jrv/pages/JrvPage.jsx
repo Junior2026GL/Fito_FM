@@ -1,12 +1,12 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { actualizarJrv, buscarJrv } from "../services/jrv.service.js";
 import {
   IconAlert,
-  IconCheckCircle,
   IconCity,
   IconEdit,
   IconGrid,
   IconInbox,
+  IconList,
   IconMapPin,
   IconSearch
 } from "../../../components/icons.jsx";
@@ -112,6 +112,7 @@ const JrvCard = ({ jrv, onSaved }) => {
         <Dato icon={IconCity} label="Ciudad" value={jrv.ciudad} />
         <Dato icon={IconMapPin} label="Sector electoral" value={jrv.sector_electoral} />
         <Dato icon={IconGrid} label="Centro de votación" value={jrv.centro} />
+        <Dato icon={IconList} label="Categoría" value={jrv.categoria} />
       </div>
 
       {error && (
@@ -174,7 +175,17 @@ export const JrvPage = () => {
   const [consultada, setConsultada] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [aviso, setAviso] = useState("");
+  const [toast, setToast] = useState("");
+  const toastTimer = useRef(null);
+
+  // Aviso flotante abajo a la derecha, igual que en Usuarios
+  const showToast = (msg) => {
+    setToast(msg);
+    clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(""), 3200);
+  };
+
+  useEffect(() => () => clearTimeout(toastTimer.current), []);
 
   const buscar = async (valor) => {
     setLoading(true);
@@ -194,12 +205,12 @@ export const JrvPage = () => {
     event.preventDefault();
     const valor = urna.trim();
     if (!valor) return;
-    setAviso("");
+    setToast("");
     buscar(valor);
   };
 
   const handleSaved = () => {
-    setAviso("JRV actualizada correctamente.");
+    showToast("JRV actualizada correctamente");
     buscar(consultada);
   };
 
@@ -232,12 +243,7 @@ export const JrvPage = () => {
         </form>
       </section>
 
-      {aviso && (
-        <div className="alert alert-success">
-          <span className="alert-icon"><IconCheckCircle /></span>
-          {aviso}
-        </div>
-      )}
+      {toast && <div className="toast" role="status">{toast}</div>}
 
       {error && (
         <div className="alert alert-error">
