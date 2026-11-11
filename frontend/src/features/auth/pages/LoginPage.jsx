@@ -90,7 +90,12 @@ export const LoginPage = () => {
 
         <div className="login-mascot-stage">
           <img className="login-mascot" src={mascota} alt="Mascota La Gorra Azul" />
-          <div className="login-mascot-bar" aria-hidden="true"><span /></div>
+          {/* 23 segmentos, uno por casilla de la papeleta, que se encienden de izquierda a derecha */}
+          <div className="login-mascot-bar" aria-hidden="true">
+            {Array.from({ length: 23 }, (_, i) => (
+              <span key={i} style={{ "--i": i }} />
+            ))}
+          </div>
         </div>
       </aside>
 
