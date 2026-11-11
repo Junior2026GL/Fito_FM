@@ -31,17 +31,6 @@ export const LoginPage = () => {
     setError(null);
 
     const username = form.username.trim();
-    if (!username || !form.password) {
-      setError({
-        title: "Faltan datos",
-        text: !username && !form.password
-          ? "Escribe tu usuario y tu contraseña para continuar."
-          : !username
-            ? "Escribe tu usuario para continuar."
-            : "Escribe tu contraseña para continuar."
-      });
-      return;
-    }
 
     setLoading(true);
 
@@ -125,7 +114,7 @@ export const LoginPage = () => {
             </div>
           )}
 
-          <form className="login-form" onSubmit={handleSubmit} noValidate>
+          <form className="login-form" onSubmit={handleSubmit}>
             <TextField
               id="username"
               name="username"
@@ -138,7 +127,6 @@ export const LoginPage = () => {
               autoComplete="username"
               autoFocus
               required
-              minLength={3}
             />
 
             <PasswordField
@@ -148,7 +136,6 @@ export const LoginPage = () => {
               value={form.password}
               onChange={handleChange}
               autoComplete="current-password"
-              minLength={8}
               labelAction={
                 // Pendiente: todavía no hay flujo para recuperar la contraseña
                 <button type="button" className="login-forgot">
