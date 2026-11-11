@@ -4754,3 +4754,35 @@ button.dc-crumb:hover {
 }
 
 .casilla-input:focus { border-bottom-color: #3b82f6; }
+
+/* Edición en la propia tarjeta de la JRV */
+.jrv-card.is-editing { border-color: #93b4f0; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12); }
+
+.jrv-casilla-edit { cursor: text; }
+.jrv-casilla-edit:focus-within { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18); background: #ffffff; }
+.jrv-casilla-edit.changed { border-color: #f59e0b; background: #fffbeb; }
+
+.jrv-casilla-edit input {
+  width: 100%;
+  min-width: 0;
+  padding: 2px 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+  color: #0b1f4d;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #cbd5e1;
+  outline: none;
+}
+
+.jrv-casilla-edit input:focus { border-bottom-color: #3b82f6; }
+
+.jrv-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid #eef1f6;
+}

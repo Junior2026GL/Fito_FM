@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { buscarJrv } from "../services/jrv.service.js";
-import { CASILLAS, EditarJrvModal } from "../components/EditarJrvModal.jsx";
+import { useMemo, useState } from "react";
+import { actualizarJrv, buscarJrv } from "../services/jrv.service.js";
 import {
   IconAlert,
   IconCheckCircle,
@@ -13,6 +12,11 @@ import {
 } from "../../../components/icons.jsx";
 import { formatNumber } from "../../distrito-central/utils.js";
 
+// Casilla 93 … Casilla 115 (posiciones 1 a 23)
+const CASILLAS = Array.from({ length: 23 }, (_, i) => 93 + i);
+
+const aTexto = (valor) => (valor == null ? "" : String(valor));
+
 const Dato = ({ icon: Icon, label, value }) => (
   <div className="jrv-dato">
     <span className="jrv-dato-icon"><Icon /></span>
@@ -23,14 +27,73 @@ const Dato = ({ icon: Icon, label, value }) => (
   </div>
 );
 
-const JrvCard = ({ jrv, onEditar }) => {
-  const total = CASILLAS.reduce((suma, c) => suma + (Number(jrv[`c${c}`]) || 0), 0);
+const JrvCard = ({ jrv, onSaved }) => {
+  const inicial = useMemo(
+    () => Object.fromEntries(CASILLAS.map((c) => [c, aTexto(jrv[`c${c}`])])),
+    [jrv]
+  );
+  const [editando, setEditando] = useState(false);
+  const [valores, setValores] = useState(inicial);
+  const [guardando, setGuardando] = useState(false);
+  const [error, setError] = useState("");
+
+  const total = CASILLAS.reduce(
+    (suma, c) => suma + (Number(editando ? valores[c] : jrv[`c${c}`]) || 0),
+    0
+  );
+
+  const empezar = () => {
+    setValores(inicial);
+    setError("");
+    setEditando(true);
+  };
+
+  const cancelar = () => {
+    setEditando(false);
+    setError("");
+  };
+
+  const handleChange = (casilla, texto) => {
+    // Solo números enteros
+    setValores((prev) => ({ ...prev, [casilla]: texto.replace(/\D/g, "") }));
+  };
+
+  const guardar = async () => {
+    setError("");
+
+    // Solo se envían las casillas que cambiaron; una casilla vacía no se puede guardar
+    const votos = {};
+    for (const casilla of CASILLAS) {
+      if (valores[casilla] === inicial[casilla]) continue;
+      if (valores[casilla] === "") {
+        setError(`La casilla ${casilla} no puede quedar vacía.`);
+        return;
+      }
+      votos[casilla] = Number(valores[casilla]);
+    }
+
+    if (Object.keys(votos).length === 0) {
+      setEditando(false);
+      return;
+    }
+
+    setGuardando(true);
+    try {
+      await actualizarJrv(jrv, votos);
+      setEditando(false);
+      onSaved();
+    } catch (err) {
+      setError(err.response?.data?.message || "No se pudieron guardar los cambios");
+    } finally {
+      setGuardando(false);
+    }
+  };
 
   return (
-    <article className="jrv-card">
+    <article className={`jrv-card${editando ? " is-editing" : ""}`}>
       <header className="jrv-card-head">
         <div className="jrv-card-title">
-          <span className="jrv-urna-badge">JRV</span>
+          <span className="jrv-urna-badge">{editando ? "EDITANDO" : "JRV"}</span>
           <h2>Urna {jrv.urna}</h2>
           <span className="jrv-muni">{jrv.municipio}</span>
         </div>
@@ -38,9 +101,11 @@ const JrvCard = ({ jrv, onEditar }) => {
           <span className="jrv-total-label">Total de votos</span>
           <strong>{formatNumber(total)}</strong>
         </div>
-        <button type="button" className="dlg-btn dlg-btn-primary" onClick={() => onEditar(jrv)}>
-          <IconEdit /> Editar votos
-        </button>
+        {!editando && (
+          <button type="button" className="dlg-btn dlg-btn-primary" onClick={empezar}>
+            <IconEdit /> Editar votos
+          </button>
+        )}
       </header>
 
       <div className="jrv-datos">
@@ -49,17 +114,50 @@ const JrvCard = ({ jrv, onEditar }) => {
         <Dato icon={IconGrid} label="Centro de votación" value={jrv.centro} />
       </div>
 
+      {error && (
+        <div className="alert alert-error">
+          <span className="alert-icon"><IconAlert /></span>
+          {error}
+        </div>
+      )}
+
       <div className="jrv-casillas" aria-label="Votos por casilla">
         {CASILLAS.map((c) => {
           const votos = jrv[`c${c}`];
+          if (!editando) {
+            return (
+              <div key={c} className={`jrv-casilla${Number(votos) > 0 ? " has-votos" : ""}`}>
+                <span>{c}</span>
+                <strong>{votos == null ? "—" : formatNumber(votos)}</strong>
+              </div>
+            );
+          }
+          const cambiado = valores[c] !== inicial[c];
           return (
-            <div key={c} className={`jrv-casilla${Number(votos) > 0 ? " has-votos" : ""}`}>
+            <label key={c} className={`jrv-casilla jrv-casilla-edit${cambiado ? " changed" : ""}`}>
               <span>{c}</span>
-              <strong>{votos == null ? "—" : formatNumber(votos)}</strong>
-            </div>
+              <input
+                inputMode="numeric"
+                maxLength={7}
+                value={valores[c]}
+                onChange={(event) => handleChange(c, event.target.value)}
+                aria-label={`Votos de la casilla ${c}`}
+              />
+            </label>
           );
         })}
       </div>
+
+      {editando && (
+        <footer className="jrv-card-actions">
+          <button type="button" className="dlg-btn dlg-btn-secondary" onClick={cancelar} disabled={guardando}>
+            Cancelar
+          </button>
+          <button type="button" className="dlg-btn dlg-btn-primary" onClick={guardar} disabled={guardando}>
+            {guardando ? <><span className="spinner" /> Guardando...</> : "Guardar cambios"}
+          </button>
+        </footer>
+      )}
     </article>
   );
 };
@@ -71,7 +169,6 @@ export const JrvPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [aviso, setAviso] = useState("");
-  const [editando, setEditando] = useState(null);
 
   const buscar = async (valor) => {
     setLoading(true);
@@ -96,7 +193,6 @@ export const JrvPage = () => {
   };
 
   const handleSaved = () => {
-    setEditando(null);
     setAviso("JRV actualizada correctamente.");
     buscar(consultada);
   };
@@ -170,14 +266,10 @@ export const JrvPage = () => {
             <JrvCard
               key={`${jrv.municipio}|${jrv.sector_electoral}|${jrv.centro}`}
               jrv={jrv}
-              onEditar={setEditando}
+              onSaved={handleSaved}
             />
           ))}
         </div>
-      )}
-
-      {editando && (
-        <EditarJrvModal jrv={editando} onClose={() => setEditando(null)} onSaved={handleSaved} />
       )}
     </>
   );
