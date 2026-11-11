@@ -4524,7 +4524,7 @@ button.dc-crumb:hover {
   display: flex;
   gap: 10px;
   width: 100%;
-  max-width: 480px;
+  max-width: 360px;
 }
 
 .jrv-search-field {
@@ -4543,12 +4543,21 @@ button.dc-crumb:hover {
 .jrv-search-field input {
   flex: 1;
   min-width: 0;
-  height: 52px;
+  height: 58px;
   border: none;
   outline: none;
   background: transparent;
-  font-size: 1.05rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   color: #0f172a;
+}
+
+.jrv-search-field input::placeholder {
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: #94a3b8;
 }
 
 .jrv-search-btn {
@@ -4672,27 +4681,45 @@ button.dc-crumb:hover {
 .jrv-dato-label { display: block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #94a3b8; }
 .jrv-dato-value { display: block; font-size: 0.9rem; font-weight: 600; color: #0f172a; }
 
+/* Las 23 casillas en una sola línea; si la pantalla es angosta, se desplaza horizontalmente */
 .jrv-casillas {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(23, minmax(54px, 1fr));
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
 }
 
+/* Número de casilla arriba, línea en medio y cantidad de votos abajo */
 .jrv-casilla {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  padding: 8px 6px;
+  align-items: stretch;
+  min-width: 0;
+  overflow: hidden;
+  text-align: center;
   background: #f8fafc;
-  border: 1px solid #eef1f6;
+  border: 1.5px solid #e2e8f0;
   border-radius: 12px;
 }
 
-.jrv-casilla span { font-size: 0.68rem; font-weight: 700; color: #94a3b8; }
-.jrv-casilla strong { font-size: 0.95rem; color: #94a3b8; }
+.jrv-casilla span {
+  padding: 8px 0 7px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #64748b;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.jrv-casilla strong {
+  padding: 9px 0 10px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #94a3b8;
+}
+
 .jrv-casilla.has-votos { background: #eaf0fc; border-color: #c7d7f5; }
-.jrv-casilla.has-votos span { color: #3b5fae; }
+.jrv-casilla.has-votos span { color: #123a8f; border-bottom-color: #9db8ec; }
 .jrv-casilla.has-votos strong { color: #0b1f4d; }
 
 @media (max-width: 640px) {
@@ -4765,18 +4792,17 @@ button.dc-crumb:hover {
 .jrv-casilla-edit input {
   width: 100%;
   min-width: 0;
-  padding: 2px 0;
-  font-size: 0.95rem;
-  font-weight: 700;
+  padding: 9px 0 10px;
+  font-size: 1.25rem;
+  font-weight: 800;
   text-align: center;
   color: #0b1f4d;
   background: transparent;
   border: none;
-  border-bottom: 2px solid #cbd5e1;
   outline: none;
 }
 
-.jrv-casilla-edit input:focus { border-bottom-color: #3b82f6; }
+.jrv-casilla-edit:focus-within span { border-bottom-color: #3b82f6; }
 
 .jrv-card-actions {
   display: flex;
