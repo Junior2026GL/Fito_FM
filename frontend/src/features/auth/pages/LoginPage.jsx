@@ -102,8 +102,6 @@ export const LoginPage = () => {
             <div className="login-logo-circle">
               <img src={logoGorra} alt="La Gorra Azul" className="login-outer-logo" />
             </div>
-            <h1 className="login-brand-name">FITO</h1>
-            <p className="login-brand-sub">Ingresa con tu usuario</p>
           </div>
 
           {sessionExpired && !error && (

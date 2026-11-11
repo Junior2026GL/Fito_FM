@@ -779,26 +779,27 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
+  width: 168px;
+  height: 168px;
   flex-shrink: 0;
   overflow: hidden;
   border-radius: 50%;
   background: #ffffff;
-  border: 3px solid #ffffff;
+  border: 3px solid rgba(26, 83, 168, 0.25);
   box-shadow:
-    0 0 0 3px rgba(26, 83, 168, 0.12),
-    0 8px 24px rgba(12, 36, 97, 0.2);
+    0 0 0 5px rgba(26, 83, 168, 0.18),
+    0 0 0 10px rgba(26, 83, 168, 0.07),
+    0 14px 40px rgba(12, 36, 97, 0.22);
 }
 
 /* La imagen trae mucho margen blanco: se amplía y se centra el dibujo dentro del círculo */
 .login-outer-logo {
   display: block;
-  width: 82px;
+  width: 173px;
   max-width: none;
   height: auto;
   flex-shrink: 0;
-  transform: translate(-0.9px, 3.3px);
+  transform: translate(-1.8px, 7px);
 }
 
 .login-form-box {
@@ -831,23 +832,8 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 22px;
+  margin: 6px 0 26px;
   text-align: center;
-}
-
-.login-brand-name {
-  margin: 10px 0 2px;
-  font-size: 2.1rem;
-  font-weight: 900;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: #0b1f4d;
-}
-
-.login-brand-sub {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #64748b;
 }
 
 .login-eyebrow {
