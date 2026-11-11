@@ -4831,3 +4831,27 @@ button.dc-crumb:hover {
   padding-top: 16px;
   border-top: 1px solid #eef1f6;
 }
+
+/* Aviso flotante de éxito (verde con check) */
+.toast.toast-success {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #14532d;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  box-shadow: 0 8px 24px rgba(22, 101, 52, 0.22);
+}
+
+.toast-success .toast-icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: #ffffff;
+  background: #16a34a;
+  border-radius: 50%;
+}
+
+.toast-success .toast-icon svg { width: 15px; height: 15px; }

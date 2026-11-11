@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { actualizarJrv, buscarJrv } from "../services/jrv.service.js";
 import {
   IconAlert,
+  IconCheck,
   IconCity,
   IconEdit,
   IconGrid,
@@ -243,7 +244,12 @@ export const JrvPage = () => {
         </form>
       </section>
 
-      {toast && <div className="toast" role="status">{toast}</div>}
+      {toast && (
+        <div className="toast toast-success" role="status">
+          <span className="toast-icon"><IconCheck /></span>
+          {toast}
+        </div>
+      )}
 
       {error && (
         <div className="alert alert-error">
