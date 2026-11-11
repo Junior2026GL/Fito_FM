@@ -774,38 +774,38 @@ button {
     #f0f4fb;
 }
 
-/* Logo en círculo */
+/* Logo en círculo, dentro de la tarjeta */
 .login-logo-circle {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 168px;
-  height: 168px;
+  width: 80px;
+  height: 80px;
   flex-shrink: 0;
-  margin-bottom: -6px;
   overflow: hidden;
   border-radius: 50%;
   background: #ffffff;
-  border: 3px solid rgba(26, 83, 168, 0.25);
+  border: 3px solid #ffffff;
   box-shadow:
-    0 0 0 5px rgba(26, 83, 168, 0.18),
-    0 0 0 10px rgba(26, 83, 168, 0.07),
-    0 14px 40px rgba(12, 36, 97, 0.22);
+    0 0 0 3px rgba(26, 83, 168, 0.12),
+    0 8px 24px rgba(12, 36, 97, 0.2);
 }
 
 /* La imagen trae mucho margen blanco: se amplía y se centra el dibujo dentro del círculo */
 .login-outer-logo {
   display: block;
-  width: 173px;
+  width: 82px;
   max-width: none;
   height: auto;
   flex-shrink: 0;
-  transform: translate(-1.8px, 7px);
+  transform: translate(-0.9px, 3.3px);
 }
 
 .login-form-box {
-  width: min(440px, 100%);
-  padding: 36px 36px 30px;
+  position: relative;
+  width: min(420px, 100%);
+  padding: 30px 36px 28px;
+  overflow: hidden;
   background: #ffffff;
   border-radius: 22px;
   border: 1px solid rgba(26, 83, 168, 0.08);
@@ -813,6 +813,41 @@ button {
     0 1px 3px rgba(12, 36, 97, 0.05),
     0 8px 24px rgba(12, 36, 97, 0.09),
     0 24px 60px rgba(12, 36, 97, 0.08);
+}
+
+/* Línea de color en el borde superior de la tarjeta */
+.login-form-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #0b1f4d 0%, #1a53a8 55%, #7aa7ea 100%);
+}
+
+/* Logo + nombre + subtítulo, centrados arriba de la tarjeta */
+.login-brandhead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.login-brand-name {
+  margin: 10px 0 2px;
+  font-size: 2.1rem;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #0b1f4d;
+}
+
+.login-brand-sub {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #64748b;
 }
 
 .login-eyebrow {

@@ -97,14 +97,14 @@ export const LoginPage = () => {
 
       {/* Lado derecho – formulario */}
       <div className="login-form-side">
-        <div className="login-logo-circle">
-          <img src={logoGorra} alt="La Gorra Azul" className="login-outer-logo" />
-        </div>
-
         <div className="login-form-box">
-          <p className="login-eyebrow">Panel de administración</p>
-          <h2 className="login-title">Ingresa al sistema</h2>
-          <p className="login-subtitle">Utiliza tus credenciales para continuar.</p>
+          <div className="login-brandhead">
+            <div className="login-logo-circle">
+              <img src={logoGorra} alt="La Gorra Azul" className="login-outer-logo" />
+            </div>
+            <h1 className="login-brand-name">FITO</h1>
+            <p className="login-brand-sub">Ingresa con tu usuario</p>
+          </div>
 
           {sessionExpired && !error && (
             <div className="dlg-note dlg-note-info login-notice" role="status">
