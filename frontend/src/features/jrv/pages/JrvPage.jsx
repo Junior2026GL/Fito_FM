@@ -121,6 +121,12 @@ const JrvCard = ({ jrv, onSaved }) => {
         </div>
       )}
 
+      {editando && (
+        <p className="jrv-edit-hint">
+          Arriba va el número de casilla; escribe los votos en el recuadro blanco de abajo.
+        </p>
+      )}
+
       <div className="jrv-casillas" aria-label="Votos por casilla">
         {CASILLAS.map((c) => {
           const votos = jrv[`c${c}`];
