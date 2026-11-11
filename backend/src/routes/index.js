@@ -7,6 +7,7 @@ import { distritoCentralRoutes } from "../modules/distrito-central/distrito-cent
 import { modulesRoutes } from "../modules/modules/modules.routes.js";
 import { dashboardRoutes } from "../modules/dashboard/dashboard.routes.js";
 import { auditoriaRoutes } from "../modules/auditoria/auditoria.routes.js";
+import { jrvRoutes } from "../modules/jrv/jrv.routes.js";
 
 export const apiRouter = Router();
 
@@ -18,4 +19,5 @@ apiRouter.use("/distrito-central", distritoCentralRoutes);
 apiRouter.use("/modules", modulesRoutes);
 apiRouter.use("/dashboard", dashboardRoutes);
 apiRouter.use("/auditoria", auditoriaRoutes);
+apiRouter.use("/jrv", jrvRoutes);
 

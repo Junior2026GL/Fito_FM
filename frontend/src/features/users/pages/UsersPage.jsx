@@ -54,7 +54,8 @@ const MODULE_ICONS = {
   dashboard: IconDashboard,
   auditoria: IconAuditoria,
   diputados: IconMap,
-  distrito_central: IconCity
+  distrito_central: IconCity,
+  jrv: IconEdit
 };
 
 const PASSWORD_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*?";

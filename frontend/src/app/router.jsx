@@ -10,6 +10,7 @@ import { DiputadosPage } from "../features/diputados/pages/DiputadosPage.jsx";
 import { DistritoCentralPage } from "../features/distrito-central/pages/DistritoCentralPage.jsx";
 import { DashboardPage } from "../features/dashboard/pages/DashboardPage.jsx";
 import { AuditoriaPage } from "../features/auditoria/pages/AuditoriaPage.jsx";
+import { JrvPage } from "../features/jrv/pages/JrvPage.jsx";
 
 export const AppRoutes = () => (
   <Routes>
@@ -39,6 +40,11 @@ export const AppRoutes = () => (
         {/* Requiere el módulo "auditoria" */}
         <Route element={<ProtectedRoute requiredModule="auditoria" />}>
           <Route path="/auditoria" element={<AuditoriaPage />} />
+        </Route>
+
+        {/* Requiere el módulo "jrv" */}
+        <Route element={<ProtectedRoute requiredModule="jrv" />}>
+          <Route path="/jrv" element={<JrvPage />} />
         </Route>
 
         {/* Solo administradores */}

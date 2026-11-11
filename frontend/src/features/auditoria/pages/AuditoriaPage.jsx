@@ -36,7 +36,8 @@ const ACTIONS = {
 
 const ENTITIES = {
   auth: { label: "Autenticación", icon: IconLock },
-  user: { label: "Usuario", icon: IconUsers }
+  user: { label: "Usuario", icon: IconUsers },
+  jrv: { label: "JRV", icon: IconEdit }
 };
 
 const SkeletonRow = () => (
